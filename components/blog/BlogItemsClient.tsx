@@ -15,7 +15,7 @@ const BlogItemsClient = ({ data }: { data: BlogType[] }) => {
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const sp = new URLSearchParams(searchParams);
-  console.log(sp.getAll("tag"));
+  // console.log(sp.getAll("tag"));
   useEffect(() => {
     setBlogs(data);
   }, [data]);

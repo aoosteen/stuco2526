@@ -2,8 +2,11 @@
 
 const { google } = require("googleapis");
 
+ const credentials = JSON.parse(
+    Buffer.from(process.env.GOOGLE_CREDENTIALS_BASE64 || "", "base64").toString()
+  );
 const auth = new google.auth.GoogleAuth({
-  keyFile: "credentials.json",
+  credentials,
   scopes: "https://www.googleapis.com/auth/spreadsheets",
 });
 
@@ -14,7 +17,7 @@ const googleSheets = google.sheets({
   auth,
 });
 
-const spreadSheetID = "11J0hk-_fGePB_EKCg7IqGB-gYU6QbYu2SytOc__lEs8";
+const spreadSheetID = process.env.GOOGLE_SHEETS_ID;
 
 export const updateSheets = async (message:string) => {
   try {

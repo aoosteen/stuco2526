@@ -137,7 +137,7 @@ const page = () => {
         </div>
         <Image
           priority
-          src={"/gallery/galleryBanner.png"}
+          src={"/gallery/GalleryBanner.png"}
           alt="yellow banner"
           width={1200}
           height={1200}

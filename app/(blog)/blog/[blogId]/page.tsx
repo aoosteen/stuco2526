@@ -106,7 +106,8 @@ const page = async ({ params }: { params: Promise<{ blogId: string }> }) => {
           src={"/blogs/OtherBlogsSeperator.png"}
           alt="Paper seperator"
           width={1000}
-          height={600}
+          height={100}
+          priority
         />
         <div className="flex flex-col">
           <Suspense fallback={<LoadingBlogs />}>

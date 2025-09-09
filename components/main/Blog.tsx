@@ -6,7 +6,7 @@ import { getAllLatestBlogs } from "@/lib/BlogActions";
 
 const Blog = async () => {
   const LatestBlogs = await getAllLatestBlogs();
-  console.log(LatestBlogs)
+  // console.log(LatestBlogs)
 
   const presets = [
     {

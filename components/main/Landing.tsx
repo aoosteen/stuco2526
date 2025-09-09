@@ -10,6 +10,7 @@ type titleType = {
   end: number;
   title: string;
   className?: string;
+  component: React.ReactNode;
 };
 const Landing = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,17 +73,36 @@ const Landing = () => {
       start: 2.2,
       end: 1.95,
       title: "/main/Text1.png",
+      component: <Image
+      src={"/main/Text1.png"}
+      alt="Welcome"
+      width={500}
+      height={500}
+      />
     },
     {
       start: 1.95,
       end: 1.4,
       title: "/main/Text2.png",
+      component: <Image
+      src={"/main/Text2.png"}
+      alt="To"
+      width={500}
+      height={500}
+      />
     },
     {
       start: 1.4,
       end: 0.4,
       title: "/main/Text3.png",
       className: "scale-200",
+      component: <Image
+      src={"/main/Text3.png"}
+      alt="JNY Student Council"
+      width={500}
+      height={500}
+      className="scale-200"
+      />
     },
   ];
 
@@ -124,13 +144,14 @@ const Landing = () => {
           }
         /> */}
 
-          <Image
+          {/* <Image
             src={
               titles.find(
                 (title) =>
                   title.start >= transformValue && title.end <= transformValue
               )?.title ?? "/main/Text1.png"
             }
+            priority
             width={500}
             height={500}
             alt="Welcome"
@@ -141,7 +162,14 @@ const Landing = () => {
               )?.className,
               ""
             )}
-          />
+          /> */}
+
+          {
+            titles.find(
+                (title) =>
+                  title.start >= transformValue && title.end <= transformValue
+              )?.component
+          }
         </div>
         <div
           className={cn(

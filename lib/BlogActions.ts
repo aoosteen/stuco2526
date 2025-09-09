@@ -113,7 +113,7 @@ export const getAllPaginatedBlogs = async (
 }[${tagsQuery}][${searchQuery}]  | ${orderQuery}   [0...5]
 `;
 
-  console.log(query);
+  // console.log(query);
   const data = await client.fetch(query);
   return data as BlogType[];
 };
