@@ -1,0 +1,33 @@
+export default {
+    name:'members',
+    type:'document',
+    title:'Members',
+    fields:[
+        {
+            name:'name',
+            type:'string',
+            title:'Name',
+        },
+        {
+            name:'position',
+            type:'string',
+            title:'Role',
+        },
+        {
+            name:'image',
+            type:'image',
+            title:'Image',
+        },
+        {
+            name:'description',
+            type:'text',
+            title:'Description',
+        },
+        {
+            name:'events',
+            type:'array',
+            title:'Events',
+            of:[{type:'string'}]
+        }
+    ],
+}
