@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { ReactLenis, useLenis } from "lenis/react";
+import { ReactLenis } from "lenis/react";
 import { useContext, useEffect, useRef } from "react";
 
 function usePreviousValue<T>(value: T): T | undefined {

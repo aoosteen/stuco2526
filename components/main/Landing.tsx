@@ -4,7 +4,6 @@ import { useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import LandingVideo from "./LandingVideo";
-import { useDeviceWidth } from "@/hooks/useDeviceWidth";
 
 type titleType = {
   start: number;
@@ -15,7 +14,6 @@ type titleType = {
 const Landing = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [transformValue, setTransformValue] = useState(2.2);
-  const deviceWidth = useDeviceWidth();
   const [mounted, setMounted] = useState(false);
   const [scrollProgress,setScrollProgress] = useState(0);
 
