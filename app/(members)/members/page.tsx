@@ -8,8 +8,7 @@ const page = () => {
         <div className="z-10 flex flex-col gap-4 items-center">
           <h1 className="text-5xl text-white">Members</h1>
           <p className="text-white text-center">
-            Cupidatat officia ea quis do deserunt mollit. Pariatur aute laborum
-            officia dolore elit ullamco consectetur ea.
+            Meet our officers! Who do you resonate with most? 🤔
           </p>
         </div>
         <Image
@@ -22,33 +21,30 @@ const page = () => {
         />
       </div>
 
-    <section className="w-screen   ">
-      <div className=" w-screen ">
-        <div className="relative h-full w-full">
-          <Image
-            src="/members/BulletinBoard.png"
-            alt="Bulletin Board"
-            width={600}
-            height={600}
-            className="w-full object-contain   "
-          />
+      <section className="w-screen   ">
+        <div className=" w-screen ">
+          <div className="relative h-full w-full">
+            <Image
+              src="/members/BulletinBoard.png"
+              alt="Bulletin Board"
+              width={600}
+              height={600}
+              className="w-full object-contain   "
+            />
+          </div>
         </div>
-      </div>
-       <div className=" w-screen ">
-        <div className="relative h-full w-full">
-          <Image
-            src="/members/BulletinBoard.png"
-            alt="Bulletin Board"
-            width={600}
-            height={600}
-            className="w-full object-contain   "
-          />
+        <div className=" w-screen ">
+          <div className="relative h-full w-full">
+            <Image
+              src="/members/BulletinBoard.png"
+              alt="Bulletin Board"
+              width={600}
+              height={600}
+              className="w-full object-contain   "
+            />
+          </div>
         </div>
-      </div>
-
-
-
-    </section>
+      </section>
     </div>
   );
 };

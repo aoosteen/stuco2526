@@ -16,7 +16,8 @@ const Landing = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [transformValue, setTransformValue] = useState(2.2);
   const [mounted, setMounted] = useState(false);
-  const [scrollProgress,setScrollProgress] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [step, setStep] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -68,43 +69,70 @@ const Landing = () => {
       setTransformValue(0.525);
     }
   });
+
   const titles: titleType[] = [
     {
       start: 2.2,
       end: 1.95,
       title: "/main/Text1.png",
-      component: <Image
-      src={"/main/Text1.png"}
-      alt="Welcome"
-      width={500}
-      height={500}
-      />
+      component: (
+        <Image
+          src={"/main/Text1.png"}
+          alt="Welcome"
+          width={500}
+          height={500}
+          key={1}
+          priority
+        />
+      ),
     },
     {
       start: 1.95,
       end: 1.4,
       title: "/main/Text2.png",
-      component: <Image
-      src={"/main/Text2.png"}
-      alt="To"
-      width={500}
-      height={500}
-      />
+      component: (
+        <Image
+          priority
+          key={2}
+          src={"/main/Text2.png"}
+          alt="To"
+          width={500}
+          height={500}
+        />
+      ),
     },
     {
       start: 1.4,
       end: 0.4,
       title: "/main/Text3.png",
       className: "scale-200",
-      component: <Image
-      src={"/main/Text3.png"}
-      alt="JNY Student Council"
-      width={500}
-      height={500}
-      className="scale-200"
-      />
+      component: (
+        <Image
+          priority
+          key={3}
+          src={"/main/Text3.png"}
+          alt="JNY Student Council"
+          width={500}
+          height={500}
+          className="scale-200"
+        />
+      ),
     },
   ];
+
+  useEffect(() => {
+    if (2.2 >= transformValue && 1.95 <= transformValue) {
+      setStep(0);
+    }
+
+    if (1.95 >= transformValue && 1.4 <= transformValue) {
+      setStep(1);
+    }
+
+    if (1.4 >= transformValue && 0.4 <= transformValue) {
+      setStep(2);
+    }
+  }, [transformValue]);
 
   if (!mounted) return null;
   // x 130 y 110 for perfect scale
@@ -164,12 +192,7 @@ const Landing = () => {
             )}
           /> */}
 
-          {
-            titles.find(
-                (title) =>
-                  title.start >= transformValue && title.end <= transformValue
-              )?.component
-          }
+          {titles[step].component}
         </div>
         <div
           className={cn(
@@ -181,6 +204,7 @@ const Landing = () => {
             className="  hidden lg:block  lg:px-[12vw]  aspect-video "
             src={"/main/TV2.png"}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             alt="tv"
             style={
               {

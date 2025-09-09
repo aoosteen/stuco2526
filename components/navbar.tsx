@@ -12,31 +12,31 @@ import { useDeviceWidth } from "@/hooks/useDeviceWidth";
 import { useLenis } from "lenis/react";
 
 const links = [
-    {
-      name: "Home",
-      href: "/",
-      textColor:'text-blue-800',
-      hoverColor:'hover:text-blue-800'
-    },
-    {
-      name: "Members",
-      href: "/members",
-   textColor:'text-rose-800',
-      hoverColor:'hover:text-rose-800/90'
-    },
-    {
-      name: "Gallery",
-      href: "/gallery",
-   textColor:'text-yellow-800',
-      hoverColor:'hover:text-yellow-800/90'
-    },
-    {
-      name: "Blog",
-      href: "/blog",
-         textColor:'text-sky-800',
-      hoverColor:'hover:text-sky-800/90',
-    },
-  ];
+  {
+    name: "Home",
+    href: "/",
+    textColor: "text-blue-800",
+    hoverColor: "hover:text-blue-800",
+  },
+  {
+    name: "Members",
+    href: "/members",
+    textColor: "text-rose-800",
+    hoverColor: "hover:text-rose-800/90",
+  },
+  {
+    name: "Gallery",
+    href: "/gallery",
+    textColor: "text-yellow-800",
+    hoverColor: "hover:text-yellow-800/90",
+  },
+  {
+    name: "Blog",
+    href: "/blog",
+    textColor: "text-sky-800",
+    hoverColor: "hover:text-sky-800/90",
+  },
+];
 
 const Navbar = ({ className }: { className?: string }) => {
   const [scrollY, setScrollY] = React.useState(0);
@@ -45,19 +45,18 @@ const Navbar = ({ className }: { className?: string }) => {
   const deviceWidth = useDeviceWidth();
   const pathname = usePathname();
 
-   const lenis = useLenis() 
+  const lenis = useLenis();
 
-   useEffect(() => {
-    if(open){
+  useEffect(() => {
+    if (open) {
       lenis?.stop();
-      document.body.setAttribute('data-lenis-prevent','true')
-    } else{
+      document.body.setAttribute("data-lenis-prevent", "true");
+    } else {
       lenis?.start();
-      document.body.removeAttribute('data-lenis-prevent')
+      document.body.removeAttribute("data-lenis-prevent");
     }
-   },[open,lenis])
+  }, [open, lenis]);
 
-  
   useEffect(() => {
     setMounted(true);
 
@@ -76,9 +75,6 @@ const Navbar = ({ className }: { className?: string }) => {
     };
   }, []);
 
-  
-
-
   if (!mounted) return null; // Ensure the component is mounted before rendering
 
   return (
@@ -86,16 +82,20 @@ const Navbar = ({ className }: { className?: string }) => {
       className={cn(
         "fixed top-0 right-0 bg-transparent z-[49]  w-full   flex flex-row justify-between px-6 md:px-12 py-4 items-center  transition-opacity duration-300 ",
         pathname === "/"
-          ? pathname === "/" && ((window.scrollY > window.innerHeight * 4.05 && window.scrollY < window.innerHeight * 9))
+          ? pathname === "/" &&
+            window.scrollY > window.innerHeight * 4.05 &&
+            window.scrollY < window.innerHeight * 9
             ? "opacity-100 "
             : "opacity-0 pointer-events-none"
           : "opacity-100",
-        pathname.includes('/gallery/') ? 'bg-[url(/gallery/GalleryBanner.png)] bg-cover': "",
+        pathname.includes("/gallery/")
+          ? "bg-[url(/gallery/GalleryBanner.png)] bg-cover"
+          : "",
         deviceWidth > 768 ? "" : "opacity-100 pointer-events-auto",
         className
       )}
     >
-      <motion.img
+      <Image
         src={"/navPaper.png"}
         alt="Blog cover image"
         width={1000}
@@ -185,9 +185,12 @@ const Navbar = ({ className }: { className?: string }) => {
                 ease: [0.25, 0.1, 0.25, 1],
               }}
             >
-              <Sheet open={open} onOpenChange={() => {
-                setOpen(!open)
-              }}>
+              <Sheet
+                open={open}
+                onOpenChange={() => {
+                  setOpen(!open);
+                }}
+              >
                 <SheetTrigger>
                   <Menu
                     size={40}
@@ -198,16 +201,27 @@ const Navbar = ({ className }: { className?: string }) => {
                     //     : "#fff"
                     // }
                     stroke={
-                      (deviceWidth < 768 && (pathname.includes('/gallery') || pathname.includes('/blog')) && scrollY === 0)
+                      (deviceWidth < 768 &&
+                      (pathname.includes("/gallery") ||
+                        pathname.includes("/blog")) &&
+                      scrollY === 0)
                         ? "#fff"
                         : "#000"
                     }
                   />
                 </SheetTrigger>
-                <SheetContent className="bg-[url(../public/main/TornPaper.png)] p-8 bg-transparent bg-no-repeat border-none shadow-none">
+                <SheetContent className=" p-8 bg-transparent bg-no-repeat border-none shadow-none ">
+                  <Image
+                    src={"/main/TornPaper.png"}
+                    width={400}
+                    height={800}
+                    alt="Torn Paper background"
+                    className="absolute top-0 right-0 h-screen object-cover -z-2"
+                    priority
+                  />
                   <SheetTitle className="text-right"></SheetTitle>
                   <div className="flex flex-col gap-8 w-full h-full items-end mt-24">
-                    {links.map((link,) => {
+                    {links.map((link) => {
                       return (
                         <motion.div
                           key={link.name}
@@ -219,7 +233,7 @@ const Navbar = ({ className }: { className?: string }) => {
                             // scroll={false}
                             // key={link.name}
                             className={cn(
-                            `${link.hoverColor} transition-colors font-thin text-3xl `,
+                              `${link.hoverColor} transition-colors font-thin text-3xl `,
                               pathname === link.href
                                 ? `${link.textColor} font-bold decoration-dotted underline underline-offset-4`
                                 : "text-black"
@@ -246,11 +260,11 @@ export default Navbar;
 export const NavBlogSheet = () => {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
- const lenis = useLenis();
+  const lenis = useLenis();
 
   useEffect(() => {
     if (!lenis) return;
-    
+
     if (open) {
       lenis.stop();
     } else {
@@ -266,7 +280,7 @@ export const NavBlogSheet = () => {
   //   }
   // }, [open, lenis]);
   return (
-    <Sheet open={open} onOpenChange={setOpen} >
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
         <Menu
           size={40}
@@ -277,7 +291,15 @@ export const NavBlogSheet = () => {
           stroke="#fff"
         />
       </SheetTrigger>
-      <SheetContent className="bg-[url(../public/main/TornPaper.png)] p-8 bg-transparent bg-no-repeat border-none shadow-none">
+      <SheetContent className=" p-8 bg-transparent bg-no-repeat border-none shadow-none">
+        <Image
+          src={"/main/TornPaper.png"}
+          width={400}
+          height={800}
+          alt="Torn Paper background"
+          className="absolute top-0 right-0 h-screen object-cover -z-2"
+          priority
+        />
         <SheetTitle className="text-right"></SheetTitle>
         <div className="flex flex-col gap-8 w-full h-full items-end mt-24">
           {links.map((link) => {

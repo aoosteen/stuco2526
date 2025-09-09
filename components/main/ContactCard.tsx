@@ -13,15 +13,15 @@ import { updateSheets } from "@/lib/submitMessage";
 
 const ContactCard = () => {
   const [flip, setFlip] = useState(false);
-  const [message,setMessage] = useState('')
-  const [isPending,startTransition] = useTransition()
+  const [message, setMessage] = useState("");
+  const [isPending, startTransition] = useTransition();
   const updateSheetsHandler = async () => {
-    startTransition(async() => {
-      await updateSheets(message)
-      setMessage('')
-      setFlip(!flip)
-    }) 
-  }
+    startTransition(async () => {
+      await updateSheets(message);
+      setMessage("");
+      setFlip(!flip);
+    });
+  };
   return (
     <div className="w-screen h-[90vh]  md:px-12  md:py-20">
       <div className="w-full h-full">
@@ -40,22 +40,19 @@ const ContactCard = () => {
               />
               <div className="absolute top-0 left-0 p-8 sm:p-16 lg:grid lg:grid-cols-2 flex flex-col gap-16 h-full">
                 <div className="flex flex-col space-y-8 justify-center h-full">
-                    <Image
-                    src={'/main/Stamp.png'}
+                  <Image
+                    src={"/main/Stamp.png"}
                     alt="Stamp"
                     width={100}
                     height={300}
                     className="object-cover   scale-150"
-                    />
+                  />
                   <h1 className="text-yellow-900 text-6xl">Contact Us</h1>
                   <p className="text-yellow-900 ">
-                    Sunt occaecat duis esse exercitation et ex qui in
-                    adipisicing culpa id esse est cupidatat consectetur. Lorem
-                    id proident enim excepteur. Dolor ea duis officia fugiat id
-                    aute deserunt esse minim ad fugiat sint nisi excepteur
-                    cupidatat. Ex cillum irure commodo eiusmod voluptate non
-                    aliquip sit in tempor enim nostrud. Nulla ad do adipisicing
-                    amet incididunt.
+                    Mail your thoughts to us through this anonymous suggestion
+                    box! Whether about an impactful idea or a minor tweak, event
+                    suggestions or short messages, a question or concern; we
+                    want to hear from you.
                   </p>
                   <Button
                     variant={"yellow"}
@@ -75,7 +72,9 @@ const ContactCard = () => {
                         height={28}
                         className="object-contain"
                       />
-                      <p className="text-2xl text-yellow-900">@jnystudentcouncil</p>
+                      <p className="text-2xl text-yellow-900">
+                        @jnystudentcouncil
+                      </p>
                     </div>
                     <div className="flex gap-4 items-center border-b-4 border-yellow-900/30 pb-4">
                       <Image
@@ -85,7 +84,9 @@ const ContactCard = () => {
                         height={28}
                         className="object-contain"
                       />
-                      <p className="text-2xl text-yellow-900">@studentcouncil_jny</p>
+                      <p className="text-2xl text-yellow-900">
+                        @studentcouncil_jny
+                      </p>
                     </div>
                     <div className="flex gap-4 items-center border-b-4 border-yellow-900/30 pb-4">
                       <Image
@@ -95,7 +96,9 @@ const ContactCard = () => {
                         height={28}
                         className="object-contain"
                       />
-                      <p className="text-2xl text-yellow-900">@CouncilJNYStudent</p>
+                      <p className="text-2xl text-yellow-900">
+                        @CouncilJNYStudent
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -129,20 +132,19 @@ const ContactCard = () => {
                     className="object-fixed w-full h-full pb-32"
                   />
                   <form action={updateSheetsHandler}>
-                  <Button
-                    className="absolute bottom-16 w-fit"
-                    variant={"yellow"}
-                    type="submit"
-                    disabled={message === "" || isPending}
-                  >
-                    {isPending ? "Submitting..." : "Submit"}
-                  </Button>{" "}
-
+                    <Button
+                      className="absolute bottom-16 w-fit"
+                      variant={"yellow"}
+                      type="submit"
+                      disabled={message === "" || isPending}
+                    >
+                      {isPending ? "Submitting..." : "Submit"}
+                    </Button>{" "}
                   </form>
                   <div className="absolute top-0 left-0 w-full max-w-full  py-8 px-4 sm:px-8 ">
                     <Textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       placeholder="Type your message here..."
                       className="outline-none h-full placeholder:text-xl md:text-xl "
                     />

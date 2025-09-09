@@ -13,19 +13,19 @@ const Blog = async () => {
       ratio: "1257/1653",
       src: "/blogs/BlogPaper.png",
       button: true,
-      className:'z-3 '
+      className: "z-3 ",
     },
     {
       ratio: "1214/1351",
       src: "/blogs/BlogPaperSmall.png",
       button: false,
-      className:" z-2 h-[85%] "
+      className: " z-2 h-[85%] ",
     },
     {
       ratio: "1214/1351",
       src: "/blogs/BlogPaperSmall.png",
       button: false,
-      className:" h-[85%]  "
+      className: " h-[85%]  ",
     },
   ];
   return (
@@ -33,10 +33,10 @@ const Blog = async () => {
       <div className="h-full py-16 pt-0 sm:pt-16 lg:pr-24 flex flex-col  justify-center space-y-8">
         <h1 className="text-6xl  text-sky-900">Our Blogs</h1>
         <p className="text-sky-900 ">
-          Esse non nostrud tempor tempor et anim consectetur eiusmod nulla
-          commodo ad aliquip occaecat. Qui do consequat nulla minim eiusmod in
-          proident. Qui laboris aliquip sint esse incididunt laborum fugiat
-          minim culpa deserunt. Nulla incididunt ex do cupidatat aliquip nostrud
+          From behind-the-scenes event stories to personal reflections on
+          student life, our blogs bring ideas, insights, and experiences to
+          life! Dive in to see what shapes our school community—one post at a
+          time.
         </p>
         <div className="flex gap-4">
           <Link href={"/blog"}>
