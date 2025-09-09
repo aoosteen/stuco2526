@@ -156,7 +156,13 @@ const Landing = () => {
 
            bg-center "
         >
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="w-screen h-screen bg-[var(--main-bg)] flex items-center justify-center ">
+                <p>Loading...</p>
+              </div>
+            }
+          >
             <LandingVideo prog={scrollProgress} className="shadow-xl" />
           </Suspense>
 
@@ -216,10 +222,10 @@ const Landing = () => {
       </div>
 
       {/* mobile  */}
-      <div className="relative lg:hidden ">
+      <div className="relative lg:hidden overflow-hidden   ">
         <div
           className={cn(
-            "sticky    w-screen  flex flex-col items-center justify-center mt-8 "
+            "    w-screen  flex flex-col items-center justify-center -translate-y-16 mt-24"
           )}
         >
           <Image
@@ -229,10 +235,10 @@ const Landing = () => {
             alt="Welcome to JNY Student Council"
             className=" sm:scale-125 md:scale-150"
           />
-          <div className="relative">
+          <div className="relative w-screen    ">
             <LandingVideo className=" block object-contain scale-88 static  " />
             <Image
-              className="  object-contain scale-135  aspect-video  "
+              className="  object-contain   w-full h-full  scale-135 aspect-video max-w-screen "
               src={"/main/TV2.png"}
               fill
               alt="tv"

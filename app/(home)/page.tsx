@@ -24,7 +24,8 @@ export default function Home() {
           alt="Seperator"
           width={1000}
           height={100}
-          className="mb-8 mt-24 sm:my-16 sm:px-8 px-4"
+          className="mb-8 mt-42 sm:mt-36 sm:px-8 px-4"
+          priority
         />
         <Blog />
         <Gallery />

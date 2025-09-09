@@ -1,12 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const loading = () => {
   return (
-    <div>
-      Loading...
+    <div className="w-screen h-screen bg-[var(--main-bg)] flex items-center justify-center ">
+      <p>Loading...</p>
     </div>
-  )
-}
+  );
+};
 
-export default loading
-
+export default loading;

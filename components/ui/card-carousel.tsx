@@ -261,7 +261,7 @@ export const CardCarousel: React.FC<CarouselProps> = ({
               animate={{ opacity: 1 }}
               // exit={{ opacity: 0 }}
               // transition={{ duration: 1 }}
-              className="space-y-3 sm:space-y-6 text-center absolute w-full sm:w-[80%] lg:w-[45%]   top-[70%] left-1/2 -translate-x-1/2 z-10 h-"
+              className="space-y-3 sm:space-y-6 text-center absolute w-full sm:w-[80%] lg:w-[45%]   top-[80%] left-1/2 -translate-x-1/2 z-10 h-"
             >
               <motion.h1
                 initial={{ opacity: 0 }}

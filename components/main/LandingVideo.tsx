@@ -20,7 +20,7 @@ const LandingVideo = ({
           filter: prog ? `grayscale(${(1 - prog) * 100}%)` : undefined,
         }}
         className={cn(
-          "size-full object-cover aspect-video absolute top-0 scale-105 left-0 -z-10 hidden lg:block",
+          "size-full object-cover aspect-video absolute rounded-md top-0 scale-105 left-0 -z-10 hidden lg:block",
           className
         )}
       >

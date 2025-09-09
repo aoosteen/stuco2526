@@ -56,7 +56,7 @@ if(flipped !== undefined){
   }, [flipped]);
 
   return (
-    <div className={cn("py-1", className)}>
+    <div className={cn("", className)}>
       <div className="group [perspective:3000px] w-full h-full" >
         <div
           className={` relative h-full w-full   transition-all duration-1300 [transform-style:preserve-3d] ${

@@ -216,7 +216,7 @@ const Navbar = ({ className }: { className?: string }) => {
                     width={400}
                     height={800}
                     alt="Torn Paper background"
-                    className="absolute top-0 right-0 h-screen object-cover -z-2"
+                    className="absolute top-0 right-0 h-screen object-cover scale-x-90 origin-right  -z-2 "
                     priority
                   />
                   <SheetTitle className="text-right"></SheetTitle>
