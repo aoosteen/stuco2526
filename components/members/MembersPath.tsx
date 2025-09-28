@@ -1,14 +1,8 @@
 "use client";
 import { MemberType } from "@/lib/MembersActions";
-import { urlFor } from "@/sanity/sanityClient";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+
+import { motion, useScroll, useTransform } from "framer-motion";
 import React, { useEffect, useRef } from "react";
-import Polaroid from "../gallery/Polaroid";
-import {
-  FlipCard,
-  FlipCardFrontFace,
-  FlipCardBackFace,
-} from "../main/Contact/FlipCard";
 import Image from "next/image";
 import MembersPolaroid from "./MembersPolaroid";
 
@@ -28,7 +22,6 @@ const MembersPath = ({
   const pathRef = useRef(null);
   const [scrollProgress, setScrollProgress] = React.useState(0);
   const svgRef = useRef(null);
-  const [pathHeight, setPathLength] = React.useState(0);
   const { scrollYProgress } = useScroll({
     target: svgRef,
     offset: ["start end", "end end"],
@@ -41,14 +34,6 @@ const MembersPath = ({
     });
     return () => unsubscribe();
   }, [scrollYProgress]);
-
-  useEffect(() => {
-    const path = document.body.querySelector("#path") as SVGPathElement;
-    if (path) {
-      const pathHeight = path.getTotalLength();
-      setPathLength(pathHeight);
-    }
-  }, []);
 
   const testLrPhotos = [
     {

@@ -3,7 +3,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
 
 const GalleryMobileButtons = ({
   term,
@@ -12,7 +11,6 @@ const GalleryMobileButtons = ({
   term: string;
   termNumWord: string;
 }) => {
-  const pathname = usePathname();
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {

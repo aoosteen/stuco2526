@@ -5,8 +5,6 @@ import Image from "next/image";
 import { getGalllery } from "@/lib/GalleryActions";
 import { cn } from "@/lib/utils";
 import format from "date-fns/format";
-import { urlFor } from "@/sanity/sanityClient";
-import Polaroid from "@/components/gallery/Polaroid";
 import GalleryImagesList from "@/components/gallery/GalleryImagesList";
 const page = async ({
   params,

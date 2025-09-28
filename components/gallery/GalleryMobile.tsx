@@ -1,10 +1,8 @@
 import React from "react";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { GalleryType } from "@/lib/GalleryActions";
 import format from "date-fns/format";
-import Link from "next/link";
 import GalleryMobileButtons from "./GalleryMobileButtons";
 
 export function GalleryMobile({

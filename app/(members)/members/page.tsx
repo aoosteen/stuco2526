@@ -1,8 +1,6 @@
-import Polaroid from "@/components/gallery/Polaroid";
 import MembersPath from "@/components/members/MembersPath";
 import MembersPolaroid from "@/components/members/MembersPolaroid";
-import { getMembers, MemberType } from "@/lib/MembersActions";
-import { urlFor } from "@/sanity/sanityClient";
+import { getMembers } from "@/lib/MembersActions";
 import Image from "next/image";
 import React from "react";
 
