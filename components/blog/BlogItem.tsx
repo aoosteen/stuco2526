@@ -22,7 +22,7 @@ const BlogItem = ({ blog, index ,pattern }: { blog: BlogType; index: number, pat
         duration: 0.3,
       }}
       onClick={() => {
-        deviceWidth < 1024
+        deviceWidth < 1280
           ? router.push(`/blog/${blog._id}`)
           : setCurrentSelectedBlog(blog);
       }}

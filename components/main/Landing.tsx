@@ -211,6 +211,7 @@ const Landing = () => {
             src={"/main/TV2.png"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority
             alt="tv"
             style={
               {
@@ -240,6 +241,7 @@ const Landing = () => {
             <Image
               className="  object-contain   w-full h-full  scale-135 aspect-video max-w-screen "
               src={"/main/TV2.png"}
+              priority
               fill
               alt="tv"
               style={

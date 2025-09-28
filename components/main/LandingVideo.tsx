@@ -15,7 +15,7 @@ const LandingVideo = ({
         loop
         muted
         playsInline
-        preload="true"
+        preload="auto"
         style={{
           filter: prog ? `grayscale(${(1 - prog) * 100}%)` : undefined,
         }}
@@ -25,6 +25,7 @@ const LandingVideo = ({
         )}
       >
         <source src="/main/StucoMainVideo.mp4" type="video/mp4" />
+        Video not supported by browser
       </video>
     </div>
   );

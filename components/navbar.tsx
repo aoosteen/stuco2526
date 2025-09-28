@@ -91,7 +91,7 @@ const Navbar = ({ className }: { className?: string }) => {
         pathname.includes("/gallery/")
           ? "bg-[url(/gallery/GalleryBanner.png)] bg-cover"
           : "",
-        deviceWidth > 768 ? "" : "opacity-100 pointer-events-auto",
+        deviceWidth > 1024 ? "" : "opacity-100 pointer-events-auto",
         className
       )}
     >
@@ -203,7 +203,7 @@ const Navbar = ({ className }: { className?: string }) => {
                     stroke={
                       (deviceWidth < 768 &&
                       (pathname.includes("/gallery") ||
-                        pathname.includes("/blog")) &&
+                        pathname.includes("/blog") || pathname.includes('/members')) &&
                       scrollY === 0)
                         ? "#fff"
                         : "#000"

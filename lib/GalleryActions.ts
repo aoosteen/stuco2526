@@ -9,9 +9,12 @@ export interface GalleryType {
     title: string;      
     date: string;
     highlights: any[];
+    studentsCollection: any[];
+    miscellaneous: any[];
+    BTS: any[];
     specialImage: string;
 
-}
+} 
 
 
 export const countGalleryTotal = async() => {
@@ -61,6 +64,9 @@ export const getGalllery = async (id: string) => {
     title,
     date,
     highlights,
+    studentsCollection,
+    miscellaneous,
+    BTS,
     specialImage
   }`;
   const data = await client.fetch(query);

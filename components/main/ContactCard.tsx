@@ -10,6 +10,7 @@ import Image from "next/image";
 import { Textarea } from "../ui/textarea";
 import { X } from "lucide-react";
 import { updateSheets } from "@/lib/submitMessage";
+import Link from "next/link";
 
 const ContactCard = () => {
   const [flip, setFlip] = useState(false);
@@ -22,10 +23,30 @@ const ContactCard = () => {
       setFlip(!flip);
     });
   };
+
+  const contactInfos = [
+    {
+      name: "Instagram",
+      handle: "@jnystudentcouncil",
+      link: "https://www.instagram.com/jnystudentcouncil",
+      icon: "/main/ContactInstagram.svg",
+    },
+    {
+      name: "YouTube",
+      handle: "@studentcouncil_jny",
+      link: "https://www.youtube.com/@jnystudentcouncil",    
+      icon: "/main/ContactYoutube.svg",
+    },{
+      name: "TikTok",
+      handle: "@CouncilJNYStudent",
+      link: "https://www.tiktok.com/@jnystudentcouncil",
+      icon: "/main/ContactTiktok.svg",
+    }
+  ]
   return (
     <div className="w-screen h-[90vh]  md:px-12  md:py-20">
       <div className="w-full h-full">
-        <FlipCard flipped={flip} className="w-full h-full shadow-sm">
+        <FlipCard flipped={flip} className="w-full h-full shadow-sm" flipOnClick={false}>
           <FlipCardFrontFace>
             <div
               className="relative  w-full h-full"
@@ -64,42 +85,26 @@ const ContactCard = () => {
                 </div>
                 <div className=" border-l-4 border-yellow-900/30 pl-24 hidden lg:block">
                   <div className="flex flex-col gap-16 justify-center h-full ">
-                    <div className="flex gap-4 items-center border-b-4 border-yellow-900/30 pb-4">
-                      <Image
-                        src={"/main/ContactInstagram.svg"}
-                        alt="Instagram"
-                        width={28}
-                        height={28}
-                        className="object-contain"
-                      />
-                      <p className="text-2xl text-yellow-900">
-                        @jnystudentcouncil
-                      </p>
-                    </div>
-                    <div className="flex gap-4 items-center border-b-4 border-yellow-900/30 pb-4">
-                      <Image
-                        src={"/main/ContactYoutube.svg"}
-                        alt="Instagram"
-                        width={28}
-                        height={28}
-                        className="object-contain"
-                      />
-                      <p className="text-2xl text-yellow-900">
-                        @studentcouncil_jny
-                      </p>
-                    </div>
-                    <div className="flex gap-4 items-center border-b-4 border-yellow-900/30 pb-4">
-                      <Image
-                        src={"/main/ContactTiktok.svg"}
-                        alt="Instagram"
-                        width={28}
-                        height={28}
-                        className="object-contain"
-                      />
-                      <p className="text-2xl text-yellow-900">
-                        @CouncilJNYStudent
-                      </p>
-                    </div>
+                    {contactInfos.map((info) => (
+                      <div key={info.name} className="flex gap-4 items-center border-b-4 border-yellow-900/30 pb-4">
+                        <Image
+                          src={info.icon}
+                          alt={info.name}
+                          width={28}
+                          height={28}
+                          className="object-contain"
+                        />
+                        <Link
+                          href={info.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <p className="text-2xl text-yellow-900 hover:underline ">
+                            {info.handle}
+                          </p>
+                        </Link>
+                      </div>
+                    ))} 
                   </div>
                 </div>
               </div>

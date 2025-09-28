@@ -23,6 +23,7 @@ const Gallery = () => {
           loop
           muted
           playsInline
+          preload="auto"
           className={cn("w-full h-full object-cover brightness-50")}
         >
           <source src="/main/galleryMainVideo.mp4" type="video/mp4" />

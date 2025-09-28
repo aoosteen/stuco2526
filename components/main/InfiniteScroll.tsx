@@ -61,13 +61,15 @@ const InfiniteScroll = ({ children }: { children: React.ReactNode }) => {
       // }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    if(deviceWidth >= 1024){
+      window.addEventListener("scroll", handleScroll);
+    }
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [direction]);
   useEffect(() => {
-    if (deviceWidth > 1024) {
+    if (deviceWidth >= 1024) {
       if (wraooerProgress === 1 && direction === "down") {
         window.scrollTo(0, 100);
       }

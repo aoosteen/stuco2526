@@ -7,10 +7,10 @@ import React from "react";
 import { FilterProps } from "@/lib/types";
 import BlogItems from "@/components/blog/BlogItems";
 
-const page =  async({
+const page = async ({
   searchParams,
 }: {
-  searchParams: Promise<FilterProps>
+  searchParams: Promise<FilterProps>;
 }) => {
   const sp = await searchParams;
   return (
@@ -34,8 +34,9 @@ const page =  async({
         <div className="z-10 flex flex-col gap-4 items-start shrink-0 ">
           <h1 className="text-5xl text-white text-start">Blog</h1>
           <p className="text-white text-start">
-            Cupidatat officia ea quis do deserunt mollit. Pariatur aute laborum
-            officia dolore elit ullamco consectetur ea.
+            Delve into YOUR perspectives in this blog space created by students,
+            for students. Come read, reflect, or even write—allow your ideas to
+            thrive!
           </p>
         </div>
         <div className="scale-75 -translate-y-1/10">
@@ -47,8 +48,9 @@ const page =  async({
         <div className="z-10 flex flex-col gap-4 items-center">
           <h1 className="text-5xl text-white">Blog</h1>
           <p className="text-white text-center">
-            Cupidatat officia ea quis do deserunt mollit. Pariatur aute laborum
-            officia dolore elit ullamco consectetur ea.
+            Delve into YOUR perspectives in this blog space created by students,
+            for students. Come read, reflect, or even write—allow your ideas to
+            thrive!
           </p>
         </div>
         <Image

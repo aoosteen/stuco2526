@@ -4,25 +4,32 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { GalleryType } from "@/lib/GalleryActions";
 import format from "date-fns/format";
+import Link from "next/link";
+import GalleryMobileButtons from "./GalleryMobileButtons";
 
-export async function GalleryMobile({
+export function GalleryMobile({
   terms,
   allData,
 }: {
   terms: string[];
   allData: GalleryType[];
 }) {
-  const TermComponent = async ({ term }: { term: string }) => {
+  const numWords = ["one", "two", "three", "four"];
+  const TermComponent = ({ term }: { term: string }) => {
     const data = allData.filter((gal) => gal.term === term);
+
+    const termNumWord =
+      numWords[parseInt(term.replace("term", "Term ").split(" ")[1]) - 1];
     const originalIds = allData.map(({ _id }) => _id);
     return (
       <div
         className={cn(
-          "px-6 flex flex-col",
+          "px-6 flex flex-col ",
           originalIds.indexOf(data[0]._id) % 2 === 0
             ? "items-start"
             : "items-end"
         )}
+        id={"term" + termNumWord}
       >
         <span className={cn("text-5xl text-yellow-800 ")}>
           {term.replace("term", "Term ")}
@@ -42,22 +49,21 @@ export async function GalleryMobile({
       </div>
     );
   };
+
   return (
     <div className="relative w-full flex flex-col gap-8 overflow-clip lg:hidden">
       <div className="flex gap-1 pl-6">
-        {terms.map((term) => (
-          <Button
-            key={term}
-            variant={"yellowOutline"}
-            className={cn(
-              "cursor-pointer"
-              // active === term.toLowerCase().replace(/\s+/g, "") &&
-              //   "bg-yellow-800 text-[var(--main-bg)] hover:bg-yellow-800/90"
-            )}
-          >
-            {term.replace("term", "Term ")}
-          </Button>
-        ))}
+        {terms.map((term) => {
+          const termNumWord =
+            numWords[parseInt(term.replace("term", "Term ").split(" ")[1]) - 1];
+          return (
+            <GalleryMobileButtons
+              key={term}
+              term={term}
+              termNumWord={termNumWord}
+            />
+          );
+        })}
       </div>
 
       {terms.map((term) => (

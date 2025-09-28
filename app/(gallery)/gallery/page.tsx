@@ -131,8 +131,7 @@ const page = () => {
         <div className="z-10 flex flex-col gap-4 items-center">
           <h1 className="text-5xl text-white">Gallery</h1>
           <p className="text-white text-center">
-            Cupidatat officia ea quis do deserunt mollit. Pariatur aute laborum
-            officia dolore elit ullamco consectetur ea.
+           A trip down memory lane! What do these records store?
           </p>
         </div>
         <Image
