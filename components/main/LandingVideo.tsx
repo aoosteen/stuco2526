@@ -24,7 +24,7 @@ const LandingVideo = ({
           className
         )}
       >
-        <source src="/main/StucoMainVideo.mp4" type="video/mp4" />
+        <source src="/main/StucoMainVideoCompressed.mp4" type="video/mp4" />
         Video not supported by browser
       </video>
     </div>

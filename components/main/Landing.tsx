@@ -208,7 +208,7 @@ const Landing = () => {
         >
           <Image
             className="  hidden lg:block  lg:px-[12vw]  aspect-video "
-            src={"/main/TV2.png"}
+            src={"/main/TV2.webp"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority
@@ -240,7 +240,7 @@ const Landing = () => {
             <LandingVideo className=" block object-contain scale-88 static  " />
             <Image
               className="  object-contain   w-full h-full  scale-135 aspect-video max-w-screen "
-              src={"/main/TV2.png"}
+              src={"/main/TV2.webp"}
               priority
               fill
               alt="tv"
