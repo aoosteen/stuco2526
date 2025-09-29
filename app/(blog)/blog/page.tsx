@@ -43,9 +43,9 @@ const page = async ({
           <BlogPreview />
         </div>
       </aside>
-      <div className="relative w-screen  h-[55vh]  bg-contain  flex flex-col xl:hidden justify-center px-6 md:px-12">
+      <div className="relative w-screen  h-[55vh]  bg-contain  flex flex-col xl:hidden justify-center ">
         {/* banner on mobile */}
-        <div className="z-10 flex flex-col gap-4 items-center">
+        <div className="z-10 flex flex-col gap-4 items-center bg-[url(../public/blogs/StucoBlogBanner.webp)] bg-cover bg-repeat-round  justify-center h-[55vh] w-full px-6 md:px-12 ">
           <h1 className="text-5xl text-white">Blog</h1>
           <p className="text-white text-center">
             Delve into YOUR perspectives in this blog space created by students,
@@ -53,14 +53,14 @@ const page = async ({
             thrive!
           </p>
         </div>
-        <Image
+        {/* <Image
           loading="eager"
           src={"/blogs/StucoBlogBanner.png"}
           alt="blue banner"
           width={1200}
           height={1200}
           className="w-full  object-cover absolute  left-0 h-full "
-        />
+        /> */}
       </div>
       <div className="p-6 md:p-12 pt-0 md:pt-0  w-full">
         <BlogList>

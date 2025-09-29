@@ -4,21 +4,17 @@ import Image from "next/image";
 import GalleryContainer from "@/components/gallery/GalleryContainer";
 import { GalleryMobile } from "@/components/gallery/GalleryMobile";
 import GalleryItem from "@/components/gallery/GalleryItem";
-import {
-  getAllGaleries,
-  getAllGalleryTerms,
-} from "@/lib/GalleryActions";
+import { getAllGaleries, getAllGalleryTerms } from "@/lib/GalleryActions";
 
 const GalleryAllCompomnents = async () => {
   const terms = await getAllGalleryTerms();
   const all = await getAllGaleries();
   const total = all.length;
 
-
   const TermComponent = async ({ term }: { term: string }) => {
     // term = Term 1, Term 2, Term 3, Term 4
 
-    const original  = all.map(({_id}) => _id)
+    const original = all.map(({ _id }) => _id);
     const data = all.filter((gal) => gal.term === term);
 
     return (
@@ -33,7 +29,7 @@ const GalleryAllCompomnents = async () => {
                 <GalleryItem
                   gal={gal}
                   key={index}
-                  index={original.indexOf(gal._id)} 
+                  index={original.indexOf(gal._id)}
                 />
               );
             })}
@@ -127,21 +123,21 @@ const page = () => {
   return (
     <main className="h-full w-full  bg-[var(--main-bg)] ">
       {/* <div className="absolute top-0 left-0 bg-[var(--main-bg)] h-[300vh] w-screen -z-100"/> */}
-      <div className="relative w-screen shrink-0 h-[56.5vh]  bg-contain  flex flex-col justify-center px-6 md:px-12 galleryBanner">
+      <div className="relative w-screen shrink-0 h-[55vh]  flex flex-col justify-center px-6 md:px-12 galleryBanner bg-[url(../public/gallery/GalleryBanner.webp)]  bg-repeat-round bg-cover">
         <div className="z-10 flex flex-col gap-4 items-center">
           <h1 className="text-5xl text-white">Gallery</h1>
           <p className="text-white text-center">
-           A trip down memory lane! What do these records store?
+            A trip down memory lane! What do these records store?
           </p>
         </div>
-        <Image
+        {/* <Image
           priority
           src={"/gallery/GalleryBanner.png"}
           alt="yellow banner"
           width={1200}
           height={1200}
           className="w-full  object-cover absolute  left-0 h-full "
-        />
+        /> */}
       </div>
 
       <Suspense
