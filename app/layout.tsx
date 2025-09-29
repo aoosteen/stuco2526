@@ -29,6 +29,43 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="preload"
+          href="/main/TornPaper.png"
+          as="image"
+          type="image/webp"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          href="../public/main/galleryMainVideo.mp4"
+          as="video"
+          type="video/mp4"
+          fetchPriority="high"
+        />
+           <link
+          rel="preload"
+          href="/main/Text1.png"
+          as="image"
+          type="image/webp"
+          fetchPriority="high"
+        />
+           <link
+          rel="preload"
+          href="/main/Text2.png"
+          as="image"
+          type="image/webp"
+          fetchPriority="high"
+        />
+           <link
+          rel="preload"
+          href="/main/Text3.png"
+          as="image"
+          type="image/webp"
+          fetchPriority="high"
+        />
+      </head>
       <body
         className={` ${merriweather.className} ${neucha.variable} overflow-x-hidden  antialiased bg-[var(--main-bg)]   
            `}
