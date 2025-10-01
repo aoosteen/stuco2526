@@ -22,7 +22,7 @@ const InfiniteScroll = ({ children }: { children: React.ReactNode }) => {
   });
   const [scrollProgress, setScrollProgress] = useState(0);
   const [wraooerProgress, setWrapperProgress] = useState(0);
-  const [direction, setDirection] = useState("down");
+  // const [direction, setDirection] = useState("down");
 
   useEffect(() => {
     window.scrollTo(0, 100);
@@ -42,41 +42,44 @@ const InfiniteScroll = ({ children }: { children: React.ReactNode }) => {
     };
   }, [scrollYProgress]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const wrapperRefRect = wrapperRef.current?.getBoundingClientRect();
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollPosition = window.scrollY;
+  //     const wrapperRefRect = wrapperRef.current?.getBoundingClientRect();
 
-      // if(deviceWidth > 1024){
-      if (wrapperRefRect && wrapperRef.current) {
-        if (
-          scrollPosition >= 100 &&
-          scrollPosition <= wrapperRef.current.clientHeight - 100
-        ) {
-          setDirection("down");
-        } else if (scrollPosition < 100) {
-          setDirection("up");
-        }
-      }
-      // }
-    };
+  //     // if(deviceWidth > 1024){
+  //     if (wrapperRefRect && wrapperRef.current) {
+  //       if (
+  //         scrollPosition >= 100 &&
+  //         scrollPosition <= wrapperRef.current.clientHeight - 100
+  //       ) {
+  //         setDirection("down");
+  //       } else if (scrollPosition < 100) {
+  //         setDirection("up");
+  //       }
+  //     }
+  //     // }
+  //   };
 
-    if(deviceWidth >= 1024){
-      window.addEventListener("scroll", handleScroll);
-    }
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [direction]);
+  //   // if(deviceWidth >= 1024){
+  //     window.addEventListener("scroll", handleScroll);
+  //   // }
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [direction]);
+
   useEffect(() => {
     if (deviceWidth >= 1024) {
-      if (wraooerProgress === 1 && direction === "down") {
+    console.log(wraooerProgress)
+      if (wraooerProgress > 0.99 ) {
+
         window.scrollTo(0, 100);
       }
       const wrapperRefRect = wrapperRef.current?.getBoundingClientRect();
       if (wrapperRefRect) {
-        if (direction === "up" && wraooerProgress === 0) {
-          setDirection("down");
+        if ( wraooerProgress === 0) {
+          // setDirection("down");
           window.scrollTo(
             0,
             document.documentElement.scrollHeight - window.innerHeight - 96

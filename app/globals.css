@@ -172,18 +172,18 @@ h1 {
 
 /* For WebKit browsers (Chrome, Safari, Edge, Opera) */
 html::-webkit-scrollbar {
-  /* display: none;
-  scrollbar-width: none; */
+  display: none;
+  scrollbar-width: none;
 }
 
-/* For Firefox */
+
 html {
-  scrollbar-width: none; /* Hide scrollbar */
+  scrollbar-width: none; 
 }
 
-/* For Internet Explorer and older Edge versions */
+
 html {
-  -ms-overflow-style: none; /* Hide scrollbar */
+  -ms-overflow-style: none; 
   scrollbar-width: none;
 }
 

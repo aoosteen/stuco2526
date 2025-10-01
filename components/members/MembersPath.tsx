@@ -1,23 +1,25 @@
 "use client";
-import { MemberType } from "@/lib/MembersActions";
+import { extendedMembers, MemberType } from "@/lib/MembersActions";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import MembersPolaroid from "./MembersPolaroid";
+import { groupPhotoType } from "@/lib/groupPhotoActions";
+import { urlFor } from "@/sanity/sanityClient";
 
-interface MembersPathProps extends MemberType {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
 const MembersPath = ({
   children,
-  data,
+  membersData,
+  LRData,
+  MajPosData,
+  groupData,
 }: {
   children?: React.ReactNode;
-  data: MembersPathProps[];
+  membersData: extendedMembers[];
+  LRData: groupPhotoType[];
+  MajPosData: groupPhotoType[];
+  groupData: groupPhotoType[];
 }) => {
   const pathRef = useRef(null);
   const [scrollProgress, setScrollProgress] = React.useState(0);
@@ -54,24 +56,6 @@ const MembersPath = ({
     },
   ];
 
-  const testMajPosPhotos = [
-    {
-      src: "/members/majpos/majpos.jpg",
-      className: "-rotate-10",
-    },
-    {
-      src: "/members/majpos/majpos4.jpg",
-      className: "-rotate-6",
-    },
-    {
-      src: "/members/majpos/majpos2.jpg",
-      className: "rotate-8",
-    },
-    {
-      src: "/members/majpos/majpos3.jpg",
-      className: "-rotate-3",
-    },
-  ];
   return (
     <>
       <span ref={svgRef} className="w-screen  block relative">
@@ -104,30 +88,82 @@ const MembersPath = ({
           <foreignObject x={400} y={2000} width={900} height={300}>
             <h1 className="text-9xl">Level Representatives</h1>
           </foreignObject>
-
-          <foreignObject x={50} y={620} width={1250} height={1050}>
-            {testMajPosPhotos.map((photo, index) => (
+          {/* majpos photos */}
+          <foreignObject x={0} y={650} width={1250} height={1050}>
+            <div className="grid grid-cols-3 w-fit -space-y-38">
+              {MajPosData.map((photo, index) => (
+                <div
+                  key={index}
+                  className={`hover:animate-[twitch_1.5s] aspect-[5.6/8.6] transition-all translate-8 scale-80 w-fit h-fit bg-white p-2 shadow-lg ${photo.className}`}
+                  // style={{
+                  //   left: `${120 * (index % 4 ) }px`,
+                  //   top: `${index *30 * (index / 4 + 1)}px`,
+                  //   zIndex: MajPosData.length - index,
+                  // }}
+                >
+                  <Image
+                    width={200}
+                    height={200}
+                    src={urlFor(photo.image).url()}
+                    alt={`Major Position ${index + 1}`}
+                    className="w-full h-full object-cover max-h-80 max-w-60"
+                  />
+                </div>
+              ))}
+            </div>
+          </foreignObject>
+          {/* lr photos */}
+          <foreignObject
+            x={500}
+            y={2250}
+            width={1250}
+            height={1050}
+            className="flex flex-col"
+          >
+            {LRData.map((photo, index) => (
               <div
                 key={index}
-                className={`absolute hover:-translate-y-10 transition-all translate-8 scale-80  bg-white p-2 shadow-lg ${photo.className}`}
+                className={`absolute hover:animate-[twitch_1.5s]  transition-all w-fit max-w-80  translate-8 scale-80  bg-white p-2 shadow-lg ${photo.className}`}
                 style={{
-                  left: `${index * 80}px`,
-                  top: `${index *30}px`,
-                  zIndex: testMajPosPhotos.length - index,
+                  left: `${(index < 5 ? index : index - 5) * 115}px`,
+                  top: `${index * 8}%`,
+                  zIndex: MajPosData.length - index,
                 }}
               >
                 <Image
-                width={200}
-                height={200}
-                  src={photo.src}
-                  alt={`Major Position ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  width={200}
+                  height={200}
+                  src={urlFor(photo.image).url()}
+                  alt={`Level Representative photos ${index + 1}`}
+                  className="w-full h-full object-cover max-h-100 max-w-80 aspect-[5.6/8.6]"
                 />
               </div>
             ))}
           </foreignObject>
-
-          {data.map((member, index) => (
+          {/* group photos */}
+          <foreignObject x={675} y={1600} width={1250} height={1050}>
+            {groupData.slice(0,4).map((photo, index) => (
+              <div
+                key={index}
+                className={`absolute hover:animate-[twitch_1.5s] aspect-[5.6/8.6] transition-all  translate-8 scale-80  bg-white p-2 shadow-lg ${photo.className}`}
+                style={{
+                  left: `${index * 90}px`,
+                  top: `${index * 30}px`,
+                  zIndex: groupData.length - index,
+                }}
+              >
+                <Image
+                  width={200}
+                  height={200}
+                  src={urlFor(photo.image).url()}
+                  alt={`Group photo ${index + 1}`}
+                  className="w-full h-full object-cover  "
+                />
+              </div>
+            ))}
+          </foreignObject>
+          {/* main polaroids */}
+          {membersData.map((member, index) => (
             <foreignObject
               key={member._id}
               x={member.x}
@@ -136,8 +172,10 @@ const MembersPath = ({
               height={member.height}
               className=""
             >
-              <MembersPolaroid member={member} index={index} 
-              polaroidClassName="hover:animate-[twitch_1.5s]"
+              <MembersPolaroid
+                member={member}
+                index={index}
+                polaroidClassName="hover:animate-[twitch_1.5s] z-100"
               />
             </foreignObject>
           ))}
@@ -146,6 +184,5 @@ const MembersPath = ({
     </>
   );
 };
-
 
 export default MembersPath;
