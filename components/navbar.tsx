@@ -210,15 +210,15 @@ const Navbar = ({ className }: { className?: string }) => {
                     }
                   />
                 </SheetTrigger>
-                <SheetContent className=" p-8 bg-transparent bg-no-repeat border-none shadow-none ">
-                  <Image
+                <SheetContent className=" p-8 bg-transparent bg-[url(../public/main/TornPaper.png)]  bg-no-repeat bg-cover border-none shadow-none ">
+                  {/* <Image
                     src={"/main/TornPaper.png"}
                     width={400}
                     height={800}
                     alt="Torn Paper background"
                     className="absolute top-0 right-0 h-screen object-cover scale-x-90 origin-right  -z-2 "
                     priority
-                  />
+                  /> */}
                   <SheetTitle className="text-right"></SheetTitle>
                   <div className="flex flex-col gap-8 w-full h-full items-end mt-24">
                     {links.map((link) => {
@@ -291,15 +291,15 @@ export const NavBlogSheet = () => {
           stroke="#fff"
         />
       </SheetTrigger>
-      <SheetContent className=" p-8 bg-transparent bg-no-repeat border-none shadow-none">
-        <Image
+      <SheetContent className=" p-8 bg-transparent bg-[url(../public/main/TornPaper.png)] bg-contain bg-no-repeat border-none shadow-none">
+        {/* <Image
           src={"/main/TornPaper.png"}
           width={400}
           height={800}
           alt="Torn Paper background"
-          className="absolute top-0 right-0 h-screen object-cover -z-2"
+          className="absolute  h-screen object-contain -z-2"
           priority
-        />
+        /> */}
         <SheetTitle className="text-right"></SheetTitle>
         <div className="flex flex-col gap-8 w-full h-full items-end mt-24">
           {links.map((link) => {
