@@ -60,7 +60,6 @@ const GalleryContainer = ({
       }
     }
     if (term2 ) {
-      console.log(term2.getBoundingClientRect());
       if (term2.getBoundingClientRect().left <= 0 || term2.getBoundingClientRect().right <= window.innerWidth) {
         setActive("term2");
       }

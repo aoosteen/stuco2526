@@ -71,7 +71,6 @@ const InfiniteScroll = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (deviceWidth >= 1024) {
-    console.log(wraooerProgress)
       if (wraooerProgress > 0.99 ) {
 
         window.scrollTo(0, 100);

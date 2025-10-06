@@ -5,7 +5,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="notes-bg ">
      
-      {/* <div></div> */}
+      <div></div>
       <div className="md:bg-[url(../public/members/MembersDoodleBg.webp)] bg-size-[105%] bg-center ">
         <Navbar />
         {children}
