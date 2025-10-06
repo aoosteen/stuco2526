@@ -89,7 +89,7 @@ const Navbar = ({ className }: { className?: string }) => {
             : "opacity-0 pointer-events-none"
           : "opacity-100",
         pathname.includes("/gallery/")
-          ? "bg-[url(/gallery/GalleryBanner.png)] bg-cover"
+          ? "bg-[url(/gallery/GalleryBanner.webp)] bg-cover"
           : "",
         deviceWidth > 1024 ? "" : "opacity-100 pointer-events-auto",
         className
@@ -291,7 +291,7 @@ export const NavBlogSheet = () => {
           stroke="#fff"
         />
       </SheetTrigger>
-      <SheetContent className=" p-8 bg-transparent bg-[url(../public/main/TornPaper.png)] bg-contain bg-no-repeat border-none shadow-none">
+      <SheetContent className=" p-8  bg-transparent bg-[url(../public/main/TornPaper.png)] bg-cover bg-no-repeat border-none shadow-none">
         {/* <Image
           src={"/main/TornPaper.png"}
           width={400}

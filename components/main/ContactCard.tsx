@@ -111,34 +111,45 @@ const ContactCard = () => {
             </div>
           </FlipCardFrontFace>
           <FlipCardBackFace>
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-full bg-[url(../public/main/StucoContactCard.webp)] bg-cover bg-repeat-round">
               <X
                 size={24}
                 className="absolute top-8 right-8 z-2 cursor-pointer"
                 onClick={() => setFlip(!flip)}
               />
-              <Image
+              {/* <Image
                 priority
                 src={"/main/StucoContactCard.png"}
                 alt="Stuco Contact Card"
                 fill
                 className="object-fixed w-full h-full "
-              />
-              <div className="absolute top-0 left-0 p-8 sm:p-16   flex flex-col gap-8 h-full">
+              /> */}
+              <div className=" left-0 p-8 sm:p-16   flex flex-col gap-8 h-full">
                 <h1 className="text-4xl md:text-6xl text-yellow-900">
                   Leave a message
                 </h1>
                 <div className="w-full h-full relative">
-                  <Image
+                  {/* <Image
                     src={"/main/ContactTextArea.png"}
                     alt="textarea border"
                     width={500}
                     height={500}
                     className="object-fixed w-full h-full pb-32"
-                  />
-                  <form action={updateSheetsHandler}>
+                  /> */}
+                 
+                  <div className="left-0 w-full max-w-full   py-8 ">
+                    <Textarea
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Type your message here..."
+                      className="outline-none h-60 placeholder:text-xl md:text-xl 
+                    bg-[url(../public/main/ContactTextArea.png)] bg-cover bg-repeat-round p-8 
+                      "
+                    />
+                  </div>
+                   <form action={updateSheetsHandler}>
                     <Button
-                      className="absolute bottom-16 w-fit"
+                      className="w-fit"
                       variant={"yellow"}
                       type="submit"
                       disabled={message === "" || isPending}
@@ -146,14 +157,6 @@ const ContactCard = () => {
                       {isPending ? "Submitting..." : "Submit"}
                     </Button>{" "}
                   </form>
-                  <div className="absolute top-0 left-0 w-full max-w-full  py-8 px-4 sm:px-8 ">
-                    <Textarea
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Type your message here..."
-                      className="outline-none h-full placeholder:text-xl md:text-xl "
-                    />
-                  </div>
                 </div>
               </div>
             </div>

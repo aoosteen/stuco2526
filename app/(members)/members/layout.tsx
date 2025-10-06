@@ -4,7 +4,14 @@ import Script from "next/script";
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="notes-bg ">
-      <Script id="preload-member-images">
+     
+      {/* <div></div> */}
+      <div className="md:bg-[url(../public/members/MembersDoodleBg.webp)] bg-size-[105%] bg-center ">
+        <Navbar />
+        {children}
+      </div>
+
+       <Script id="preload-member-images">
         {`
           // This script runs on the client side to preload images
           (function() {
@@ -26,10 +33,6 @@ export default function layout({ children }: { children: React.ReactNode }) {
           })();
         `}
       </Script>
-      <div className="md:bg-[url(../public/members/doodle.webp)] bg-contain   ">
-        <Navbar />
-        {children}
-      </div>
     </div>
   );
 }

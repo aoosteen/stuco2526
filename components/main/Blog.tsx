@@ -19,13 +19,13 @@ const Blog = async () => {
       ratio: "1214/1351",
       src: "/blogs/BlogPaperSmall.png",
       button: false,
-      className: " z-2 h-[85%] ",
+      className: " z-2 h-fit max-h-[85%] ",
     },
     {
       ratio: "1214/1351",
       src: "/blogs/BlogPaperSmall.png",
       button: false,
-      className: " h-[85%]  ",
+      className: " h-fit max-h-[85%]  ",
     },
   ];
   return (
@@ -77,6 +77,8 @@ const Blog = async () => {
               button={presets[index].button}
               className={presets[index].className}
               data={blog}
+              contentClassName="w-[80%] mx-auto "
+              bgClassName=""
             />
           );
         })}

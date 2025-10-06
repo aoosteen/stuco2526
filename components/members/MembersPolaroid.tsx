@@ -73,7 +73,7 @@ const MembersPolaroid = ({
             {member.events?.length > 4 && (
               <HoverCard openDelay={200} closeDelay={100} >
                 <HoverCardTrigger className="" asChild>
-                  <p className="text-sm  italic hover:underline ">and more...</p>
+                  <p className="text-sm  italic hover:underline w-fit">and more...</p>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-48" align="start"  hideWhenDetached >
                   <ul className="list-disc">

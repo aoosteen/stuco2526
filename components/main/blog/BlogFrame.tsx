@@ -76,30 +76,32 @@ const BlogFrame = ({
   return (
     <div
       className={cn(
-        "relative hidden h-full  shadow-sm sm:block bg-contain  blogFrame  ",
-        className
+        " hidden h-full w-full  shadow-sm sm:block   bg-repeat-round bg-cover  ",
+        className,
+        rotateState
       )}
       style={{
-        // backgroundImage: `url(${src})`,
-        backgroundRepeat: "no-repeat",
-        aspectRatio: ratio,
-        backgroundSize: "cover",
+        backgroundImage: `url(${src})`,
+        // backgroundRepeat: "no-repeat",
+        // aspectRatio: ratio,
+        // backgroundSize: "cover",
       }}
     >
-      <Image
+      {/* <Image
         src={src}
         alt="blog paper"
-        height={500}
-        width={500}
+        height={1000}
+        width={1000}
         priority
-        className={cn("object-cover w-full ", rotateState, bgClassName)}
-      />
+        className={cn("  absolute w-full h-full", rotateState, bgClassName,'bg-red-200 ')}
+      /> */}
 
       <div
         className={cn(
-          "p-8  absolute top-0 left-0  overflow-hidden",
+          "py-8  overflow-hidden",
           headerSrc ? "bottom-12" : "",
-          contentClassName
+          contentClassName,
+          rotateState === "rotate-0" ? "rotate-0" : "rotate-180"
         )}
         onMouseOver={() => setOver(true)}
         onMouseLeave={() => setOver(false)}
@@ -128,7 +130,7 @@ const BlogFrame = ({
               )}
               {showTags && (
                 <div className="flex gap-2 mt-4 flex-wrap">
-                  {data.tags.slice(0, 5).map((tag) => (
+                  {data.tags.map((tag) => (
                     <Badge key={tag} variant={"blue"}>
                       <p className="!text-sm capitalize">{tag}</p>
                     </Badge>
@@ -136,10 +138,10 @@ const BlogFrame = ({
                 </div>
               )}
               <div className="flex flex-col gap-1.5 ">
-                <h1 className="text-sky-800 text-2xl font-normal line-clamp-2">
+                <h1 className="text-sky-800 text-2xl font-normal ">
                   {data.title}
                 </h1>
-                <p className="capitalize text-sky-800 text-sm line-clamp-2">
+                <p className="capitalize text-sky-800 text-sm ">
                   By {data.author}
                 </p>
                 {showDate && (
@@ -158,27 +160,31 @@ const BlogFrame = ({
               />
               <p
                 className={cn(
-                  "text-sky-800 line-clamp-10 md:line-clamp-7",
-                  headerSrc ? "lg:line-clamp-5" : "lg:line-clamp-7"
+                  "text-sky-800 "
+                  // headerSrc ? "lg:line-clamp-5" : "lg:line-clamp-7"
                 )}
               >
                 {disableScramble
                   ? data.description
                   : scrambleWord(data.description)}
               </p>
-              <div className="flex justify-center md:mt-8 lg:mt-3 xl:mt-12">
                 {button && (
+              <div className="flex justify-center md:mt-8 lg:mt-3 ">
                   <Link href={`/blog/${data._id}`}>
                     <Button variant={"blueOutline"} className="">
                       Read article
                     </Button>
                   </Link>
-                )}
               </div>
+                )}
             </motion.div>
           )}
         </AnimatePresence>
-        {!data && <p className="text-center">Select a blog to preview...</p>}
+        {!data && (
+          <div className="w-100 h-120 flex justify-center  items-center">
+            <p className=" -translate-1/4">Select a blog to preview...</p>
+          </div>
+        )}
       </div>
     </div>
   );

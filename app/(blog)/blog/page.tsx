@@ -6,6 +6,7 @@ import Link from "next/link";
 import React from "react";
 import { FilterProps } from "@/lib/types";
 import BlogItems from "@/components/blog/BlogItems";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const page = async ({
   searchParams,
@@ -15,8 +16,10 @@ const page = async ({
   const sp = await searchParams;
   return (
     <div className="bg-[var(--main-bg)]   flex flex-col xl:flex-row xl:h-fit">
-      <aside className=" hidden  w-[600px] sticky top-0 h-screen  shrink-0 xl:flex xl:flex-col gap-0 justify-start bg-[url(/blogs/VerticalBanner.png)] bg-cover bg-no-repeat p-12 pr-32 ">
-        <div className="flex justify-between items-center mb-6">
+      <aside className=" hidden  w-1/3 shrink-0 xl:flex xl:flex-col gap-0 justify-start bg-[url(/blogs/VerticalBanner.webp)] bg-size-[100%]  bg-repeat-y    ">
+      {/* <div className="sticky"> */}
+
+        <div className="flex justify-between items-center pl-12 pr-20 sticky top-0  pt-12 z-100">
           <div className=" w-fit p-2 rounded-full bg-white  ">
             <Link href={"/"}>
               <Image
@@ -31,16 +34,30 @@ const page = async ({
           </div>
           <NavBlogSheet />
         </div>
-        <div className="z-10 flex flex-col gap-4 items-start shrink-0 ">
-          <h1 className="text-5xl text-white text-start">Blog</h1>
-          <p className="text-white text-start">
-            Delve into YOUR perspectives in this blog space created by students,
-            for students. Come read, reflect, or even write—allow your ideas to
-            thrive!
-          </p>
-        </div>
-        <div className="scale-75 -translate-y-1/10">
-          <BlogPreview />
+        {/* <div className=""> */}
+          <div className="z-10  flex flex-col gap-4 items-start shrink-0 p-12 pr-32 mt-6 pt-0 pb-0">
+            <h1 className="text-5xl text-white text-start">Blog</h1>
+            <p className="text-white text-start">
+              Delve into YOUR perspectives in this blog space created by
+              students, for students. Come read, reflect, or even write—allow
+              your ideas to thrive!
+            </p>
+          </div>
+          <div className="sticky top-20 flex justify-center ">
+            <svg
+              className=" "
+              viewBox="0 0 436 626"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              width={436}
+              height={576}
+            >
+              <foreignObject x={0} y={-25} width={436} height={676}>
+                <BlogPreview />
+              </foreignObject>
+            </svg>
+          {/* </div> */}
+      {/* </div> */}
         </div>
       </aside>
       <div className="relative w-screen  h-[55vh]  bg-contain  flex flex-col xl:hidden justify-center ">
@@ -64,7 +81,10 @@ const page = async ({
       </div>
       <div className="p-6 md:p-12 pt-0 md:pt-0  w-full">
         <BlogList>
+          {/* <ScrollArea className="h-[70vh]" > */}
           <BlogItems searchParams={sp} />
+
+          {/* </ScrollArea> */}
         </BlogList>
       </div>
     </div>

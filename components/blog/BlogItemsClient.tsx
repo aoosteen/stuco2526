@@ -55,7 +55,7 @@ const BlogItemsClient = ({ data }: { data: BlogType[] }) => {
         ease: "easeInOut",
         duration: 0.3,
       }}
-      className="py-4 flex flex-col gap-4 min-h-[60vh]"
+      className="pt-4 flex flex-col gap-4 "
       ref={containerRef}
     >
       {blogs.map((blog: BlogType, index) => {

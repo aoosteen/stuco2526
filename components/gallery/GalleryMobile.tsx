@@ -4,6 +4,8 @@ import Image from "next/image";
 import { GalleryType } from "@/lib/GalleryActions";
 import format from "date-fns/format";
 import GalleryMobileButtons from "./GalleryMobileButtons";
+import { urlFor } from "@/sanity/sanityClient";
+import Link from "next/link";
 
 export function GalleryMobile({
   terms,
@@ -97,15 +99,15 @@ const GalleryItemMobile = ({
         index % 2 === 0 ? "items-start" : "items-end"
       )}
     >
-      <div className="">
+      <Link href={`/gallery/${gal._id}`}>
         <Image
-          src={"/testimg.png"}
+          src={urlFor(gal.highlights[0]).url()}
           alt={"Blog img"}
           width={300}
           height={100}
           className="    object-cover w-auto "
         />
-      </div>
+      </Link>
       {/* <div className="w-10 h-10 rounded-full bg-orange-600 opacity-50" /> */}
       <div className="min-h-20  text-yellow-600 ">
         <div
@@ -115,7 +117,9 @@ const GalleryItemMobile = ({
           )}
         >
           <p>{format(new Date(gal.date), "dd MMMM yyyy")}</p>
-          <h1 className="text-3xl">{gal.title}</h1>
+          <Link href={`/gallery/${gal._id}`}>
+            <h1 className="text-3xl hover:underline">{gal.title}</h1>
+          </Link>
           <p
             className={cn(
               "text-yellow-900 mt-4 ",
