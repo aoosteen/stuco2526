@@ -54,7 +54,7 @@ const ContactCard = () => {
             >
               <Image
                 priority
-                src={"/main/StucoContactCard.png"}
+                src={"/main/StucoContactCard.webp"}
                 alt="Stuco Contact Card"
                 fill
                 className=" w-full h-full "
