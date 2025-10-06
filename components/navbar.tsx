@@ -153,6 +153,7 @@ const Navbar = ({ className }: { className?: string }) => {
                   <Link
                     href={link.href}
                     // key={link.name}
+                    scroll={true}
                     className={cn(
                       "  transition-colors font-thin ",
                       pathname !== "/"
@@ -230,7 +231,7 @@ const Navbar = ({ className }: { className?: string }) => {
                         >
                           <Link
                             href={link.href}
-                            // scroll={false}
+                            scroll={true}
                             // key={link.name}
                             className={cn(
                               `${link.hoverColor} transition-colors font-thin text-3xl `,

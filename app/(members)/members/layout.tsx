@@ -10,13 +10,6 @@ export default function layout({ children }: { children: React.ReactNode }) {
         <Navbar />
         {children}
       </div>
-     <Script id="scroll-top" strategy="afterInteractive">
-        {`
-          if (typeof window !== 'undefined') {
-            window.scrollTo(0, 0);
-          }
-        `}
-      </Script>
        <Script id="preload-member-images">
         {`
           // This script runs on the client side to preload images

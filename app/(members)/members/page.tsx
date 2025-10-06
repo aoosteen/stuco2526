@@ -2,7 +2,6 @@ import MembersPath from "@/components/members/MembersPath";
 import MembersPolaroid from "@/components/members/MembersPolaroid";
 import { getGroupPhotos, getLRPhotos, getMajPosPhotos } from "@/lib/groupPhotoActions";
 import { getMembers } from "@/lib/MembersActions";
-import Image from "next/image";
 import React from "react";
 
 const page = async () => {
