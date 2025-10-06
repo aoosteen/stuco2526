@@ -37,7 +37,9 @@ const MembersPath = ({
     return () => unsubscribe();
   }, [scrollYProgress]);
 
- 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
@@ -125,7 +127,7 @@ const MembersPath = ({
           </foreignObject>
           {/* group photos */}
           <foreignObject x={675} y={1600} width={1250} height={1050}>
-            {groupData.slice(0,4).map((photo, index) => (
+            {groupData.slice(0, 4).map((photo, index) => (
               <div
                 key={index}
                 className={`absolute hover:animate-[twitch_1.5s] aspect-[5.6/8.6] transition-all  translate-8 scale-80  bg-white p-2 shadow-lg ${photo.className}`}

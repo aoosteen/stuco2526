@@ -69,10 +69,10 @@ export function LayoutTransition({
         exit={exit}
         transition={transition}
       >
-        {/* <ReactLenis
+        <ReactLenis
           root
           className="scrollbar"
-        /> */}
+        />
 
         <FrozenRouter>{children}</FrozenRouter>
       </motion.div>
