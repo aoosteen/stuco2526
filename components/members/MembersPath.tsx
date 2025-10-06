@@ -37,24 +37,7 @@ const MembersPath = ({
     return () => unsubscribe();
   }, [scrollYProgress]);
 
-  const testLrPhotos = [
-    {
-      src: "/members/LR/lr.jpg",
-      className: "",
-    },
-    {
-      src: "/members/LR/lr1.jpg",
-      className: "-rotate-6",
-    },
-    {
-      src: "/members/LR/lr2.jpg",
-      className: "rotate-6",
-    },
-    {
-      src: "/members/LR/lr3.jpg",
-      className: "-rotate-3",
-    },
-  ];
+ 
 
   return (
     <>
