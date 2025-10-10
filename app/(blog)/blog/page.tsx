@@ -15,8 +15,8 @@ const page = async ({
 }) => {
   const sp = await searchParams;
   return (
-    <div className="bg-[var(--main-bg)]   flex flex-col xl:flex-row xl:h-fit">
-      <aside className=" hidden  w-1/3 shrink-0 xl:flex xl:flex-col gap-0 justify-start bg-[url(/blogs/VerticalBanner.webp)] bg-size-[100%]  bg-repeat-y    ">
+    <div className="bg-[var(--main-bg)]   flex flex-col xl:flex-row ">
+      <aside className=" hidden  w-1/3 shrink-0 xl:flex xl:flex-col gap-0 justify-start bg-[url(/blogs/VerticalBanner.webp)] bg-size-[100%]     ">
       {/* <div className="sticky"> */}
 
         <div className="flex justify-between items-center pl-12 pr-20 sticky top-0  pt-12 z-100">
@@ -79,7 +79,7 @@ const page = async ({
           className="w-full  object-cover absolute  left-0 h-full "
         /> */}
       </div>
-      <div className="p-6 md:p-12 pt-0 md:pt-0  w-full">
+      <div className="p-6 md:p-12 pt-0 md:pt-0  w-full min-h-screen">
         <BlogList>
           {/* <ScrollArea className="h-[70vh]" > */}
           <BlogItems searchParams={sp} />
