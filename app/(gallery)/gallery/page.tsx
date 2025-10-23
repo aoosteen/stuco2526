@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import Image from "next/image";
 
 import GalleryContainer from "@/components/gallery/GalleryContainer";
 import { GalleryMobile } from "@/components/gallery/GalleryMobile";

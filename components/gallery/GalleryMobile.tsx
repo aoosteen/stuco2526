@@ -92,6 +92,7 @@ const GalleryItemMobile = ({
   index: number;
   gal: GalleryType;
 }) => {
+
   return (
     <div
       className={cn(
@@ -99,15 +100,17 @@ const GalleryItemMobile = ({
         index % 2 === 0 ? "items-start" : "items-end"
       )}
     >
+      {Object.keys(gal).includes('highlights') && (
       <Link href={`/gallery/${gal._id}`}>
         <Image
-          src={urlFor(gal.highlights[0]).url()}
+          src={urlFor(gal.highlights[0]).url()} 
           alt={"Blog img"}
           width={300}
           height={100}
           className="    object-cover w-auto "
         />
       </Link>
+      )}
       {/* <div className="w-10 h-10 rounded-full bg-orange-600 opacity-50" /> */}
       <div className="min-h-20  text-yellow-600 ">
         <div

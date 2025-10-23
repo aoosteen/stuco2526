@@ -30,6 +30,7 @@ export const GalleryItem = ({
                 index % 2 === 0 ? "bottom-12  " : "top-12"
               )}
             >
+              {Object.keys(gal).includes("highlights") && (
               <Link href={`/gallery/${gal._id}`} scroll={false}>
                 <div className="relative  ">
                   <Image
@@ -48,6 +49,7 @@ export const GalleryItem = ({
                   />
                 </div>
               </Link>
+              )}
             </div>
           </div>
           {/* <Image src={urlFor(gal.specialImage).url()} alt={""} width={40} height={40} className="w-10 h-10 
