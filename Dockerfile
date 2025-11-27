@@ -8,13 +8,21 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies
+# Install app dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
+
+# Install Sanity Studio dependencies with pnpm
+WORKDIR /app/sanity
+COPY sanity/package.json sanity/pnpm-lock.yaml ./
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
+
+WORKDIR /app
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/sanity/node_modules ./sanity/node_modules
 COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
