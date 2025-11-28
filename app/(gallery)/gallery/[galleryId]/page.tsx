@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { getGalllery } from "@/lib/GalleryActions";
 import { cn } from "@/lib/utils";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import GalleryImagesList from "@/components/gallery/GalleryImagesList";
 const page = async ({
   params,
@@ -104,18 +104,21 @@ const page = async ({
                       "text-yellow-600  font-bold   border-t-2 border-b-2 border-t-yellow-500 border-b-yellow-500 first:border-l-2 border-l-yellow-500 last:border-r-2 border-r-yellow-500"
                   )}
                 >
-                  <div className="  w-full text-center p-1 whitespace-nowrap">{cat}</div>
+                  <div className="  w-full text-center p-1 whitespace-nowrap">
+                    {cat}
+                  </div>
                 </Link>
               ))}
             </div>
           </div>
         </div>
       </section>
-      <div className=" min-h-[20vh]  lg:h-auto w-full relative bg-orange-100 grid  gap-8  sm:p-16 
+      <div
+        className=" min-h-[20vh]  lg:h-auto w-full relative bg-orange-100 grid  gap-8  sm:p-16 
 
       
-      ">
-       
+      "
+      >
         <GalleryImagesList data={data} />
       </div>
     </div>

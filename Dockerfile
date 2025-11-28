@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Install app dependencies
 COPY package.json package-lock.json ./
-RUN npm ci
+
 
 # Install Sanity Studio dependencies with pnpm
 WORKDIR /app/sanity
@@ -18,11 +18,16 @@ COPY sanity/package.json sanity/pnpm-lock.yaml ./
 RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
 WORKDIR /app
+
+# Use npm install instead of npm ci since lock file may be out of sync
+# For production, regenerate package-lock.json with: npm install --package-lock-only
+RUN npm install
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/sanity/node_modules ./sanity/node_modules
+# Don't copy sanity/node_modules during build to avoid type conflicts
+# The Next.js app only needs sanityClient.ts, which uses packages from root node_modules
 COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.

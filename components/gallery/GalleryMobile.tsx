@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { GalleryType } from "@/lib/GalleryActions";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import GalleryMobileButtons from "./GalleryMobileButtons";
 import { urlFor } from "@/sanity/sanityClient";
 import Link from "next/link";

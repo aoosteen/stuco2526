@@ -3,7 +3,7 @@ import React from "react";
 
 import Image from "next/image";
 import { GalleryType } from "@/lib/GalleryActions";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import { urlFor } from "@/sanity/sanityClient";
 import Link from "next/link";
 
