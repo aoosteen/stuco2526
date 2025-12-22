@@ -28,8 +28,8 @@ const page = async ({
   const currentTab = sp.tab ?? "Highlights";
 
   return (
-    <div className="px-12 pb-8 pt-30 flex lg:flex-row flex-col gap-8 lg:gap-16 h-full">
-      <section className="flex flex-col lg:w-[400px] shrink-0 h-full lg:sticky lg:top-30">
+    <div className="px-12 pb-8 pt-40 flex lg:flex-row flex-col gap-8 lg:gap-16 h-full">
+      <section className="flex flex-col lg:w-[400px] shrink-0 h-full lg:sticky lg:top-40">
         <Link
           className="text-yellow-600 flex items-center text-2xl -translate-x-7 lg:-translate-x-0"
           href={"/gallery"}
@@ -113,12 +113,7 @@ const page = async ({
           </div>
         </div>
       </section>
-      <div
-        className=" min-h-[20vh]  lg:h-auto w-full relative bg-orange-100 grid  gap-8  sm:p-16 
-
-      
-      "
-      >
+      <div className=" min-h-[20vh]  lg:h-auto w-full relative bg-orange-100 grid  gap-8  sm:p-16 ">
         <GalleryImagesList data={data} />
       </div>
     </div>
