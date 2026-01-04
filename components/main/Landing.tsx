@@ -1,6 +1,11 @@
 "use client";
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { useScroll, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import LandingVideo from "./LandingVideo";
@@ -18,6 +23,8 @@ const Landing = () => {
   const [mounted, setMounted] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [step, setStep] = useState(0);
+
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -139,34 +146,43 @@ const Landing = () => {
 
   // tv behind, zoom out to the left aja
   return (
-    <div className="w-screen relative  ">
-      <div
-        className={cn("h-[500vh] relative  hidden lg:block ")}
-        ref={containerRef}
-      >
+    <>
+      <AnimatePresence mode="popLayout">
+        {!loaded && (
+          <motion.div
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 1 }}
+            className="w-screen h-screen bg-(--main-bg) sticky top-0 left-0 z-999 flex items-center justify-center "
+          >
+            <p>Loading...</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="w-screen relative  ">
         <div
-          style={{
-            scale: transformValue < 1 ? transformValue : 1,
-            transform:
-              transformValue < 1
-                ? `translateY(${(1 - transformValue) * -170}px)`
-                : "translateX(0%)",
-          }}
-          className="sticky text-center aspect-video text-7xl  w-full top-0 left-0 flex justify-center items-center gap-4 h-screen  z-20 mx-auto
+          className={cn("h-[500vh] relative  hidden lg:block ")}
+          ref={containerRef}
+        >
+          <div
+            style={{
+              scale: transformValue < 1 ? transformValue : 1,
+              transform:
+                transformValue < 1
+                  ? `translateY(${(1 - transformValue) * -170}px)`
+                  : "translateX(0%)",
+            }}
+            className="sticky text-center aspect-video text-7xl  w-full top-0 left-0 flex justify-center items-center gap-4 h-screen  z-20 mx-auto
 
            bg-center "
-        >
-          <Suspense
-            fallback={
-              <div className="w-screen h-screen bg-[var(--main-bg)] flex items-center justify-center ">
-                <p>Loading...</p>
-              </div>
-            }
           >
-            <LandingVideo prog={scrollProgress} className="shadow-xl" />
-          </Suspense>
+            <LandingVideo
+              prog={scrollProgress}
+              className="shadow-xl"
+              onLoaded={() => setLoaded(true)}
+            />
 
-          {/* <Image
+            {/* <Image
           className=" w-full h-full object-contain scale-x-180 scale-y-145   "
           src={"/main/TV.png"}
           fill
@@ -178,7 +194,7 @@ const Landing = () => {
           }
         /> */}
 
-          {/* <Image
+            {/* <Image
             src={
               titles.find(
                 (title) =>
@@ -198,51 +214,20 @@ const Landing = () => {
             )}
           /> */}
 
-          {titles[step].component}
-        </div>
-        <div
-          className={cn(
-            "sticky mx-auto top-0 left-0 h-screen w-screen  ",
-            transformValue < 0.53 ? "z-30" : "z-10"
-          )}
-        >
-          <Image
-            className="  hidden lg:block  lg:px-[12vw]  aspect-video "
-            src={"/main/TV2.webp"}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority
-            alt="tv"
-            style={
-              {
-                // transform: `scaleX(${transformValue}) scaleY(${transformValue})`,
-              }
-            }
-          />
-        </div>
-      </div>
-
-      {/* mobile  */}
-      <div className="relative lg:hidden overflow-hidden   ">
-        <div
-          className={cn(
-            "    w-screen  flex flex-col items-center justify-center -translate-y-16 mt-24"
-          )}
-        >
-          <Image
-            width={400}
-            height={100}
-            src={"/main/Text3.png"}
-            alt="Welcome to JNY Student Council"
-            className=" sm:scale-125 md:scale-150"
-          />
-          <div className="relative w-screen    ">
-            <LandingVideo className=" block object-contain scale-88 static  " />
+            {titles[step].component}
+          </div>
+          <div
+            className={cn(
+              "sticky mx-auto top-0  left-0 h-screen w-screen  mt-10   ",
+              transformValue < 0.53 ? "z-30" : "z-10"
+            )}
+          >
             <Image
-              className="  object-contain   w-full h-full  scale-135 aspect-video max-w-screen "
+              className="  hidden lg:block w-fit  lg:scale-x-85 lg:-translate-x-1.5 xl:scale-x-80 aspect-video  -translate-y-2  "
               src={"/main/TV2.webp"}
-              priority
               fill
+              // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority
               alt="tv"
               style={
                 {
@@ -252,8 +237,40 @@ const Landing = () => {
             />
           </div>
         </div>
+
+        {/* mobile  */}
+        <div className="relative lg:hidden overflow-hidden   ">
+          <div
+            className={cn(
+              "    w-screen  flex flex-col items-center justify-center -translate-y-16 mt-24"
+            )}
+          >
+            <Image
+              width={400}
+              height={100}
+              src={"/main/Text3.png"}
+              alt="Welcome to JNY Student Council"
+              className=" sm:scale-125 md:scale-150"
+            />
+            <div className="relative w-screen    ">
+              <LandingVideo className=" block object-contain scale-88 static  " />
+              <Image
+                className="  object-contain   w-full h-full  scale-135 aspect-video max-w-screen "
+                src={"/main/TV2.webp"}
+                priority
+                fill
+                alt="tv"
+                style={
+                  {
+                    // transform: `scaleX(${transformValue}) scaleY(${transformValue})`,
+                  }
+                }
+              />
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

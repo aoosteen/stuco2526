@@ -1,10 +1,5 @@
 "use client";
-import React, {
-  Suspense,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import { Button } from "../ui/button";
 import {
@@ -75,11 +70,7 @@ const BlogList = ({ children }: { children?: React.ReactNode }) => {
     if (!tabsRef) return;
     const handleScroll = () => {
       if (tabsRef.current) {
-        const {
-          scrollLeft,
-          scrollWidth,
-          clientWidth,
-        } = tabsRef.current;
+        const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
         const progress =
           (Math.ceil(scrollLeft) / (scrollWidth - clientWidth)) * 100;
         setTabScrollProg(isNaN(progress) ? 0 : Math.ceil(progress)); // Handle division by zero if content fit
@@ -270,7 +261,6 @@ const SortSelect = ({ className }: { className?: string }) => {
     </Select>
   );
 };
-
 
 // const AlphabeticalSortSelect = ({className}:{className?:string}) => {
 //   const searchParams = useSearchParams();

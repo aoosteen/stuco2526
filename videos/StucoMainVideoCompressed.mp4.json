@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "originalFilePath": "videos/StucoMainVideoCompressed.mp4",
+  "provider": "mux",
+  "providerMetadata": {
+    "mux": {
+      "uploadId": "WtAQmbh1C13W022qN86v99syFOto7u7TEsPzAboxry7I",
+      "assetId": "D93iCYIvJxnlyGB24bj83QVeTzClSJzaeabLNUy8NRc",
+      "playbackId": "WriLHXHbs0201y4I001PkKL014slxvHbfVdyd4iwYuIDekE"
+    }
+  },
+  "createdAt": 1767545816423,
+  "updatedAt": 1767545937680,
+  "size": 9624059,
+  "sources": [
+    {
+      "src": "https://stream.mux.com/WriLHXHbs0201y4I001PkKL014slxvHbfVdyd4iwYuIDekE.m3u8",
+      "type": "application/x-mpegURL"
+    }
+  ],
+  "poster": "https://image.mux.com/WriLHXHbs0201y4I001PkKL014slxvHbfVdyd4iwYuIDekE/thumbnail.webp",
+  "blurDataURL": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAwAgCdASoQAAkAAQAcJYwCdAYrxc9vcC/wAAD++TBv5rtcvioLh0nUMjfyGRTc6GVw1CnzvzhOVTYeh+KPafykFs7kWI1vPuSZIK4BGrfEWDUBcnVkWLRj/5S9kWnzSpY6iyCulBEjWUE/xmxoc9YI5Gv2HAAA"
+}
