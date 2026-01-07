@@ -52,7 +52,7 @@ export const getAllGalleryTerms = async () => {
 };
 
 export const getAllGaleries = async () => {
-  const query = `*[_type == 'gallery']| order(_createdAt desc)`;
+  const query = `*[_type == 'gallery']| order(date asc)`;
   const data = await client.fetch(
     query,
     {},

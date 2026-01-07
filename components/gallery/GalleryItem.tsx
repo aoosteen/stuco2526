@@ -15,7 +15,7 @@ export const GalleryItem = ({
   gal: GalleryType;
 }) => {
   return (
-    <div className="   h-full  flex gap-40 py-4  z-100 ">
+    <div className="   h-full  flex gap-40 py-4  z-100 min-w-100">
       <div className="w-80 h-full z-2   flex justify-start items-center ">
         <div
           className={cn(
@@ -38,14 +38,14 @@ export const GalleryItem = ({
                     alt={"Blog img"}
                     width={150}
                     height={150}
-                    className=" absolute rotate-10   object-cover z-1 "
+                    className=" absolute rotate-10 scale-120   object-cover z-1 "
                   />
                   <Image
                     src={urlFor(gal.highlights[1]).url()}
                     alt={"Blog img"}
                     width={150}
                     height={150}
-                    className=" absolute -rotate-10 object-cover"
+                    className=" absolute left-22 scale-120  -rotate-10 object-cover"
                   />
                 </div>
               </Link>
@@ -54,8 +54,8 @@ export const GalleryItem = ({
           </div>
           {/* <Image src={urlFor(gal.specialImage).url()} alt={""} width={40} height={40} className="w-10 h-10 
            object-contain" /> */}
-          <div className="bg-[#FFC21A] rounded-full size-10 flex justify-center items-center ">
-            {gal.specialImage}
+          <div className="bg-[#bca25b] rounded-full size-10 text-xl flex justify-center items-center ">
+            <span>{gal.specialImage}</span>
           </div>
           <div className="min-h-20 min-w-100 relative text-yellow-600 ">
             <div
@@ -72,7 +72,7 @@ export const GalleryItem = ({
                   {gal.title}
                 </h1>
               </Link>
-              <p className="text-yellow-900 mt-4 line-clamp-5">
+              <p className="text-yellow-900 mt-4 line-clamp-7">
                 {gal.description}
               </p>
             </div>

@@ -44,10 +44,9 @@ export default {
       validation: (Rule: any) => [
         Rule.required().warning('Special Emoji is required'),
         Rule.regex(
-          /^(\p{Extended_Pictographic}(?:\u200d\p{Extended_Pictographic}|\ufe0f|\p{Emoji_Modifier})*)$/u,
+          /^(?:\p{Extended_Pictographic}(?:\u200d\p{Extended_Pictographic}|\ufe0f|\p{Emoji_Modifier})*|[\u{1F1E6}-\u{1F1FF}]{2})$/u,
           {
             name: 'emoji',
-            invert: false,
             message: 'Only one emoji is allowed',
           },
         ),

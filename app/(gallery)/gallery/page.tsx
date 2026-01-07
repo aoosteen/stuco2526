@@ -17,11 +17,11 @@ const GalleryAllCompomnents = async () => {
     const data = all.filter((gal) => gal.term === term);
 
     return (
-      <div className="relative w-full min-w-[900px]" id={term}>
-        <span className="absolute top-1/2 -translate-y-1/2 text-[256px] text-[#F8EED7]  ">
+      <div className="relative w-full " id={term}>
+        <span className="top-1/2  absolute -translate-y-1/2 text-[256px] text-[#F8EED7]  ">
           {term.replace("term", "Term ")}
         </span>
-        <div className="h-full pl-16 ">
+        <div className="h-full  pl-16 ">
           <div className="  h-full  flex gap-40 py-4  ">
             {data.map((gal, index) => {
               return (
@@ -48,9 +48,10 @@ const GalleryAllCompomnents = async () => {
         terms={terms.map((term) => term.replace("term", "Term "))}
         items={total}
       >
-        <div className="w-full   flex  gap-30 shrink-0 relative h-[80vh] pr-16">
+        <div className="w-full top-0  flex  gap-30 shrink-0 relative h-[80vh] pr-16">
           {/* <div className="w-110  h-full absolute -right-16 top-0 bg-[var(--main-bg)] z-2" /> */}
-          <div className="bg-[url(/gallery/yelowDottedLine.svg)] bg-repeat absolute top-1/2 -translate-y-1/2 w-full h-[2px]  bg-contain translate-x-16 z-1 " />{" "}
+          <div className="bg-[url(/gallery/yelowDottedLine.svg)] bg-repeat absolute top-1/2 -translate-y-1/2 w-full h-0.5  bg-contain translate-x-16 z-1 " />{" "}
+          {/* <div className="absolute top-1/2 -translate-y-1/2 -right-16 h-0.5 bg-green-200  z-999"/> */}
           {terms.map((term) => (
             <TermComponent key={term} term={term} />
           ))}
