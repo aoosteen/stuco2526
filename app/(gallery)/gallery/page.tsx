@@ -18,10 +18,10 @@ const GalleryAllCompomnents = async () => {
 
     return (
       <div className="relative w-full " id={term}>
-        <span className="top-1/2  absolute -translate-y-1/2 text-[256px] text-[#F8EED7]  ">
+        <span className="top-1/2  absolute -translate-y-1/2 text-[256px]  text-[#F8EED7]  ">
           {term.replace("term", "Term ")}
         </span>
-        <div className="h-full  pl-16 ">
+        <div className="h-full  pl-16  min-w-[900px]">
           <div className="  h-full  flex gap-40 py-4  ">
             {data.map((gal, index) => {
               return (
