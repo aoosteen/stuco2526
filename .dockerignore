@@ -1,8 +1,29 @@
-Dockerfile
-.dockerignore
+# Dependencies
 node_modules
-npm-debug.log
-README.md
+
+# Next.js build output
 .next
-docker
+
+# Logs
+npm-debug.log
+
+# Environment variables
+.env
+.env.*
+
+# Sanity Studio (editor only)
+sanity/node_modules
+sanity/dist
+sanity/.sanity
+sanity/static
+sanity/sanity.cli.ts
+sanity/sanity.config.ts
+sanity/tsconfig.json
+sanity/eslint.config.mjs
+sanity/README.md
+
+# Git
 .git
+
+# OS / editor junk
+.DS_Store

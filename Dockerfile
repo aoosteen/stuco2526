@@ -12,13 +12,6 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 
-# Install Sanity Studio dependencies with pnpm
-WORKDIR /app/sanity
-COPY sanity/package.json sanity/pnpm-lock.yaml ./
-RUN corepack enable pnpm && pnpm install --frozen-lockfile
-
-WORKDIR /app
-
 # Use npm install instead of npm ci since lock file may be out of sync
 # For production, regenerate package-lock.json with: npm install --package-lock-only
 RUN npm install

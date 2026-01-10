@@ -35,14 +35,14 @@ export const GalleryItem = ({
                 <div className="relative  ">
                   <Image
                     src={urlFor(gal.highlights[0]).url()}
-                    alt={"Blog img"}
+                    alt={"Gallery image"}
                     width={150}
                     height={150}
                     className=" absolute rotate-10 scale-120   object-cover z-1 "
                   />
                   <Image
                     src={urlFor(gal.highlights[1]).url()}
-                    alt={"Blog img"}
+                    alt={"Gallery image"}
                     width={150}
                     height={150}
                     className=" absolute left-22 scale-120  -rotate-10 object-cover"
