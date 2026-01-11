@@ -33,7 +33,7 @@ const MembersPolaroid = ({
 
   return (
     <div>
-      <FlipCard orientation="horizontal" className="">
+      <FlipCard orientation="horizontal" className="cursor-pointer">
         <FlipCardFrontFace>
           <motion.div
             ref={ref}

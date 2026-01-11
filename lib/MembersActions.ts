@@ -25,7 +25,11 @@ export const getMembers = async () => {
     events,
     image
 }`;
-  const data = await client.fetch(query);
+  const data = await client.fetch(query,{},{
+    next:{
+      tags:["members"]
+    }
+  });
    const positionOrder = [
     "StuCo Advisor",
     "President",
