@@ -44,7 +44,9 @@ const Blog = async () => {
               Open blog
             </Button>
           </Link>
+          <Link href={"https://tally.so/r/Y5GDV0"} target="_blank" rel="noopener noreferrer">
           <Button variant={"blueOutline"}>Submit an article</Button>
+          </Link>
         </div>
       </div>
 
