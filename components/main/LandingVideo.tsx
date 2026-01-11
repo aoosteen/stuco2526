@@ -76,7 +76,6 @@ const LandingVideo = ({
         src={StucoMainVideoCompressed}
         blurDataURL={StucoMainVideoCompressed.blurDataURL}
         onLoadedData={() => {
-          window.scrollTo(0, 100);
           // setMainPageLoaded(true);
           onLoaded && onLoaded();
         }}

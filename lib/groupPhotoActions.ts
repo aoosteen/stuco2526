@@ -10,7 +10,11 @@ export const getLRPhotos = async () => {
   const query = `*[_type == 'group' && position == 'LR']{
         image
       }| order(_createdAt desc)`;
-  const data = (await client.fetch(query)) as { image: any }[];
+  const data = (await client.fetch(query,{},{
+    next:{
+      tags:["members"]
+    }
+  })) as { image: any }[];
 
   const classnames = [
     {
@@ -47,7 +51,11 @@ export const getMajPosPhotos = async () => {
   const query = `*[_type == 'group' && position == 'MP']{
         image
       } | order(_createdAt desc)`;
-  const data = (await client.fetch(query)) as groupPhotoType[];
+  const data = (await client.fetch(query,{},{
+    next:{
+      tags:["members"]
+    }
+  })) as groupPhotoType[];
 
   const leftMPClassnames = [
     {
@@ -82,7 +90,11 @@ export const getGroupPhotos = async () => {
         image
         } | order(_createdAt desc)`;
 
-  const data = (await client.fetch(query)) as groupPhotoType[];
+  const data = (await client.fetch(query,{},{
+    next:{
+      tags:["members"]
+    }
+  })) as groupPhotoType[];
   const className = [
     {
       className: "-rotate-10 ",

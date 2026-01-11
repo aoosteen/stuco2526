@@ -37,20 +37,6 @@ export default function RootLayout({
           type="image/webp"
           fetchPriority="high"
         />
-        <link
-          rel="preload"
-          href="../public/main/galleryMainVideo.mp4"
-          as="video"
-          type="video/mp4"
-          fetchPriority="high"
-        />
-         <link
-          rel="preload"
-          href="../public/main/stucoMainVideoCompressed.mp4"
-          as="video"
-          type="video/mp4"
-          fetchPriority="high"
-        />
            <link
           rel="preload"
           href="/main/Text1.png"

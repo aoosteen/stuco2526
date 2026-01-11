@@ -130,7 +130,11 @@ export const getAllLatestBlogs = async () => {
     description
 } | order(_createdAt desc)[0..2]`;
 
-  const data = await client.fetch(query);
+  const data = await client.fetch(query,{},{
+    next:{
+      revalidate: 3600
+    }
+  });
   return data as BlogType[];
 };
 
