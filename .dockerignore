@@ -27,3 +27,8 @@ sanity/README.md
 
 # OS / editor junk
 .DS_Store
+
+#Dockerfile files
+Dockerfile
+.dockerignore
+docker
