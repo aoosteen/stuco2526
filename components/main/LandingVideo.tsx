@@ -87,6 +87,8 @@ const LandingVideo = ({
           filter: prog ? `grayscale(${(1 - prog) * 100}%)` : undefined,
           aspectRatio: deviceWidth > 1024 ? aspectRatio.toString() : 16 / 9,
         }}
+        width={deviceWidth}
+        height={deviceWidth > 1024 ? deviceHeight: undefined}
       />
     </div>
   );
