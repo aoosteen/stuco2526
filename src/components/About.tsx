@@ -16,14 +16,14 @@ export const About = () => {
     <section 
       ref={sectionRef} 
       id="about" 
-      className="relative w-full bg-[#fff9ef] py-32 md:py-64 torn-top torn-bottom z-20"
+      className="relative w-full bg-[#ffffff] py-32 md:py-64   z-20"
     >
       {/* Container for background elements that need clipping */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {/* Background Texture & Grid */}
         <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
         {/* Graph paper grid */}
-        <div className="absolute inset-0 opacity-[0.08] pointer-events-none" style={{ backgroundImage: 'linear-gradient(#005986 1px, transparent 1px), linear-gradient(90deg, #005986 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <div className="absolute inset-0 opacity-[0.08] pointer-events-none" style={{ backgroundImage: 'linear-gradient(#024a70 1px, transparent 1px), linear-gradient(90deg, #024a70 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
         {/* Colorful Gradient Blobs */}
         <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#FF1493]/20 rounded-full blur-[120px] pointer-events-none" />
@@ -69,7 +69,7 @@ export const About = () => {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
         >
-          <p className="font-hand text-xl md:text-3xl text-[#005986] opacity-80">"It all started with an idea..."</p>
+          <p className="font-hand text-xl md:text-3xl text-[#024a70] opacity-80">"It all started with an idea..."</p>
         </motion.div>
 
         {/* Top Right Star Doodle - Larger and more prominent */}
@@ -131,7 +131,7 @@ export const About = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
         >
-          <p className="font-hand text-xl md:text-3xl text-[#a30037] opacity-80">"The journey continues!"</p>
+          <p className="font-hand text-xl md:text-3xl text-[#8b0836] opacity-80">"The journey continues!"</p>
         </motion.div>
       </div>
 
@@ -150,7 +150,7 @@ export const About = () => {
           
           <div className="bg-white p-10 md:p-16 shadow-2xl border border-gray-100 relative rotate-[-1deg] mx-auto text-center">
             <Tape className="absolute -top-4 left-1/2 -translate-x-1/2" rotation={2} />
-            <h2 className="font-serif text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-[#a30037] leading-none">
+            <h2 className="font-serif text-5xl md:text-8xl font-bold tracking-tighter mb-6 text-[#8b0836] leading-none">
               Beyond<br/>Events.
             </h2>
             <p className="font-hand text-2xl md:text-4xl text-gray-600">We are building a legacy.</p>
@@ -200,7 +200,7 @@ export const About = () => {
             
             {/* Handwritten annotation */}
             <div className="absolute -bottom-16 -right-8 hidden lg:block rotate-6">
-              <p className="font-hand text-xl text-[#005986] opacity-70">"Action is our middle name!"</p>
+              <p className="font-hand text-xl text-[#024a70] opacity-70">"Action is our middle name!"</p>
             </div>
           </motion.div>
         </div>
@@ -239,7 +239,7 @@ export const About = () => {
             className="bg-white p-8 md:p-12 shadow-2xl rotate-[-2deg] max-w-lg relative border border-gray-100 z-10"
           >
             <Tape className="absolute -top-3 left-1/2 -translate-x-1/2 z-10" rotation={3} />
-            <h3 className="font-serif font-bold text-3xl md:text-4xl mb-4 uppercase tracking-tight text-[#005986]">The Vision</h3>
+            <h3 className="font-serif font-bold text-3xl md:text-4xl mb-4 uppercase tracking-tight text-[#024a70]">The Vision</h3>
             <p className="font-serif text-xl md:text-2xl italic leading-relaxed text-gray-800">
               "A school where every voice is heard, every idea is valued, and every student belongs. We don't just plan events; we build culture."
             </p>
@@ -248,7 +248,7 @@ export const About = () => {
 
             {/* Handwritten annotation */}
             <div className="absolute -top-12 -left-12 hidden lg:block -rotate-12">
-              <p className="font-hand text-xl text-[#a30037] opacity-70">"Building a legacy together."</p>
+              <p className="font-hand text-xl text-[#8b0836] opacity-70">"Building a legacy together."</p>
             </div>
           </motion.div>
         </div>
@@ -273,13 +273,13 @@ export const About = () => {
             <p className="font-serif text-3xl md:text-5xl lg:text-6xl leading-tight md:leading-[1.2] text-center text-black font-medium">
               We are a collective of passionate individuals dedicated to elevating the student experience.
               <br/><br/>
-              <span className="text-[#a30037] italic relative inline-block">
+              <span className="text-[#8b0836] italic relative inline-block">
                 We listen, we act, and we inspire.
               </span>
             </p>
 
             <div className="mt-12 flex justify-center relative">
-              <p className="font-hand text-4xl md:text-5xl text-[#005986] opacity-80 rotate-[-2deg]">#WeAreJNY</p>
+              <p className="font-hand text-4xl md:text-5xl text-[#024a70] opacity-80 rotate-[-2deg]">#WeAreJNY</p>
             </div>
           </div>
         </motion.div>

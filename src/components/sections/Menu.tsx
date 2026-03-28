@@ -15,9 +15,9 @@ export const MenuOverlay = ({ isOpen, onClose }: MenuProps) => {
           animate={{ clipPath: 'circle(150% at 100% 0)' }}
           exit={{ clipPath: 'circle(0% at 100% 0)' }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 bg-[#a30037] z-40 flex flex-col justify-center px-10 md:px-32 text-[#fff9ef]"
+          className="fixed inset-0 bg-[#8b0836] z-40 flex flex-col justify-center px-10 md:px-32 text-[#ffffff]"
         >
-          <div className="noise-overlay" />
+          <div className="hidden" />
           <ul className="text-5xl md:text-8xl font-serif font-bold tracking-tighter flex flex-col gap-4 md:gap-8">
             {['Home', 'About', 'Initiatives', 'Team', 'Contact'].map((item, i) => (
               <motion.li 

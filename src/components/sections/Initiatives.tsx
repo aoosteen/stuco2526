@@ -3,7 +3,7 @@ import { Polaroid } from '../ui/Polaroid';
 
 export const Initiatives = () => {
   return (
-    <section id="initiatives" data-cursor="drag" className="py-32 bg-[#005986] text-[#fff9ef] torn-top torn-bottom relative">
+    <section id="initiatives" data-cursor="drag" className="py-32 bg-[#024a70] text-[#ffffff]   relative">
       <div className="px-6 md:px-20 max-w-7xl mx-auto mb-20">
         <h2 className="font-serif text-6xl md:text-8xl font-bold tracking-tighter text-outline-white">Initiatives</h2>
         <p className="font-sans uppercase tracking-widest mt-4">Moments we've created</p>

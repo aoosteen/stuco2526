@@ -28,7 +28,7 @@ const boardMembers = [
     role: 'Secretary',
     bio: "Notes, schedules, and organization are my jam. I keep the council running smoothly. In my free time, I'm probably playing guitar or rewatching old movies.",
     events: ['Club Rush Week', 'End of Year Banquet'],
-    color: 'bg-[#fff9ef]',
+    color: 'bg-[#ffffff]',
     rotation: -1,
     image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop',
   },
@@ -58,7 +58,7 @@ const levelReps = [
     name: 'Jason Lee', 
     bio: 'Senior year is the best year! Making every moment count before graduation.', 
     events: ['Graduation Ball', 'Senior Prank Day'],
-    color: 'bg-[#fff9ef]', 
+    color: 'bg-[#ffffff]', 
     rotation: 1, 
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop' 
   },
@@ -85,7 +85,7 @@ const levelReps = [
     name: 'Mia Chen', 
     bio: 'Freshman year adventures! Starting our high school story right.', 
     events: ['Freshman Orientation', 'Welcome Picnic'],
-    color: 'bg-[#fff9ef]', 
+    color: 'bg-[#ffffff]', 
     rotation: -1, 
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&auto=format&fit=crop' 
   },
@@ -167,8 +167,8 @@ export default function Members() {
   }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-[#fff9ef] text-[#000000] font-sans selection:bg-[#FFC21A] selection:text-[#000000] overflow-x-hidden">
-      <div className="noise-overlay" />
+    <div ref={containerRef} className="min-h-screen bg-[#ffffff] text-[#000000] font-sans selection:bg-[#FFC21A] selection:text-[#000000] overflow-x-hidden">
+      <div className="hidden" />
       <Navbar />
 
       {/* Story Progress Indicator */}
@@ -180,7 +180,7 @@ export default function Members() {
         <div className="w-[2px] h-64 bg-black/10 relative">
           <motion.div 
             style={{ scaleY: smoothProgress }}
-            className="absolute inset-0 bg-[#a30037] origin-top"
+            className="absolute inset-0 bg-[#8b0836] origin-top"
           />
         </div>
       </motion.div>
@@ -205,11 +205,11 @@ export default function Members() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 1 }}
-          className="font-hand text-3xl md:text-4xl text-[#a30037] max-w-2xl mt-8"
+          className="font-hand text-3xl md:text-4xl text-[#8b0836] max-w-2xl mt-8"
         >
           Every chapter of our school life is written by those who lead. Meet the authors of this year's journey.
         </motion.p>
-        <ScribbleLine className="w-48 mx-auto mt-8 text-[#005986]" />
+        <ScribbleLine className="w-48 mx-auto mt-8 text-[#024a70]" />
 
         <motion.div 
           animate={{ y: [0, 10, 0] }}
@@ -239,10 +239,10 @@ export default function Members() {
           <div className="flex-1 h-[2px] bg-black/10 relative">
             <motion.div 
               style={{ scaleX: smoothProgress }}
-              className="absolute inset-0 bg-[#a30037] origin-left"
+              className="absolute inset-0 bg-[#8b0836] origin-left"
             />
           </div>
-          <span className="font-hand text-2xl text-[#a30037]">Major Positions</span>
+          <span className="font-hand text-2xl text-[#8b0836]">Major Positions</span>
         </div>
 
         <div className="space-y-40 md:space-y-64">
@@ -250,7 +250,7 @@ export default function Members() {
             <div key={member.name} className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 md:gap-24 relative`}>
               {/* Connector Lines */}
               {i < boardMembers.length - 1 && (
-                <div className={`absolute -bottom-48 ${i % 2 === 0 ? 'left-[20%]' : 'right-[20%]'} hidden md:block text-[#a30037] opacity-20`}>
+                <div className={`absolute -bottom-48 ${i % 2 === 0 ? 'left-[20%]' : 'right-[20%]'} hidden md:block text-[#8b0836] opacity-20`}>
                   <svg width="200" height="300" viewBox="0 0 200 300">
                     <motion.path
                       d={i % 2 === 0 ? "M0,0 Q100,150 0,300" : "M200,0 Q100,150 200,300"}
@@ -288,14 +288,14 @@ export default function Members() {
                         <div className="h-[1px] flex-1 bg-black/10" />
                       </div>
                       <h3 className="font-serif text-4xl md:text-6xl font-bold mb-2">{member.name}</h3>
-                      <p className="font-sans text-sm uppercase tracking-[0.3em] font-black text-[#a30037] mb-6">{member.role}</p>
+                      <p className="font-sans text-sm uppercase tracking-[0.3em] font-black text-[#8b0836] mb-6">{member.role}</p>
                       <p className="font-hand text-2xl md:text-3xl leading-relaxed mb-8">"{member.bio}"</p>
                       
                       {/* Random Stickers for Board Members */}
                       {i === 0 && <Sticker text="The Visionary" color="bg-[#FFC21A]" className="absolute -top-10 -right-4 rotate-12" />}
                       {i === 1 && <Sticker text="The Heart" color="bg-[#ffbd9b]" className="absolute top-1/2 -left-12 -translate-y-1/2 -rotate-90" />}
                       {i === 2 && <Sticker text="The Brains" color="bg-[#b8e6fe]" className="absolute -bottom-8 right-10 rotate-3" />}
-                      {i === 3 && <Sticker text="The Numbers" color="bg-[#fff9ef]" className="absolute top-20 -right-10 rotate-12" />}
+                      {i === 3 && <Sticker text="The Numbers" color="bg-[#ffffff]" className="absolute top-20 -right-10 rotate-12" />}
                       {i === 4 && <Sticker text="The Energy" color="bg-[#FF1493] text-white" className="absolute -bottom-4 -left-4 -rotate-6" />}
 
                       <div className="pt-6 border-t border-black/10">
@@ -326,7 +326,7 @@ export default function Members() {
                     {i === 3 && "Fueling the dreams. Making sure every cent counts."}
                     {i === 4 && "The architect of joy. Creating moments that last forever."}
                   </div>
-                  <HandDrawnArrow className={`w-24 h-24 mt-8 ${i % 2 === 0 ? 'rotate-90' : '-rotate-90 scale-x-[-1]'} text-[#a30037] opacity-40`} />
+                  <HandDrawnArrow className={`w-24 h-24 mt-8 ${i % 2 === 0 ? 'rotate-90' : '-rotate-90 scale-x-[-1]'} text-[#8b0836] opacity-40`} />
                 </motion.div>
               </div>
             </div>
@@ -335,8 +335,8 @@ export default function Members() {
       </section>
 
       {/* Level Representatives Section */}
-      <section className="py-48 bg-[#1a1a1a] text-[#fff9ef] relative overflow-hidden">
-        <div className="noise-overlay opacity-20" />
+      <section className="py-48 bg-[#1a1a1a] text-[#ffffff] relative overflow-hidden">
+        <div className="hidden opacity-20" />
         
         <div className="max-w-7xl mx-auto px-6 md:px-20 relative z-10">
           <div className="text-center mb-32">
@@ -367,7 +367,7 @@ export default function Members() {
                     </div>
                     
                     <div className="text-center sm:text-left">
-                      <div className="font-sans text-[10px] uppercase tracking-widest font-black text-[#a30037] mb-2">{rep.grade}</div>
+                      <div className="font-sans text-[10px] uppercase tracking-widest font-black text-[#8b0836] mb-2">{rep.grade}</div>
                       <h3 className="font-serif text-3xl font-bold mb-3">{rep.name}</h3>
                       <p className="font-hand text-xl md:text-2xl leading-tight mb-4">"{rep.bio}"</p>
                       
@@ -385,7 +385,7 @@ export default function Members() {
                   {i === 0 && <Sticker text="Class of 2026" color="bg-[#FFC21A]" className="absolute -bottom-4 -right-4 rotate-6" />}
                   {i === 1 && <Sticker text="Junior Power" color="bg-[#b8e6fe]" className="absolute -top-4 -left-4 -rotate-12" />}
                   {i === 2 && <Sticker text="Rising Stars" color="bg-[#ffbd9b]" className="absolute -bottom-6 left-10 rotate-3" />}
-                  {i === 3 && <Sticker text="New Chapter" color="bg-[#fff9ef]" className="absolute top-1/2 -right-8 -translate-y-1/2 rotate-90" />}
+                  {i === 3 && <Sticker text="New Chapter" color="bg-[#ffffff]" className="absolute top-1/2 -right-8 -translate-y-1/2 rotate-90" />}
                 </div>
               </motion.div>
             ))}
@@ -407,12 +407,12 @@ export default function Members() {
 
       {/* Footer Storytelling */}
       <section className="py-32 px-6 text-center relative">
-        <HandDrawnArrow className="w-32 h-32 mx-auto mb-12 rotate-180 text-[#a30037] opacity-20" />
+        <HandDrawnArrow className="w-32 h-32 mx-auto mb-12 rotate-180 text-[#8b0836] opacity-20" />
         <h2 className="font-serif text-4xl md:text-6xl font-bold tracking-tighter mb-8">Ready to be part of the story?</h2>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-[#a30037] text-white px-12 py-6 font-sans uppercase tracking-[0.3em] font-black hover:bg-black transition-colors hover-trigger"
+          className="bg-[#8b0836] text-white px-12 py-6 font-sans uppercase tracking-[0.3em] font-black hover:bg-black transition-colors hover-trigger"
         >
           Join the Council
         </motion.button>

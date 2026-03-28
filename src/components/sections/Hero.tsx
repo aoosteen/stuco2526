@@ -46,10 +46,10 @@ export const Hero = () => {
           <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:32px_32px]" />
           {/* Vibrant Blobs */}
           <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#FFC21A]/30 rounded-full blur-[120px]" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#a30037]/20 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#8b0836]/20 rounded-full blur-[120px]" />
           <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-[#4A90E2]/20 rounded-full blur-[100px]" />
           {/* Noise */}
-          <div className="noise-overlay opacity-50" />
+          <div className="hidden opacity-50" />
         </div>
 
         {/* Background Scribbles (Behind Video) */}
@@ -106,7 +106,7 @@ export const Hero = () => {
               scale: text3Scale,
               rotate: text3Rotate
             }} 
-            className="absolute top-[65%] md:top-[68%] left-1/2 -translate-x-1/2 w-[80%] max-w-[600px] h-12 text-[#a30037]"
+            className="absolute top-[65%] md:top-[68%] left-1/2 -translate-x-1/2 w-[80%] max-w-[600px] h-12 text-[#8b0836]"
           >
             <svg viewBox="0 0 400 40" className="w-full h-full overflow-visible">
               <motion.path

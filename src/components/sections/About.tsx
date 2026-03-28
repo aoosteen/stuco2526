@@ -7,7 +7,7 @@ export const About = () => {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
         <div className="md:col-span-4 flex flex-col justify-start">
           <h2 className="font-serif text-5xl md:text-7xl font-bold tracking-tighter mb-6">Our<br/>Vision.</h2>
-          <div className="w-20 h-1 bg-[#a30037] mb-8" />
+          <div className="w-20 h-1 bg-[#8b0836] mb-8" />
           <p className="font-hand text-3xl text-gray-600 rotate-[-2deg]">More than just a council.</p>
         </div>
         <div className="md:col-span-8">

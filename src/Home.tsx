@@ -93,8 +93,8 @@ export default function Home() {
   const scrollIndicatorOpacity = useTransform(heroProgress, [0, 0.05], [1, 0]);
 
   return (
-    <div className="min-h-screen bg-[#fff9ef] text-[#000000] font-sans selection:bg-[#FFC21A] selection:text-[#000000]">
-      <div className="noise-overlay" />
+    <div className="min-h-screen bg-[#ffffff] text-[#000000] font-sans selection:bg-[#FFC21A] selection:text-[#000000]">
+      <div className="hidden" />
 
       <Navbar />
 
@@ -232,7 +232,7 @@ export default function Home() {
       <Blogs />
 
       {/* Team Section */}
-      <section id="team" data-cursor="view" className="py-32 md:py-48 bg-[#fff9ef] torn-top torn-bottom relative z-20 overflow-hidden">
+      <section id="team" data-cursor="view" className="py-32 md:py-48 bg-[#ffffff]   relative z-20 overflow-hidden">
         {/* Decorative Background Text */}
         <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none opacity-[0.03] select-none z-0 overflow-hidden">
           <motion.div 

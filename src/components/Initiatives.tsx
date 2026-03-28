@@ -42,7 +42,7 @@ export const Initiatives = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
   return (
-    <section ref={containerRef} id="initiatives" className="pt-48 pb-32 bg-[#1c1917] text-[#fff9ef] relative overflow-hidden z-10">
+    <section ref={containerRef} id="initiatives" className="pt-48 pb-32 bg-[#1c1917] text-[#ffffff] relative overflow-hidden z-10">
       {/* Background Texture */}
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
       
@@ -134,11 +134,11 @@ export const Initiatives = () => {
                 transition={{ duration: 0.8, type: "spring" }}
                 className="w-full md:w-1/2 relative"
               >
-                <div className="bg-[#fff9ef] text-black p-8 md:p-12 shadow-2xl relative border border-gray-200">
+                <div className="bg-[#ffffff] text-black p-8 md:p-12 shadow-2xl relative border border-gray-200">
                   <Tape className="absolute -top-4 left-1/2 -translate-x-1/2 z-10" rotation={isEven ? -3 : 3} />
                   <Tape className="absolute -bottom-4 right-8 z-10" rotation={isEven ? 4 : -4} />
                   
-                  <h3 className="font-serif font-bold text-3xl md:text-5xl mb-6 text-[#a30037]">{item.title}</h3>
+                  <h3 className="font-serif font-bold text-3xl md:text-5xl mb-6 text-[#8b0836]">{item.title}</h3>
                   <p className="font-sans text-lg md:text-xl leading-relaxed opacity-90">{item.desc}</p>
                   
                   {/* Scribble underline */}

@@ -6,12 +6,12 @@
   --font-serif: "Merriweather", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-hand: "Neucha", cursive;
 
-  --color-paper: #fff9ef;
+  --color-paper: #ffffff;
   --color-ink: #000000;
-  --color-accent-red: #a30037;
-  --color-accent-darkblue: #005986;
+  --color-accent-red: #8b0836;
+  --color-accent-darkblue: #024a70;
   --color-accent-yellow: #FFC21A;
-  --color-accent-lightblue: #b8e6fe;
+  --color-accent-lightblue: #e5e0d7;
 }
 
 body {
@@ -35,77 +35,7 @@ button, .hover-trigger, a {
   cursor: pointer !important;
 }
 
-/* Fixed Noise Overlay */
-.noise-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-/* Scrapbook Tape */
-.tape {
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  backdrop-filter: blur(4px);
-  z-index: 10;
-}
-
-/* Polaroid */
-.polaroid {
-  background: white;
-  padding: clamp(8px, 2vw, 16px) clamp(8px, 2vw, 16px) clamp(30px, 6vw, 60px) clamp(8px, 2vw, 16px);
-  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
-  position: relative;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-}
-
-.polaroid:hover {
-  transform: scale(1.02) rotate(0deg) !important;
-  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
-  z-index: 20;
-}
-
-/* Torn Paper Edge */
-.torn-top {
-  position: relative;
-}
-.torn-top::before {
-  content: '';
-  position: absolute;
-  top: -40px;
-  left: 0;
-  right: 0;
-  height: 40px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 20' preserveAspectRatio='none'%3E%3Cpath d='M0,20 L0,12 L40,15 L90,4 L130,16 L200,10 L260,18 L320,5 L380,14 L450,2 L510,17 L580,8 L650,19 L710,6 L780,15 L840,3 L910,16 L960,9 L1000,14 L1000,20 Z' fill='%23fff9ef'/%3E%3C/svg%3E");
-  background-size: 1500px 40px;
-  z-index: 20;
-  pointer-events: none;
-  filter: drop-shadow(0 -10px 15px rgba(0,0,0,0.3));
-}
-
-.torn-bottom {
-  position: relative;
-}
-.torn-bottom::after {
-  content: '';
-  position: absolute;
-  bottom: -40px;
-  left: 0;
-  right: 0;
-  height: 40px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 20' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L0,8 L40,5 L90,16 L130,4 L200,10 L260,2 L320,15 L380,6 L450,18 L510,3 L580,12 L650,1 L710,14 L780,5 L840,17 L910,4 L960,11 L1000,6 L1000,0 Z' fill='%23fff9ef'/%3E%3C/svg%3E");
-  background-size: 1500px 40px;
-  z-index: 20;
-  pointer-events: none;
-  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
-}
+/* Scrapbook specific styles removed for clean theme */
 
 /* Hide Scrollbar */
 ::-webkit-scrollbar {

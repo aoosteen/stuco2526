@@ -5,8 +5,8 @@ import { Link, useLocation } from 'react-router-dom';
 
 const navItems = [
   { name: 'Home', path: '/', color: '#FF1493', desc: 'Back to start', isHash: false },
-  { name: 'Members', path: '/members', color: '#005986', desc: 'Meet the team', isHash: false },
-  { name: 'Blog', path: '/blog', color: '#a30037', desc: 'Read our stories', isHash: false },
+  { name: 'Members', path: '/members', color: '#024a70', desc: 'Meet the team', isHash: false },
+  { name: 'Blog', path: '/blog', color: '#8b0836', desc: 'Read our stories', isHash: false },
   { name: 'Gallery', path: '/gallery', color: '#FFC21A', desc: 'See our memories', isHash: false },
   { name: 'Contact', path: 'contact', color: '#ffbd9b', desc: 'Get in touch', isHash: true },
 ];
@@ -67,7 +67,7 @@ export const Navbar = () => {
             transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
             className="fixed inset-0 bg-[#d1fae5] z-[90] flex flex-col justify-center px-10 md:px-32 text-[#1a1a1a] menu-container"
           >
-            <div className="noise-overlay opacity-30" />
+            <div className="hidden opacity-30" />
             
             {/* Floating Decorative Elements - Repositioned for better composition */}
             <motion.div 
@@ -87,7 +87,7 @@ export const Navbar = () => {
               className="absolute top-1/2 left-10 pointer-events-none hidden md:block"
             >
               <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="40" cy="40" r="30" stroke="#a30037" strokeWidth="6" strokeDasharray="12 12" />
+                <circle cx="40" cy="40" r="30" stroke="#8b0836" strokeWidth="6" strokeDasharray="12 12" />
               </svg>
             </motion.div>
 
@@ -224,7 +224,7 @@ export const Navbar = () => {
                 <a href="#" className="w-10 h-10 rounded-full border-2 border-black flex items-center justify-center hover:bg-[#FF1493] hover:text-white transition-colors text-black">
                   IG
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full border-2 border-black flex items-center justify-center hover:bg-[#005986] hover:text-white transition-colors text-black">
+                <a href="#" className="w-10 h-10 rounded-full border-2 border-black flex items-center justify-center hover:bg-[#024a70] hover:text-white transition-colors text-black">
                   TT
                 </a>
               </div>

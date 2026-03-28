@@ -3,11 +3,11 @@ import { Mail, Instagram, MapPin } from 'lucide-react';
 
 export const Footer = () => {
   return (
-    <footer id="contact" className="bg-[#000000] text-[#fff9ef] pt-32 pb-10 px-6 md:px-20 relative overflow-hidden torn-top">
+    <footer id="contact" className="bg-[#000000] text-[#ffffff] pt-32 pb-10 px-6 md:px-20 relative overflow-hidden ">
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-20">
           <div>
-            <h2 className="font-serif text-[12vw] leading-[0.8] tracking-tighter font-black text-outline-white hover:text-[#fff9ef] transition-colors duration-500 cursor-pointer hover-trigger">
+            <h2 className="font-serif text-[12vw] leading-[0.8] tracking-tighter font-black text-outline-white hover:text-[#ffffff] transition-colors duration-500 cursor-pointer hover-trigger">
               LET'S
             </h2>
             <h2 className="font-serif text-[12vw] leading-[0.8] tracking-tighter font-black">
@@ -30,13 +30,13 @@ export const Footer = () => {
 
         <div className="border-t border-white/20 pt-10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-sans text-sm uppercase tracking-widest opacity-50">© {new Date().getFullYear()} JNY Student Council</p>
-          <p className="font-hand text-2xl text-[#a30037]">Made with passion.</p>
+          <p className="font-hand text-2xl text-[#8b0836]">Made with passion.</p>
         </div>
       </div>
       
       {/* Decorative elements */}
-      <div className="absolute top-20 right-20 w-32 h-32 bg-[#a30037] rounded-full blur-[100px] opacity-50" />
-      <div className="absolute bottom-0 left-20 w-64 h-64 bg-[#005986] rounded-full blur-[120px] opacity-30" />
+      <div className="absolute top-20 right-20 w-32 h-32 bg-[#8b0836] rounded-full blur-[100px] opacity-50" />
+      <div className="absolute bottom-0 left-20 w-64 h-64 bg-[#024a70] rounded-full blur-[120px] opacity-30" />
     </footer>
   );
 };
