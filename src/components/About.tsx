@@ -64,7 +64,7 @@ export const About = () => {
       <div className="absolute inset-0 pointer-events-none z-30">
         {/* Top Left Note */}
         <motion.div 
-          className="absolute top-[5%] left-[5%] md:left-[15%] rotate-[-12deg]"
+          className="absolute top-[2.5%] left-[5%] md:left-[15%] rotate-[-12deg]"
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -74,19 +74,19 @@ export const About = () => {
 
         {/* Top Right Star Doodle - Larger and more prominent */}
         <motion.div 
-          className="absolute top-[8%] right-[8%] text-[#FFC21A] opacity-70 cursor-pointer pointer-events-auto"
+          className="absolute top-[6%] md:top-[8%] right-[4%] md:right-[8%] scale-50 md:scale-100   text-[#FFC21A] opacity-70 cursor-pointer pointer-events-auto"
           animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }}
           whileHover={{ scale: 1.6, rotate: 180, opacity: 1 }}
           transition={{ repeat: Infinity, duration: 4 }}
         >
-          <svg width="100" height="100" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="100" height="100" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" >
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
           </svg>
         </motion.div>
 
         {/* Middle Left Doodle - Even more filling */}
         <motion.div 
-          className="absolute top-[25%] left-[3%] text-[#00FFFF] opacity-50 cursor-pointer pointer-events-auto"
+          className="absolute top-[25%] -left-[1.5%] md:left-[3%] text-[#00FFFF] opacity-50 cursor-pointer pointer-events-auto scale-75 md:scale-100"
           animate={{ y: [0, -30, 0], rotate: [0, 10, -10, 0] }}
           whileHover={{ scale: 1.5, rotate: 90, opacity: 1 }}
           transition={{ repeat: Infinity, duration: 7 }}
@@ -126,7 +126,7 @@ export const About = () => {
 
         {/* Bottom Right Note */}
         <motion.div 
-          className="absolute bottom-[5%] right-[5%] md:right-[12%] rotate-[8deg]"
+          className="absolute bottom-[1.5%] md:bottom-[5%] right-[5%] md:right-[12%] rotate-[8deg]"
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
@@ -169,10 +169,10 @@ export const About = () => {
           >
             <div className="polaroid inline-block w-full">
               <Tape className="absolute -top-3 left-1/2 -translate-x-1/2 z-10" rotation={4} />
-              <div className="relative overflow-hidden bg-gray-100 aspect-[4/5] w-full">
-                <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=2070" alt="Mission" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              <div className="relative overflow-hidden bg-[#CFF7FF] aspect-[4/5] w-full">
+                <img src="/main/Mission.png" alt="Mission" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
-              <p className="font-hand text-2xl mt-4 text-center text-gray-800">Action</p>
+              <p className="font-hand text-2xl mt-4 text-center text-gray-800">Hi!</p>
             </div>
 
             {/* Paper clip decoration - Moved inside scaling container */}
@@ -217,10 +217,10 @@ export const About = () => {
           >
             <div className="polaroid inline-block w-full">
               <Tape className="absolute -top-3 left-1/2 -translate-x-1/2 z-10" rotation={-4} />
-              <div className="relative overflow-hidden bg-gray-100 aspect-[4/5] w-full">
-                <img src="https://images.unsplash.com/photo-1523580494112-071d16940363?q=80&w=2070" alt="Vision" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              <div className="relative overflow-hidden bg-[#F8D5E0] aspect-[4/5] w-full">
+                <img src="public/main/Vision.png" alt="Vision" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
-              <p className="font-hand text-2xl mt-4 text-center text-gray-800">Future</p>
+              <p className="font-hand text-2xl mt-4 text-center text-gray-800">Hey!</p>
             </div>
 
             {/* Paper clip decoration - Moved inside scaling container */}
@@ -286,7 +286,7 @@ export const About = () => {
 
       </div>
       
-      {/* Transition Elements bridging to Initiatives */}
+      {/* Transition Elements bridging to LatestEvents */}
       <div className="absolute bottom-[-40px] left-[15%] md:left-[25%] z-30">
         <Tape rotation={-8} className="w-32 md:w-48" />
       </div>

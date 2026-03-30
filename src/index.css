@@ -6,12 +6,13 @@
   --font-serif: "Merriweather", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-hand: "Neucha", cursive;
 
-  --color-paper: #ffffff;
+  --color-paper: #fff9ef;
   --color-ink: #000000;
   --color-accent-red: #8b0836;
   --color-accent-darkblue: #024a70;
   --color-accent-yellow: #FFC21A;
   --color-accent-lightblue: #e5e0d7;
+  --color-accent-pink: #FF1493;
 }
 
 body {
@@ -20,18 +21,22 @@ body {
   overflow-x: hidden;
 }
 
+:root {
+  --scrapbook-transition-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
 /* Hide default cursor on elements with custom cursor */
 [data-cursor], [data-cursor] * {
   cursor: none !important;
 }
 
 /* Ensure default cursor is visible on nav, menu, and form elements */
-nav, nav *, .menu-container, .menu-container * , 
-form, form *, button, button *, input, textarea, .hover-trigger {
-  cursor: auto !important;
+nav, .menu-container, form, button, input, textarea, .hover-trigger {
+  cursor: auto;
 }
 
-button, .hover-trigger, a {
+/* Force pointer cursor on interactive elements */
+button, button *, .hover-trigger, .hover-trigger *, a, a * {
   cursor: pointer !important;
 }
 
@@ -71,4 +76,181 @@ html.lenis, html.lenis body {
 }
 .lenis.lenis-smooth iframe {
   pointer-events: none;
+}
+
+.scrapbook-transition-backdrop {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.45), transparent 42%),
+    radial-gradient(circle at 88% 82%, rgba(255, 194, 26, 0.2), transparent 40%),
+    linear-gradient(135deg, rgba(255, 249, 239, 0.9), rgba(241, 229, 205, 0.98));
+}
+
+.scrapbook-transition-sheet {
+  position: relative;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.84), rgba(255, 249, 239, 0.98) 52%, rgba(245, 232, 208, 0.95)),
+    url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  background-blend-mode: multiply;
+  border-left: 1px solid rgba(0, 0, 0, 0.07);
+  border-right: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+.scrapbook-transition-sheet::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 18%;
+  pointer-events: none;
+}
+
+.scrapbook-transition-sheet--closing {
+  transform-origin: left center;
+}
+
+.scrapbook-transition-sheet--closing::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0));
+}
+
+.scrapbook-transition-sheet--opening {
+  transform-origin: right center;
+}
+
+.scrapbook-transition-sheet--opening::after {
+  left: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0));
+}
+
+.scrapbook-logo-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1.5rem;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.88), rgba(255, 249, 239, 0.92)),
+    url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  background-blend-mode: multiply;
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.16),
+    6px 6px 0 rgba(0, 0, 0, 0.12);
+  border-radius: 0.4rem;
+}
+
+.aod-transition-page {
+  position: relative;
+  z-index: 2;
+}
+
+.aod-transition-page--stacked {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.aod-transition-page--current {
+  z-index: 2;
+}
+
+.aod-transition-page--next {
+  z-index: 1;
+}
+
+.aod-transition-corners-wrap {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+  pointer-events: none;
+  z-index: 900;
+  opacity: 0;
+}
+
+.aod-transition-corners-wrap--active {
+  opacity: 1;
+}
+
+.aod-transition-corners {
+  flex-shrink: 0;
+  width: calc(100vw + 32px);
+  height: calc(100vh + 32px);
+  background:
+    linear-gradient(90deg, #ffffff 1px, transparent 0) 0 0,
+    linear-gradient(90deg, #ffffff 1px, transparent 0) 0 100%,
+    linear-gradient(270deg, #ffffff 1px, transparent 0) 100% 0,
+    linear-gradient(270deg, #ffffff 1px, transparent 0) 100% 100%,
+    linear-gradient(180deg, #ffffff 1px, transparent 0) 0 0,
+    linear-gradient(180deg, #ffffff 1px, transparent 0) 100% 0,
+    linear-gradient(0deg, #ffffff 1px, transparent 0) 0 100%,
+    linear-gradient(0deg, #ffffff 1px, transparent 0) 100% 100%;
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+}
+
+.aod-transition-mobile-wipe {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #121212;
+  z-index: 901;
+  pointer-events: none;
+  translate: 0 120%;
+  opacity: 0;
+}
+
+.aod-transition-mobile-wipe--active {
+  opacity: 1;
+}
+
+.aod-transition-tint {
+  position: fixed;
+  inset: 0;
+  z-index: 850;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0;
+}
+
+.aod-transition-tint--active {
+  animation: aod-transition-tint-pulse 1.8s cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
+}
+
+@keyframes aod-transition-tint-pulse {
+  0% {
+    opacity: 0;
+  }
+  28% {
+    opacity: 0;
+  }
+  52% {
+    opacity: 0.24;
+  }
+  68% {
+    opacity: 0.14;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .aod-transition-corners {
+    display: none;
+  }
 }

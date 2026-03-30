@@ -1,111 +1,76 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'motion/react';
-import { Navbar } from './components/Navbar';
 import { Tape } from './components/Tape';
 import Lenis from 'lenis';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, Tag, Search, ChevronDown } from 'lucide-react';
+import { useRouteTransitionMotion } from './lib/routeTransitionMotion';
+import { useBlogPosts } from './hooks/useBlog';
 
-// Mock CMS Data
-const featuredPost = {
-  id: 'post-1',
-  title: "Winter Gala 2026: A Night to Remember",
-  excerpt: "From the dazzling decorations to the unforgettable dance floor, here's how the student council pulled off the biggest event of the year. Dive into the behind-the-scenes magic and see the exclusive photo gallery!",
-  date: "Feb 14, 2026",
-  category: "Events",
-  image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1600&auto=format&fit=crop",
-  color: "bg-[#b8e6fe]"
-};
+const cardColors = ['bg-[#b8e6fe]', 'bg-[#ffbd9b]', 'bg-[#fff9ef]', 'bg-[#ffc21a]'];
+const cardRotations = [-2, 3, -1, 2, -3];
 
-const blogPosts = [
-  {
-    id: 'post-2',
-    title: "Mental Health Week Recap",
-    excerpt: "A look back at the workshops, the therapy dogs, and the importance of taking a break.",
-    date: "Jan 28, 2026",
-    category: "Wellness",
-    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=800&auto=format&fit=crop",
-    color: "bg-[#ffbd9b]",
-    rotation: -2
-  },
-  {
-    id: 'post-3',
-    title: "Meet the New Grade 9 Reps",
-    excerpt: "Fresh faces, fresh ideas. Get to know the newest members of the student council family.",
-    date: "Jan 10, 2026",
-    category: "Interviews",
-    image: "https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=800&auto=format&fit=crop",
-    color: "bg-[#fff9ef]",
-    rotation: 3
-  },
-  {
-    id: 'post-4',
-    title: "Behind the Scenes: Charity Bake Sale",
-    excerpt: "How much flour does it take to raise $1000? We found out the hard way.",
-    date: "Dec 05, 2025",
-    category: "Behind the Scenes",
-    image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop",
-    color: "bg-[#b8e6fe]",
-    rotation: -1
-  },
-  {
-    id: 'post-5',
-    title: "Exam Season Survival Guide",
-    excerpt: "Tips, tricks, and the best study spots on campus according to your seniors.",
-    date: "Nov 20, 2025",
-    category: "Student Life",
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800&auto=format&fit=crop",
-    color: "bg-[#ffbd9b]",
-    rotation: 2
-  },
-  {
-    id: 'post-6',
-    title: "The Art of Balancing Academics & Council",
-    excerpt: "Our President shares her secrets to maintaining straight A's while leading the school.",
-    date: "Oct 15, 2025",
-    category: "Advice",
-    image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop",
-    color: "bg-[#fff9ef]",
-    rotation: -3
-  }
-];
 
-const allPosts = [featuredPost, ...blogPosts];
-const categories = ['All', ...Array.from(new Set(allPosts.map(p => p.category)))];
-
-const Sticker = ({ text, color, className }: { text: string, color: string, className?: string }) => (
+const Sticker = ({
+  text,
+  color,
+  className,
+  enabled = true,
+}: {
+  text: string;
+  color: string;
+  className?: string;
+  enabled?: boolean;
+}) => (
   <motion.div
-    initial={{ scale: 0, rotate: -20 }}
-    whileInView={{ scale: 1, rotate: (Math.random() * 20) - 10 }}
+    initial={enabled ? { scale: 0, rotate: -20 } : false}
+    whileInView={enabled ? { scale: 1, rotate: (Math.random() * 20) - 10 } : undefined}
     viewport={{ once: true }}
+    transition={enabled ? { duration: 0.4 } : { duration: 0 }}
     className={`px-4 py-2 ${color} border-2 border-black font-hand text-sm font-bold shadow-[4px_4px_0px_rgba(0,0,0,1)] whitespace-nowrap ${className}`}
   >
     {text}
   </motion.div>
 );
 
-const ScribbleLine = ({ className }: { className?: string }) => (
+const ScribbleLine = ({ className, enabled = true }: { className?: string; enabled?: boolean }) => (
   <svg className={className} viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <motion.path
       d="M0 10C20 5 40 15 60 10C80 5 100 15 120 10"
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      initial={{ pathLength: 0 }}
-      whileInView={{ pathLength: 1 }}
-      transition={{ duration: 1.5, ease: "easeInOut" }}
+      initial={enabled ? { pathLength: 0 } : false}
+      whileInView={enabled ? { pathLength: 1 } : undefined}
+      transition={enabled ? { duration: 1.5, ease: "easeInOut" } : { duration: 0 }}
     />
   </svg>
 );
 
 export default function Blog() {
+  const { shouldRunEnter, incomingEnterDelaySec } = useRouteTransitionMotion();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('newest');
 
+  const { posts: allPosts, loading } = useBlogPosts();
+
+
+  useEffect(() => {
+    if (!loading && allPosts.length > 0) {
+      const timer = setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, allPosts]);
+
+  const categories = useMemo(() => ['All', ...Array.from(new Set(allPosts.map(p => p.category)))], [allPosts]);
+
   const isFiltering = searchQuery !== '' || selectedCategory !== 'All' || sortBy !== 'newest';
 
   const displayedPosts = useMemo(() => {
-    let posts = isFiltering ? [...allPosts] : [...blogPosts];
+    let posts = isFiltering ? [...allPosts] : allPosts.slice(1);
 
     if (selectedCategory !== 'All') {
       posts = posts.filter(p => p.category === selectedCategory);
@@ -120,21 +85,20 @@ export default function Blog() {
     }
 
     posts.sort((a, b) => {
-      if (sortBy === 'newest') return new Date(b.date).getTime() - new Date(a.date).getTime();
-      if (sortBy === 'oldest') return new Date(a.date).getTime() - new Date(b.date).getTime();
+      if (sortBy === 'newest') return new Date(b.dateStr).getTime() - new Date(a.dateStr).getTime();
+      if (sortBy === 'oldest') return new Date(a.dateStr).getTime() - new Date(b.dateStr).getTime();
       if (sortBy === 'a-z') return a.title.localeCompare(b.title);
       if (sortBy === 'z-a') return b.title.localeCompare(a.title);
       return 0;
     });
 
     return posts;
-  }, [searchQuery, selectedCategory, sortBy, isFiltering]);
+  }, [searchQuery, selectedCategory, sortBy, isFiltering, allPosts]);
+
+  const featuredPost = allPosts.length > 0 ? allPosts[0] : null;
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+  const { scrollYProgress } = useScroll();
 
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 50, damping: 20, mass: 0.5 });
 
@@ -155,43 +119,51 @@ export default function Blog() {
     }
 
     requestAnimationFrame(raf);
+    
+    // Initial scroll reset
+    lenis.scrollTo(0, { immediate: true });
+    window.scrollTo(0, 0);
 
     return () => {
       lenis.destroy();
     };
   }, []);
 
+  const heroScrollX = useTransform(smoothProgress, [0, 1], [0, -300]);
+  const storiesScrollX = useTransform(smoothProgress, [0, 1], [0, -800]);
+  const legacyScrollX = useTransform(smoothProgress, [0, 1], [0, 800]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-paper flex items-center justify-center">
+        <div className="font-serif text-2xl animate-pulse text-ink">Reading Stories...</div>
+      </div>
+    );
+  }
+
   return (
-    <div ref={containerRef} className="min-h-screen bg-[#fff9ef] text-[#000000] font-sans selection:bg-[#FFC21A] selection:text-[#000000] overflow-x-hidden relative">
+    <div ref={containerRef} className="min-h-screen bg-paper text-ink font-sans selection:bg-accent-yellow selection:text-ink overflow-x-hidden relative">
       <div className="noise-overlay" />
-      <Navbar />
 
       {/* Hero Section */}
       <section className="h-screen flex items-center justify-center px-6 md:px-20 max-w-7xl mx-auto relative overflow-hidden" data-cursor="magic">
-        {/* Decorative Background Text */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none opacity-[0.03] select-none z-0 overflow-hidden">
-          <motion.div 
-            style={{ x: useTransform(smoothProgress, [0, 1], [0, -300]) }}
-            className="font-serif text-[15vw] font-black whitespace-nowrap leading-none text-[#005986] flex gap-20"
-          >
-            <span>THE CHRONICLES</span>
-            <span>THE JOURNAL</span>
-            <span>THE UPDATES</span>
-          </motion.div>
-        </div>
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={shouldRunEnter ? { opacity: 0, y: 50 } : false}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={
+            shouldRunEnter
+              ? { duration: 0.8, ease: "easeOut", delay: incomingEnterDelaySec }
+              : { duration: 0 }
+          }
           className="text-center relative z-10"
         >
           <h1 className="font-serif text-[12vw] md:text-[8vw] leading-[0.85] font-black tracking-tighter text-[#1a1a1a] mb-6">
             THE<br/>CHRONICLES.
           </h1>
-          <p className="font-hand text-2xl md:text-4xl text-[#005986] max-w-2xl mx-auto">
+          <p className="font-hand text-2xl md:text-4xl text-accent-red max-w-2xl mx-auto">
             Stories, updates, and behind-the-scenes from your student council.
           </p>
-          <ScribbleLine className="w-48 mx-auto mt-8 text-[#a30037]" />
+          <ScribbleLine className="w-48 mx-auto mt-8 text-[#a30037]" enabled={shouldRunEnter} />
         </motion.div>
 
         {/* Floating Background Doodles */}
@@ -265,26 +237,35 @@ export default function Blog() {
       </section>
 
       {/* Featured Post */}
-      {!isFiltering && (
+      {!isFiltering && featuredPost && (
         <section className="px-6 md:px-20 max-w-7xl mx-auto mb-32 relative z-10" data-cursor="read">
-          <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative group cursor-pointer"
+          <Link 
+            to={`/blog/${featuredPost.id}`}
+            className="relative group cursor-pointer block"
           >
-            <div className={`p-6 md:p-10 border-2 border-black ${featuredPost.color} shadow-[20px_20px_0px_rgba(0,0,0,0.1)] transition-transform duration-500 group-hover:scale-[1.01]`}>
+            <motion.div 
+              initial={shouldRunEnter ? { opacity: 0, y: 50 } : false}
+              whileInView={shouldRunEnter ? { opacity: 1, y: 0 } : undefined}
+              viewport={{ once: true }}
+              transition={shouldRunEnter ? { duration: 0.6, delay: incomingEnterDelaySec } : { duration: 0 }}
+              className={`p-6 md:p-10 border-2 border-black ${cardColors[0]} shadow-[20px_20px_0px_rgba(0,0,0,0.1)] transition-transform duration-500 group-hover:scale-[1.01]`}
+            >
               <Tape rotation={-2} className="absolute -top-6 left-1/2 -translate-x-1/2 w-48 opacity-90 z-20" />
               
               <div className="flex flex-col lg:flex-row gap-10 items-center">
-                <div className="w-full lg:w-3/5 aspect-video md:aspect-[16/9] overflow-hidden border-2 border-black relative">
+                <div className="w-full lg:w-3/5 aspect-video overflow-hidden border-2 border-black relative">
                   <img 
                     src={featuredPost.image} 
                     alt={featuredPost.title} 
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
+                    className="w-full h-full object-cover transition-all duration-700" 
                     referrerPolicy="no-referrer"
                   />
-                  <Sticker text="Featured" color="bg-[#FFC21A]" className="absolute top-4 left-4 -rotate-6" />
+                  <Sticker
+                    text="Featured"
+                    color="bg-[#FFC21A]"
+                    className="absolute top-4 left-4 -rotate-6"
+                    enabled={shouldRunEnter}
+                  />
                 </div>
                 
                 <div className="w-full lg:w-2/5 flex flex-col justify-center">
@@ -292,17 +273,17 @@ export default function Blog() {
                     <span className="flex items-center gap-1"><Calendar size={12} /> {featuredPost.date}</span>
                     <span className="flex items-center gap-1"><Tag size={12} /> {featuredPost.category}</span>
                   </div>
-                  <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6 leading-tight">{featuredPost.title}</h2>
+                  <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6 leading-tight text-ink">{featuredPost.title}</h2>
                   <p className="font-hand text-2xl leading-relaxed mb-8 text-black/80">
                     {featuredPost.excerpt}
                   </p>
-                  <button className="flex items-center gap-2 font-sans uppercase tracking-[0.2em] font-black text-[#a30037] group-hover:text-black transition-colors w-fit">
+                  <div className="flex items-center gap-2 font-sans uppercase tracking-[0.2em] font-black text-accent-red group-hover:text-black transition-colors w-fit">
                     Read Full Story <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
-                  </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </Link>
         </section>
       )}
 
@@ -324,48 +305,56 @@ export default function Blog() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16">
             <AnimatePresence mode="popLayout">
               {displayedPosts.map((post, i) => (
-                <motion.div
+                <Link 
+                  to={`/blog/${post.id}`}
                   key={post.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative group cursor-pointer"
+                  className="relative group cursor-pointer block"
                 >
-                  <div 
-                    className={`h-full flex flex-col p-6 border-2 border-black ${post.color} shadow-[12px_12px_0px_rgba(0,0,0,0.1)] transition-transform duration-500 group-hover:scale-[1.02]`}
-                    style={{ transform: `rotate(${post.rotation || 0}deg)` }}
+                  <motion.div
+                    layout
+                    initial={shouldRunEnter ? { opacity: 0, scale: 0.9 } : false}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={
+                      shouldRunEnter
+                        ? { duration: 0.3, delay: incomingEnterDelaySec }
+                        : { duration: 0 }
+                    }
+                    className="h-full"
                   >
-                    <Tape rotation={(post.rotation || 0) * -4} className="absolute -top-4 left-1/2 -translate-x-1/2 w-24 opacity-80 z-20" />
-                    
-                    <div className="w-full aspect-video overflow-hidden border-2 border-black mb-6 relative">
-                      <img 
-                        src={post.image} 
-                        alt={post.title} 
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
-                        referrerPolicy="no-referrer"
-                      />
-                      {post.id === 'post-2' && <Sticker text="Must Read" color="bg-[#FF1493] text-white" className="absolute bottom-2 right-2 rotate-12" />}
-                    </div>
-                    
-                    <div className="flex flex-col flex-1">
-                      <div className="flex items-center justify-between mb-3 font-sans text-[9px] uppercase tracking-widest font-bold opacity-60">
-                        <span className="flex items-center gap-1"><Calendar size={10} /> {post.date}</span>
-                        <span className="flex items-center gap-1"><Tag size={10} /> {post.category}</span>
-                      </div>
-                      <h3 className="font-serif text-2xl font-bold mb-3 leading-tight group-hover:text-[#005986] transition-colors">{post.title}</h3>
-                      <p className="font-hand text-xl leading-snug mb-6 text-black/70 flex-1">
-                        {post.excerpt}
-                      </p>
+                    <div 
+                      className={`h-full flex flex-col p-6 border-2 border-black ${cardColors[i % 4]} shadow-[12px_12px_0px_rgba(0,0,0,0.1)] transition-transform duration-500 group-hover:scale-[1.02]`}
+                      style={{ transform: `rotate(${cardRotations[i % 5]}deg)` }}
+                    >
+                      <Tape rotation={cardRotations[i % 5] * -4} className="absolute -top-4 left-1/2 -translate-x-1/2 w-24 opacity-80 z-20" />
                       
-                      <div className="mt-auto pt-4 border-t border-black/10 flex items-center justify-between">
-                        <span className="font-sans text-xs uppercase tracking-widest font-black">Read</span>
-                        <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
+                      <div className="w-full aspect-video overflow-hidden border-2 border-black mb-6 relative">
+                        <img 
+                          src={post.image} 
+                          alt={post.title} 
+                          className="w-full h-full object-cover transition-all duration-700" 
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                      
+                      <div className="flex flex-col flex-1">
+                        <div className="flex items-center justify-between mb-3 font-sans text-[9px] uppercase tracking-widest font-bold opacity-60">
+                          <span className="flex items-center gap-1"><Calendar size={10} /> {post.date}</span>
+                          <span className="flex items-center gap-1"><Tag size={10} /> {post.category}</span>
+                        </div>
+                        <h3 className="font-serif text-2xl font-bold mb-3 leading-tight group-hover:text-accent-darkblue transition-colors text-ink">{post.title}</h3>
+                        <p className="font-hand text-xl leading-snug mb-6 text-black/70 flex-1">
+                          {post.excerpt}
+                        </p>
+                        
+                        <div className="mt-auto pt-4 border-t border-black/10 flex items-center justify-between">
+                          <span className="font-sans text-xs uppercase tracking-widest font-black">Read</span>
+                          <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </Link>
               ))}
             </AnimatePresence>
           </div>
@@ -393,7 +382,7 @@ export default function Blog() {
       {/* Decorative Background Text */}
       <div className="absolute top-[60%] left-0 w-full pointer-events-none opacity-[0.03] select-none z-0 overflow-hidden">
         <motion.div 
-          style={{ x: useTransform(smoothProgress, [0, 1], [0, -800]) }}
+          style={{ x: storiesScrollX }}
           className="font-serif text-[25vw] font-black whitespace-nowrap leading-none text-[#005986] flex gap-20"
         >
           <span>STORIES</span>
@@ -405,7 +394,7 @@ export default function Blog() {
       {/* Additional Decorative Background Text */}
       <div className="absolute top-[90%] left-0 w-full pointer-events-none opacity-[0.03] select-none z-0 overflow-hidden">
         <motion.div 
-          style={{ x: useTransform(smoothProgress, [0, 1], [0, 800]) }}
+          style={{ x: legacyScrollX }}
           className="font-serif text-[25vw] font-black whitespace-nowrap leading-none text-[#005986] flex gap-20"
         >
           <span>THE CHRONICLES</span>

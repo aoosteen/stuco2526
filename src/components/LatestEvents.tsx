@@ -1,36 +1,18 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { Polaroid } from './Polaroid';
 import { Tape } from './Tape';
+import { urlFor } from '../lib/sanity';
+import { cn } from '../lib/utils';
+import { useLatestGalleryEvents } from '../hooks/useGallery';
+import { ArrowRight } from 'lucide-react';
 
-const initiatives = [
-  {
-    id: 1,
-    title: "Winter Gala",
-    desc: "Organizing the annual winter gala, bringing together over 500 students for a night of celebration and community building.",
-    img: "https://images.unsplash.com/photo-1511629091441-ee46146481b6?q=80&w=2070",
-    rotation: -4,
-    caption: "A night to remember"
-  },
-  {
-    id: 2,
-    title: "Sports Fest",
-    desc: "A week-long inter-house sports competition promoting physical wellness, teamwork, and school spirit.",
-    img: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=2070",
-    rotation: 6,
-    caption: "House pride!"
-  },
-  {
-    id: 3,
-    title: "Charity Drive",
-    desc: "Partnering with local NGOs to raise funds and awareness, teaching students the value of giving back.",
-    img: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=2049",
-    rotation: -2,
-    caption: "Giving back"
-  }
-];
+const MotionLink = motion.create(Link);
 
-export const Initiatives = () => {
+export const LatestEvents = () => {
+  const { events } = useLatestGalleryEvents(3);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -42,14 +24,14 @@ export const Initiatives = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
   return (
-    <section ref={containerRef} id="initiatives" className="pt-48 pb-32 bg-[#1c1917] text-[#ffffff] relative overflow-hidden z-10">
+    <section ref={containerRef} id="latest-events" className="pt-48 pb-32 bg-[#1c1917] text-[#ffffff] relative overflow-hidden z-10">
       {/* Background Texture */}
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
       
       {/* Background Doodles */}
       <div className="absolute top-[10%] right-[5%] opacity-20 pointer-events-none">
         <svg width="300" height="300" viewBox="0 0 100 100">
-           <path d="M10,50 Q50,10 90,50 T10,90" fill="none" stroke="#FFC21A" strokeWidth="1" strokeDasharray="4 4" />
+           <path d="M10,50 Q50,10 90,50 T10,90" fill="none" stroke="currentColor" className="text-accent-yellow" strokeWidth="1" strokeDasharray="4 4" />
         </svg>
       </div>
       <div className="absolute bottom-[20%] left-[5%] opacity-10 pointer-events-none">
@@ -62,9 +44,9 @@ export const Initiatives = () => {
       <div className="px-6 md:px-20 max-w-7xl mx-auto mb-16 relative z-10">
         <motion.div style={{ y: y2 }} className="flex flex-col md:flex-row items-start md:items-end gap-8">
           <div className="relative">
-            <h2 className="font-serif text-6xl md:text-8xl font-black tracking-tighter text-white leading-none">Initiatives.</h2>
+            <h2 className="font-serif text-6xl md:text-8xl font-black tracking-tighter text-white leading-none">Latest Events.</h2>
             <div className="relative inline-block mt-4">
-              <p className="font-sans uppercase tracking-widest text-[#FFC21A] text-sm md:text-base">Moments we've created</p>
+              <p className="font-sans uppercase tracking-widest text-accent-yellow text-sm md:text-base">Moments we've created</p>
             </div>
           </div>
           
@@ -74,7 +56,7 @@ export const Initiatives = () => {
             viewport={{ once: true }}
             className="hidden md:block mb-4"
           >
-            <div className="px-6 py-3 bg-[#FF1493] text-white font-hand text-2xl border-2 border-white shadow-[8px_8px_0px_rgba(255,255,255,0.1)] rotate-12">
+            <div className="px-6 py-3 bg-accent-pink text-white font-hand text-2xl border-2 border-white shadow-[8px_8px_0px_rgba(255,255,255,0.1)] rotate-12">
               Our Impact!
             </div>
           </motion.div>
@@ -82,19 +64,32 @@ export const Initiatives = () => {
       </div>
 
       <div className="relative w-full max-w-6xl mx-auto px-6 flex flex-col gap-32 md:gap-48 pb-20">
-        {initiatives.map((item, index) => {
+        {events.map((item, index) => {
           const isEven = index % 2 !== 0;
           const yTransform = index === 0 ? y1 : index === 1 ? y3 : y1;
+          const stableRotation = [ -3, 2, -2, 3 ][index % 4];
           
           return (
-            <div key={item.id} className={`flex flex-col ${isEven ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-10 md:gap-20 relative z-10`}>
+            <MotionLink 
+              to={`/gallery/${item._id}`}
+              key={item._id} 
+              className={`flex flex-col ${isEven ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-10 md:gap-20 relative z-10 group cursor-pointer`}
+            >
               
               {/* Image Side */}
               <motion.div 
                 style={{ y: yTransform }}
+                whileHover={{ scale: 1.05 }}
                 className="w-full md:w-1/2 flex justify-center relative"
               >
-                <Polaroid src={item.img} alt={item.title} rotation={item.rotation} caption={item.caption} className="w-[85%] md:w-[75%]" />
+                <Polaroid 
+                  src={item.coverPhoto ? urlFor(item.coverPhoto).url() : ''} 
+                  alt={item.title} 
+                  rotation={stableRotation} 
+                  caption={item.shortWords || "Memory"} 
+                  className="w-[85%] md:w-[75%]" 
+                  captionClassname={isEven ? 'text-accent-pink' : 'text-accent-yellow'}
+                />
                 
                 {/* Decorative elements per item */}
                 {index === 0 && (
@@ -103,12 +98,12 @@ export const Initiatives = () => {
                     animate={{ rotate: [12, 20, 12] }}
                     transition={{ repeat: Infinity, duration: 4 }}
                   >
-                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                   </motion.div>
                 )}
                 {index === 1 && (
                   <motion.div 
-                    className="absolute -top-12 -left-8 text-[#FF1493] opacity-80 -rotate-12"
+                    className="absolute -top-12 -left-8 text-accent-pink opacity-80 -rotate-12"
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ repeat: Infinity, duration: 3 }}
                   >
@@ -117,7 +112,7 @@ export const Initiatives = () => {
                 )}
                 {index === 2 && (
                   <motion.div 
-                    className="absolute -bottom-10 -left-10 text-[#FFC21A] opacity-80 rotate-45"
+                    className="absolute -bottom-10 -left-10 text-accent-yellow opacity-80 rotate-45"
                     animate={{ rotate: [45, 90, 45] }}
                     transition={{ repeat: Infinity, duration: 5 }}
                   >
@@ -134,24 +129,31 @@ export const Initiatives = () => {
                 transition={{ duration: 0.8, type: "spring" }}
                 className="w-full md:w-1/2 relative"
               >
-                <div className="bg-[#ffffff] text-black p-8 md:p-12 shadow-2xl relative border border-gray-200">
+                <div className="bg-[#ffffff] text-black p-8 md:p-12 shadow-2xl relative border border-gray-200 transition-shadow group-hover:shadow-accent-pink/20">
                   <Tape className="absolute -top-4 left-1/2 -translate-x-1/2 z-10" rotation={isEven ? -3 : 3} />
                   <Tape className="absolute -bottom-4 right-8 z-10" rotation={isEven ? 4 : -4} />
                   
-                  <h3 className="font-serif font-bold text-3xl md:text-5xl mb-6 text-[#8b0836]">{item.title}</h3>
-                  <p className="font-sans text-lg md:text-xl leading-relaxed opacity-90">{item.desc}</p>
+                  <h3 className={cn("font-serif font-bold text-3xl md:text-5xl mb-6 text-accent-red transition-colors", isEven ? "group-hover:text-accent-pink" : "group-hover:text-accent-yellow")}>{item.title}</h3>
+                  <p className="font-sans text-lg md:text-xl leading-relaxed opacity-90">{item.description}</p>
                   
-                  {/* Scribble underline */}
-                  <div className="mt-8 opacity-30">
-                    <svg width="100%" height="20" viewBox="0 0 200 20" preserveAspectRatio="none">
-                      <path d="M0 10 Q 50 20, 100 10 T 200 10" fill="none" stroke="#000" strokeWidth="2" />
-                    </svg>
+                  <div className="mt-8 flex items-center gap-2 font-sans text-xs uppercase tracking-widest font-black text-accent-red group-hover:translate-x-2 transition-transform h-5">
+                    View Gallery <span>→</span>
                   </div>
                 </div>
               </motion.div>
-            </div>
+            </MotionLink>
           );
         })}
+      </div>
+      <div className="mt-10 flex justify-center relative z-20">
+        <Link to="/gallery">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className="bg-accent-yellow text-black px-8 py-4 md:px-12 md:py-6 font-sans uppercase tracking-[0.2em] font-black border-2 border-black shadow-[8px_8px_0px_rgba(255,255,255,1)] hover:shadow-[12px_12px_0px_rgba(255,255,255,1)] transition-all hover-trigger flex items-center gap-4 text-sm md:text-base hover:scale-105"
+          >
+            View Event Gallery <ArrowRight size={24} />
+          </motion.button>
+        </Link>
       </div>
     </section>
   );

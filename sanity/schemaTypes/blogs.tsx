@@ -67,14 +67,9 @@ export default {
       validation: (rule:any) => rule.required().warning('Author of blog is required'),
     },
     {
-      name: 'tags',
-      type: 'array',
-      title: 'Tags',
-      of: [
-        {
-          type: 'string',
-        },
-      ],
+      name: 'category',
+      type: 'string',
+      title: 'Category',
       options: {
         list: BlogTags.map((tag) => {
           return {
@@ -83,7 +78,15 @@ export default {
           };
         }),
       },
-      validation: (rule:any) => rule.required().warning('Tags of blog is required'),
+      validation: (rule:any) => rule.required().warning('Category of blog is required'),
+    },
+    {
+      name: 'publishedAt',
+      type: 'datetime',
+      title: 'Published at',
+      description: 'This can be used to schedule post for publishing',
+      initialValue: () => (new Date()).toISOString(),
+      validation: (rule:any) => rule.required().warning('Published date is required'),
     },
     {
       name: 'coverImage',

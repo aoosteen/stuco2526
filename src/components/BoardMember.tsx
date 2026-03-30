@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
+import { urlFor } from '../lib/sanity';
 
 interface BoardMemberProps {
-  member: { role: string; name: string };
+  member: { position: string; name: string; image?: any };
   index: number;
-  key?: React.Key;
 }
 
 export const BoardMember = ({ member, index }: BoardMemberProps) => {
@@ -36,13 +36,13 @@ export const BoardMember = ({ member, index }: BoardMemberProps) => {
   return (
     <motion.div 
       ref={ref}
-      className="border-b-2 border-black py-8 md:py-12 flex flex-col md:flex-row justify-between items-start md:items-center relative cursor-pointer hover-trigger"
+      className="border-b-2 border-black py-8 md:py-12 flex flex-col md:flex-row justify-between items-start md:items-center relative cursor-pointer hover-trigger group/board"
     >
       <motion.span 
         style={{ x: xOffset }}
         className="font-serif text-3xl md:text-5xl font-bold"
       >
-        {member.role}
+        {member.position}
       </motion.span>
       <motion.span 
         style={{ opacity: textOpacity }}
@@ -60,8 +60,12 @@ export const BoardMember = ({ member, index }: BoardMemberProps) => {
         }}
         className="absolute right-[20%] top-1/2 -translate-y-1/2 w-48 hidden md:block pointer-events-none z-30"
       >
-        <div className="bg-white p-4 shadow-2xl">
-          <img src={`https://i.pravatar.cc/400?img=${index + 10}`} alt={member.name} className="w-full aspect-square object-cover grayscale" />
+        <div className="bg-white p-4 shadow-2xl transition-transform duration-500 group-hover/board:scale-105">
+          <img 
+            src={member.image ? urlFor(member.image).url() : `https://i.pravatar.cc/400?img=${index + 10}`} 
+            alt={member.name} 
+            className="w-full aspect-square object-cover " 
+          />
         </div>
       </motion.div>
     </motion.div>

@@ -1,38 +1,50 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { Tape } from './Tape';
+import { sanityClient } from '../lib/sanity';
+import { ArrowRight } from 'lucide-react';
 
-const blogs = [
-  {
-    id: 1,
-    title: "Why We Need More Plants in the Library",
-    date: "March 15, 2026",
-    author: "Sarah Jenkins",
-    excerpt: "A deep dive into how greenery improves focus and why the student council is pushing for a botanical takeover.",
-    color: "bg-[#fff9ef]",
-    rotation: -2,
-  },
-  {
-    id: 2,
-    title: "Behind the Scenes: Winter Gala Planning",
-    date: "February 28, 2026",
-    author: "David Kim",
-    excerpt: "Ever wonder what goes into planning the biggest night of the year? Spoiler: It involves a lot of coffee and spreadsheets.",
-    color: "bg-[#fff9ef]",
-    rotation: 3,
-  },
-  {
-    id: 3,
-    title: "The Case for Longer Lunch Breaks",
-    date: "February 10, 2026",
-    author: "Alex Chen",
-    excerpt: "We've heard your feedback. Here's our proposal to the administration for a 15-minute extension to our lunch period.",
-    color: "bg-[#fff9ef]",
-    rotation: -1,
-  }
-];
+const bgColors = ["bg-[#fff9ef]", "bg-[#b8e6fe]", "bg-[#ffbd9b]"];
+const rotations = [-2, 3, -1];
 
 export const Blogs = () => {
+  const [blogs, setBlogs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      const data = await sanityClient.fetch(
+        `*[_type == "Blogs"] | order(publishedAt desc, _createdAt desc)[0..2] {
+          _id,
+          title,
+          author,
+          publishedAt,
+          _createdAt,
+          description
+        }`
+      );
+      
+      const formattedBlogs = data.map((blog: any, index: number) => {
+        const dateObj = new Date(blog.publishedAt || blog._createdAt);
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        
+        return {
+          id: blog._id,
+          title: blog.title,
+          author: blog.author || 'Council Member',
+          date: dateObj.toLocaleDateString('en-US', options),
+          excerpt: blog.description || 'Read more about this council update.',
+          color: bgColors[index % bgColors.length],
+          rotation: rotations[index % rotations.length]
+        };
+      });
+
+      setBlogs(formattedBlogs);
+    };
+
+    fetchBlogs();
+  }, []);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -71,11 +83,11 @@ export const Blogs = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-20 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20">
-          <h2 className="font-serif text-6xl md:text-8xl font-black tracking-tighter text-[#1a1a1a]">
+        <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end mb-20 ">
+          <h2 className="font-serif text-6xl md:text-8xl font-black tracking-tighter text-[#1a1a1a] ">
             COUNCIL<br/>NOTES.
           </h2>
-          <p className="font-hand text-3xl text-[#a30037] max-w-sm mt-6 md:mt-0">
+          <p className="font-hand text-3xl text-[#a30037] max-w-sm mt-6 md:mt-0 text-center lg:text-left">
             Thoughts, updates, and ramblings from your student reps.
           </p>
         </div>
@@ -83,8 +95,10 @@ export const Blogs = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
           {blogs.map((blog, i) => {
             const y = i === 0 ? y1 : i === 1 ? y2 : y3;
+            const MotionLink = motion.create(Link);
             return (
-              <motion.div 
+              <MotionLink 
+                to={`/blog/${blog.id}`} 
                 key={blog.id}
                 style={{ y }}
                 className="relative group cursor-pointer hover-trigger"
@@ -95,16 +109,16 @@ export const Blogs = () => {
                 >
                   <Tape rotation={blog.rotation * -2} className="absolute -top-4 left-1/2 -translate-x-1/2 w-24 opacity-80" />
                   
-                  <div className="font-sans text-xs uppercase tracking-widest font-bold opacity-60 mb-4 flex justify-between">
-                    <span>{blog.date}</span>
-                    <span>By {blog.author}</span>
+                  <div className="font-sans text-xs uppercase tracking-widest font-bold opacity-60 mb-4   ">
+                    <p>{blog.date}</p>
+                    <p >By {blog.author}</p>
                   </div>
                   
                   <h3 className="font-serif text-2xl font-bold mb-4 leading-tight border-b-2 border-black/10 pb-4">
                     {blog.title}
                   </h3>
                   
-                  <p className="font-hand text-xl text-gray-700 leading-relaxed mb-6">
+                  <p className="font-hand text-xl text-gray-700 leading-relaxed mb-6 line-clamp-4">
                     {blog.excerpt}
                   </p>
                   
@@ -116,9 +130,19 @@ export const Blogs = () => {
                     </svg>
                   </div>
                 </div>
-              </motion.div>
+              </MotionLink>
             );
           })}
+        </div>
+          <div className="mt-20 flex justify-center relative z-20">
+          <Link to="/blog">
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              className="bg-[#a30037] text-white px-8 py-4 md:px-12 md:py-6 font-sans uppercase tracking-[0.2em] font-black border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all hover-trigger flex items-center gap-4 text-sm md:text-base hover:scale-105"
+            >
+              Read more blogs <ArrowRight size={24} />
+            </motion.button>
+          </Link>
         </div>
       </div>
     </section>

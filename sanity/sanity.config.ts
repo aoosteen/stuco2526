@@ -5,7 +5,7 @@ import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
   name: 'default',
-  title: 'Sanity Studio',
+  title: 'Student council website',
   projectId: 'kwax2pg0', // Replace with your projectId
   dataset: 'production',        // Replace with your dataset
 

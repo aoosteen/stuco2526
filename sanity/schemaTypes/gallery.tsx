@@ -38,19 +38,19 @@ export default {
       validation: (Rule: any) => Rule.required().warning('Term is required'),
     },
     {
-      name: 'specialImage',
+      name: 'shortWords',
       type: 'string',
-      title: 'An emoji to describe the event in general',
-      validation: (Rule: any) => [
-        Rule.required().warning('Special Emoji is required'),
-        Rule.regex(
-          /^(?:\p{Extended_Pictographic}(?:\u200d\p{Extended_Pictographic}|\ufe0f|\p{Emoji_Modifier})*|[\u{1F1E6}-\u{1F1FF}]{2})$/u,
-          {
-            name: 'emoji',
-            message: 'Only one emoji is allowed',
-          },
-        ),
-      ],
+      title: '2 words to describe the event',
+      validation: (Rule: any) => Rule.required().max(20).warning('Maximum 20 characters allowed'),
+    },
+    {
+      name: 'coverPhoto',
+      type: 'image',
+      title: 'Cover Photo',
+      validation: (Rule: any) => Rule.required().warning('Cover Photo is required'),
+      options: {
+        hotspot: true,
+      },
     },
     {
       name: 'highlights',
