@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import { urlFor } from '../lib/sanity';
+import { useDeviceDimensions } from '../hooks/useDeviceDimensions';
 
 interface BoardMemberProps {
   member: { position: string; name: string; image?: any };
@@ -33,20 +34,23 @@ export const BoardMember = ({ member, index }: BoardMemberProps) => {
     [-15, index % 2 === 0 ? 6 : -6, index % 2 === 0 ? 6 : -6, 15]
   );
 
+  const {width} = useDeviceDimensions()
+
+
   return (
     <motion.div 
       ref={ref}
-      className="border-b-2 border-black py-8 md:py-12 flex flex-col md:flex-row justify-between items-start md:items-center relative cursor-pointer hover-trigger group/board"
+      className="border-b-2 border-black py-8 md:py-12 flex flex-col lg:flex-row justify-between items-start lg:items-center relative cursor-pointer hover-trigger group/board"
     >
       <motion.span 
-        style={{ x: xOffset }}
-        className="font-serif text-3xl md:text-5xl font-bold"
+        style={{ x: width < 480 ? 0 : xOffset }}
+        className="font-serif text-2xl sm:text-3xl md:text-5xl font-bold"
       >
         {member.position}
       </motion.span>
       <motion.span 
         style={{ opacity: textOpacity }}
-        className="font-sans text-xl md:text-2xl mt-2 md:mt-0"
+        className="font-sans text-md sm:text-xl md:text-2xl mt-2 md:mt-0"
       >
         {member.name}
       </motion.span>
@@ -58,9 +62,9 @@ export const BoardMember = ({ member, index }: BoardMemberProps) => {
           scale: imgScale,
           rotate: imgRotate
         }}
-        className="absolute right-[20%] top-1/2 -translate-y-1/2 w-48 hidden md:block pointer-events-none z-30"
+        className="absolute right-0 sm:right-[20%] top-1/2 -translate-y-1/2 w-48  pointer-events-none z-30"
       >
-        <div className="bg-white p-4 shadow-2xl transition-transform duration-500 group-hover/board:scale-105">
+        <div className="bg-white p-4 shadow-2xl transition-transform duration-500 group-hover/board:scale-105 scale-50 sm:scale-100">
           <img 
             src={member.image ? urlFor(member.image).url() : `https://i.pravatar.cc/400?img=${index + 10}`} 
             alt={member.name} 

@@ -73,6 +73,7 @@ const cleanupPageStyles = (element: HTMLElement) => {
   element.style.removeProperty('scale');
   element.style.removeProperty('opacity');
   element.style.removeProperty('will-change');
+  element.scrollTop = 0;
 };
 
 export type SlotKey = 'A' | 'B';
@@ -123,6 +124,7 @@ export const usePageTransition = (location: Location) => {
 
     const outgoing = activeSlot;
     const incoming = oppositeSlot(outgoing);
+    currentScrollYRef.current = window.scrollY;
     queuedLocationRef.current = null;
     setSlotLocations((prev) => ({ ...prev, [incoming]: location }));
     setTransitionSlots({ outgoing, incoming });
@@ -218,8 +220,6 @@ export const usePageTransition = (location: Location) => {
         return;
       }
 
-      window.scrollTo(0, 0);
-
       const queuedLocation = queuedLocationRef.current;
       queuedLocationRef.current = null;
 
@@ -292,11 +292,9 @@ export const usePageTransition = (location: Location) => {
         ),
       );
 
-      currentScrollYRef.current = window.scrollY;
-      outgoingPage.style.top = `${-currentScrollYRef.current}px`;
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      window.scrollTo(0, 0);
+      // Keep the outgoing viewport frozen at the user's current scroll position.
+      outgoingPage.scrollTop = currentScrollYRef.current;
+      incomingPage.scrollTop = 0;
 
       const expandedWidth = viewportWidth + toResponsivePixels(32, viewportWidth);
       const expandedHeight = viewportHeight + toResponsivePixels(32, viewportWidth);

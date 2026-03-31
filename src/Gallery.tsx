@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Tape } from './components/Tape';
+import { ParallaxText } from './components/ParallaxText';
 import Lenis from 'lenis';
 import { Calendar } from 'lucide-react';
 
@@ -61,8 +62,23 @@ const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunE
       className="relative" 
       style={{ '--term-color': termData.hex } as any}
     >
+      <div className="absolute inset-x-0 left-0 max-w-screen -top-50 h-[600px] pointer-events-none select-none -z-10 hidden sm:block">
+        <ParallaxText baseVelocity={-0.8}>
+          <span 
+            className="font-serif font-black uppercase whitespace-nowrap leading-none mr-20"
+            style={{ 
+              color: termData.hex, 
+              opacity: 0.06, 
+              fontSize: '12vw' 
+            }}
+          >
+            {termData.theme}
+          </span>
+        </ParallaxText>
+      </div>
+
       {/* Local Timeline Segment for this term */}
-      <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 z-0 hidden md:block">
+      <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px]  -translate-x-1/2 z-0 hidden md:block">
         <div className="absolute inset-0 bg-black/5" />
         <motion.div 
           style={{ 
@@ -76,10 +92,6 @@ const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunE
       
       {/* Term Header */}
       <motion.div 
-        initial={shouldRunEnter ? { opacity: 0, y: 30 } : false}
-        whileInView={shouldRunEnter ? { opacity: 1, y: 0 } : undefined}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={shouldRunEnter ? { duration: 0.6 } : { duration: 0 }}
         className="text-center mb-16 md:mb-24 relative bg-paper py-8 z-10"
       >
         <div className="inline-block relative">
@@ -95,7 +107,7 @@ const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunE
       </motion.div>
 
       {/* Events in Term */}
-      <div className="flex flex-col gap-20 md:gap-32">
+      <div className="flex flex-col gap-20 md:gap-32 max-w-6xl">
         {termData.events.map((event: any, eventIndex: number) => {
           const isEven = eventIndex % 2 === 0;
           return (
@@ -118,7 +130,7 @@ const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunE
               >
                 <div className={`p-4 md:p-6 border-2 border-black ${event.bgColor} shadow-[15px_15px_0px_rgba(0,0,0,0.1)] transition-transform duration-500 group-hover/link:scale-[1.02]`}>
                   <Tape rotation={event.rotation * -4} className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 opacity-90 z-20" />
-                  <div className="aspect-[4/3] overflow-hidden border-2 border-black relative">
+                  <div className="aspect-4/3 overflow-hidden border-2 border-black relative">
                     <img 
                       src={event.coverPhoto ? urlFor(event.coverPhoto).url() : ''} 
                       alt={event.title} 
@@ -221,7 +233,7 @@ export default function Gallery() {
   }
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-paper text-ink font-sans selection:bg-accent-yellow selection:text-ink overflow-x-hidden relative">
+    <div ref={containerRef} className="min-h-screen bg-paper text-ink font-sans selection:bg-accent-yellow selection:text-ink overflow-x-hidden relative flex flex-col items-center">
       <div className="noise-overlay" />
 
       {/* Hero Section */}
@@ -259,8 +271,8 @@ export default function Gallery() {
       </section>
 
       {/* Timeline Section */}
-      <section className="px-6 md:px-20 max-w-7xl mx-auto pb-32 relative z-10">
-        <div className="flex flex-col gap-32 md:gap-48 relative z-10">
+      <section className="px-6 pb-32 relative z-10">
+        <div className="flex flex-col gap-32 md:gap-72 relative z-10">
           {galleryData.map((termData) => (
             <TermSection 
               key={termData.term}

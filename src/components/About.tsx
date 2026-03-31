@@ -218,7 +218,7 @@ export const About = () => {
             <div className="polaroid inline-block w-full">
               <Tape className="absolute -top-3 left-1/2 -translate-x-1/2 z-10" rotation={-4} />
               <div className="relative overflow-hidden bg-[#F8D5E0] aspect-[4/5] w-full">
-                <img src="public/main/Vision.png" alt="Vision" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                <img src="/main/Vision.png" alt="Vision" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
               <p className="font-hand text-2xl mt-4 text-center text-gray-800">Hey!</p>
             </div>

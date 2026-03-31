@@ -5,6 +5,7 @@ import { BoardMember } from './BoardMember';
 import { Tape } from './Tape';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { ParallaxText } from './ParallaxText';
 
 export const Board = () => {
   const { allSortedMembers: boardMembers, loading } = useMember();
@@ -18,11 +19,34 @@ export const Board = () => {
 
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 50, damping: 20, mass: 0.5 });
   
-  // Custom horizontal movement for the background text based on the section's scroll
-  const xMovement = useTransform(smoothProgress, [0, 1], [-200, 200]);
+
 
   return (
     <section ref={containerRef} id="team" data-cursor="view" className="py-32 md:py-48 bg-[#FEF8EE] relative z-20 overflow-hidden">
+      {/* Parallax Background Text Layers */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0 hidden sm:block">
+        <div className="absolute w-full" style={{ top: "17.4%", opacity: 0.05, color: "#000000" }}>
+          <ParallaxText baseVelocity={0.5}>
+            <span className="font-serif text-[15vw] font-black uppercase whitespace-nowrap leading-none mr-24">
+              PURPOSE
+            </span>
+          </ParallaxText>
+        </div>
+        <div className="absolute w-full" style={{ top: "50%", opacity: 0.05, color: "#E91E63", transform: "rotate(2deg)" }}>
+          <ParallaxText baseVelocity={-0.3}>
+            <span className="font-serif text-[15vw] font-black uppercase whitespace-nowrap leading-none mr-24">
+              LEGACY
+            </span>
+          </ParallaxText>
+        </div>
+        <div className="absolute w-full" style={{ top: "80%", opacity: 0.05, color: "#024a70", transform: "rotate(-3deg)" }}>
+          <ParallaxText baseVelocity={0.8}>
+            <span className="font-serif text-[15vw] font-black uppercase whitespace-nowrap leading-none mr-24">
+              ACTION 
+            </span>
+          </ParallaxText>
+        </div>
+      </div>
      
 
       {/* Transition Elements bridging from LatestEvents */}
@@ -38,8 +62,8 @@ export const Board = () => {
 
       <div className="px-6 md:px-20 max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20">
-          <h2 className="font-serif text-6xl md:text-8xl font-bold tracking-tighter">The<br/>Board.</h2>
-          <p className="font-hand text-3xl text-gray-600 max-w-sm mt-6 md:mt-0">The minds behind the madness. Meet your representatives.</p>
+          <h2 className="font-serif text-6xl md:text-8xl font-bold tracking-tighter">The<br/>Council.</h2>
+          <p className="font-hand text-3xl text-gray-600 max-w-sm mt-6 md:mt-0">The minds behind the madness. Meet your officers.</p>
         </div>
 
         <div className="border-t-2 border-black min-h-[400px]">

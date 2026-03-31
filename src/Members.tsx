@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 
 import { useMember } from "./hooks/useMember";
 import { useRouteTransitionMotion } from "./lib/routeTransitionMotion";
+import { ParallaxText } from "./components/ParallaxText";
 
 const Sticker = ({
   text,
@@ -227,17 +228,6 @@ export default function Members() {
 
       {/* The Board Section */}
       <section className="py-32 px-10 md:px-20 max-w-7xl mx-auto relative overflow-hidden">
-        {/* Decorative Background Text */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none opacity-[0.03] select-none z-0 overflow-hidden">
-          <motion.div
-            style={{ x: useTransform(smoothProgress, [0, 1], [0, 600]) }}
-            className="font-serif text-[20vw] font-black whitespace-nowrap leading-none text-black flex gap-20"
-          >
-            <span>THE LEADERS</span>
-            <span>THE VISIONARIES</span>
-            <span>THE MAKERS</span>
-          </motion.div>
-        </div>
         <div className="flex items-center gap-6 mb-24 relative z-10">
           <h2 className="font-serif text-5xl md:text-7xl font-bold tracking-tighter">
             The Council.
@@ -251,6 +241,30 @@ export default function Members() {
           <span className="font-hand text-2xl text-accent-darkblue">
             Major Positions
           </span>
+        </div>
+
+        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
+          <div className="absolute w-full" style={{ top: "15%", opacity: 0.03 }}>
+            <ParallaxText baseVelocity={0.5}>
+              <span className="font-serif text-[15vw] font-black uppercase whitespace-nowrap leading-none mr-24">
+                LEADERSHIP
+              </span>
+            </ParallaxText>
+          </div>
+          <div className="absolute w-full" style={{ top: "47.5%", opacity: 0.03, color: "#024a70" }}>
+            <ParallaxText baseVelocity={-0.5}>
+              <span className="font-serif text-[15vw] font-black uppercase whitespace-nowrap leading-none mr-24">
+                SERVICE
+              </span>
+            </ParallaxText>
+          </div>
+          <div className="absolute w-full" style={{ top: "82%", opacity: 0.03 }}>
+            <ParallaxText baseVelocity={0.8}>
+              <span className="font-serif text-[15vw] font-black uppercase whitespace-nowrap leading-none mr-24">
+                EXCELLENCE 
+              </span>
+            </ParallaxText>
+          </div>
         </div>
 
         <div className="space-y-40 md:space-y-64">
@@ -482,15 +496,23 @@ export default function Members() {
         </div>
 
         {/* Decorative Background Text */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none opacity-[0.05] select-none z-0">
-          <motion.div
-            style={{ x: useTransform(smoothProgress, [0, 1], [0, -500]) }}
-            className="font-serif text-[25vw] font-black whitespace-nowrap leading-none text-[#ffbd9b] flex gap-20"
-          >
-            <span>COMMUNITY</span>
-            <span>UNITY</span>
-            <span>SPIRIT</span>
-          </motion.div>
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0">
+          <div style={{ opacity: 0.05, color: "#ffbd9b" }}>
+            <ParallaxText baseVelocity={0.3}>
+              <span className="font-serif text-[25vw] font-black uppercase whitespace-nowrap leading-none mr-32">
+                COMMUNITY 
+              </span>
+            </ParallaxText>
+          </div>
+        </div>
+         <div className="absolute top-3/4 left-0 -translate-y-1/2 w-full pointer-events-none select-none z-0">
+          <div style={{ opacity: 0.05, color: "#ffbd9b" }}>
+            <ParallaxText baseVelocity={-0.3}>
+              <span className="font-serif text-[25vw] font-black uppercase whitespace-nowrap leading-none mr-32">
+                UNITY
+              </span>
+            </ParallaxText>
+          </div>
         </div>
       </section>
 
