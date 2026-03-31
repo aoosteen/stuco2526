@@ -1,21 +1,4 @@
-import express from 'express';
-import dotenv from 'dotenv';
 import { google } from 'googleapis';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-dotenv.config({ path: '.env.local' });
-
-const app = express();
-const port = Number(process.env.PORT) || 3000;
-
-app.use(express.json());
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const distDir = path.resolve(__dirname, '..', 'dist');
-
-app.use(express.static(distDir));
 
 const getSheetsClient = async () => {
   const base64 = process.env.GOOGLE_CREDENTIALS_BASE64;
@@ -32,7 +15,12 @@ const getSheetsClient = async () => {
   return google.sheets({ version: 'v4', auth });
 };
 
-app.post('/api/messages', async (req, res) => {
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
   try {
     const { message } = req.body ?? {};
     const trimmed = typeof message === 'string' ? message.trim() : '';
@@ -46,7 +34,7 @@ app.post('/api/messages', async (req, res) => {
       return res.status(500).json({ error: 'Missing GOOGLE_SHEETS_ID in environment.' });
     }
 
-    const range = 'Sheet1'
+    const range = process.env.GOOGLE_SHEETS_RANGE || 'Sheet1!A:B';
     const sheets = await getSheetsClient();
     const now = new Date().toISOString();
 
@@ -64,12 +52,4 @@ app.post('/api/messages', async (req, res) => {
     const message = error instanceof Error ? error.message : 'Unable to append message.';
     return res.status(500).json({ error: message });
   }
-});
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distDir, 'index.html'));
-});
-
-app.listen(port, () => {
-  console.log(`Message API listening on http://localhost:${port}`);
-});
+}

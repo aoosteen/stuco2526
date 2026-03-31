@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: student-council-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: student-council-app:latest
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "${APP_PORT}:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
