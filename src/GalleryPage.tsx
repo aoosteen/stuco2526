@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { Tape } from './components/Tape';
 import { ParallaxText } from './components/ParallaxText';
 import Lenis from 'lenis';
@@ -9,6 +8,9 @@ import { Calendar } from 'lucide-react';
 import { sanityClient, urlFor } from './lib/sanity';
 import { useRouteTransitionMotion } from './lib/routeTransitionMotion';
 import { useGalleryData } from './hooks/useGallery';
+import { Eyebrow } from './components/Eyebrow';
+import { PageTransitionLink } from './components/PageTransitionLink';
+import { ScribbleLine } from './components/ScribbleLine';
 
 
 const Sticker = ({
@@ -33,21 +35,9 @@ const Sticker = ({
   </motion.div>
 );
 
-const ScribbleLine = ({ className, enabled = true }: { className?: string; enabled?: boolean }) => (
-  <svg className={className} viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <motion.path
-      d="M0 10C20 5 40 15 60 10C80 5 100 15 120 10"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      initial={enabled ? { pathLength: 0 } : false}
-      whileInView={enabled ? { pathLength: 1 } : undefined}
-      transition={enabled ? { duration: 1.5, ease: "easeInOut" } : { duration: 0 }}
-    />
-  </svg>
-);
 
-const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunEnter }: any) => {
+
+const TermSection = ({ termData, urlFor, Sticker, Tape, shouldRunEnter, onImageClick }: any) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -111,7 +101,7 @@ const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunE
         {termData.events.map((event: any, eventIndex: number) => {
           const isEven = eventIndex % 2 === 0;
           return (
-            <Link 
+            <PageTransitionLink 
               to={`/gallery/${event._id}`} 
               key={event._id} 
               className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8 md:gap-16 relative group/link cursor-pointer`}
@@ -134,7 +124,7 @@ const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunE
                     <img 
                       src={event.coverPhoto ? urlFor(event.coverPhoto).url() : ''} 
                       alt={event.title} 
-                      className="w-full h-full object-cover transition-all duration-700"
+                      className="w-full h-full object-cover transition-all duration-700 cursor-zoom-in"
                       referrerPolicy="no-referrer"
                     />
                   </div>
@@ -171,7 +161,7 @@ const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunE
                 </div>
               </motion.div>
 
-            </Link>
+            </PageTransitionLink>
           );
         })}
       </div>
@@ -182,20 +172,13 @@ const TermSection = ({ termData, urlFor, Sticker, ScribbleLine, Tape, shouldRunE
 export default function Gallery() {
   const { galleryData, loading } = useGalleryData();
   const { shouldRunEnter, incomingEnterDelaySec } = useRouteTransitionMotion();
+  const [selectedImage, setSelectedImage] = useState<{ url: string; alt: string } | null>(null);
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
 
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 50, damping: 20, mass: 0.5 });
   const backgroundX = useTransform(smoothProgress, [0, 1], [0, -1000]);
-
-  useEffect(() => {
-    if (!loading && galleryData.length > 0) {
-      const timer = setTimeout(() => {
-        window.scrollTo(0, 0);
-      }, 50);
-      return () => clearTimeout(timer);
-    }
-  }, [loading, galleryData]);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -214,10 +197,6 @@ export default function Gallery() {
     }
 
     requestAnimationFrame(raf);
-
-    // Initial scroll reset
-    lenis.scrollTo(0, { immediate: true });
-    window.scrollTo(0, 0);
 
     return () => {
       lenis.destroy();
@@ -248,6 +227,11 @@ export default function Gallery() {
           }
           className="relative z-10"
         >
+          <Eyebrow 
+            text="The Gallery" 
+            color="text-accent-yellow" 
+            delay={incomingEnterDelaySec} 
+          />
           <h1 className="font-serif text-[12vw] md:text-[8vw] leading-[0.85] font-black tracking-tighter text-ink mb-6">
             MEMORY<br/>LANE.
           </h1>
@@ -279,14 +263,15 @@ export default function Gallery() {
               termData={termData}
               urlFor={urlFor}
               Sticker={Sticker}
-              ScribbleLine={ScribbleLine}
               Tape={Tape}
               shouldRunEnter={shouldRunEnter}
+              onImageClick={setSelectedImage}
             />
           ))}
         </div>
       </section>
 
+      
     </div>
   );
 }

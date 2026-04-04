@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Location } from 'react-router-dom';
 
 const MOBILE_BREAKPOINT = 480;
@@ -22,22 +22,22 @@ const routeTransitionKey = (value: Location | null) => {
 
 const routeTransitionTint = (value: Location | null) => {
   if (!value) {
-    return '#fff9ef';
+    return '#f2f4ff';
   }
 
   if (value.pathname.startsWith('/members')) {
-    return '#b8e6fe';
+    return '#d9f3ee';
   }
 
   if (value.pathname.startsWith('/blog')) {
-    return '#ffd3e8';
+    return '#ffe6c7';
   }
 
   if (value.pathname.startsWith('/gallery')) {
-    return '#ffe8a3';
+    return '#e6f0ff';
   }
 
-  return '#ffbd9b';
+  return '#efe3ff';
 };
 
 const toResponsivePixels = (remValue: number, viewportWidth: number) => {
@@ -66,14 +66,22 @@ const animateElement = (
 const cleanupPageStyles = (element: HTMLElement) => {
   element.style.removeProperty('position');
   element.style.removeProperty('inset');
+  element.style.removeProperty('left');
+  element.style.removeProperty('right');
   element.style.removeProperty('top');
+  element.style.removeProperty('bottom');
   element.style.removeProperty('overflow');
   element.style.removeProperty('height');
   element.style.removeProperty('translate');
   element.style.removeProperty('scale');
   element.style.removeProperty('opacity');
+  element.style.removeProperty('visibility');
   element.style.removeProperty('will-change');
   element.scrollTop = 0;
+};
+
+const cleanupInnerStyles = (element: HTMLElement) => {
+  element.style.removeProperty('translate');
 };
 
 export type SlotKey = 'A' | 'B';
@@ -107,29 +115,36 @@ export const usePageTransition = (location: Location) => {
     }
   }, []);
 
+  const startTransitionForLocation = useCallback(
+    (nextLocation: Location) => {
+      const activeLocation = slotLocations[activeSlot];
+      const nextKey = routeTransitionKey(nextLocation);
+      const activeKey = routeTransitionKey(activeLocation);
+      const inFlightKey = transitionSlots ? routeTransitionKey(slotLocations[transitionSlots.incoming]) : '';
+
+      if (nextKey === activeKey || nextKey === inFlightKey) {
+        return;
+      }
+
+      if (isTransitioning) {
+        queuedLocationRef.current = nextLocation;
+        return;
+      }
+
+      const outgoing = activeSlot;
+      const incoming = oppositeSlot(outgoing);
+      currentScrollYRef.current = window.scrollY;
+      queuedLocationRef.current = null;
+      setSlotLocations((prev) => ({ ...prev, [incoming]: nextLocation }));
+      setTransitionSlots({ outgoing, incoming });
+      setIsTransitioning(true);
+    },
+    [activeSlot, isTransitioning, slotLocations, transitionSlots],
+  );
+
   useEffect(() => {
-    const activeLocation = slotLocations[activeSlot];
-    const nextKey = routeTransitionKey(location);
-    const activeKey = routeTransitionKey(activeLocation);
-    const inFlightKey = transitionSlots ? routeTransitionKey(slotLocations[transitionSlots.incoming]) : '';
-
-    if (nextKey === activeKey || nextKey === inFlightKey) {
-      return;
-    }
-
-    if (isTransitioning) {
-      queuedLocationRef.current = location;
-      return;
-    }
-
-    const outgoing = activeSlot;
-    const incoming = oppositeSlot(outgoing);
-    currentScrollYRef.current = window.scrollY;
-    queuedLocationRef.current = null;
-    setSlotLocations((prev) => ({ ...prev, [incoming]: location }));
-    setTransitionSlots({ outgoing, incoming });
-    setIsTransitioning(true);
-  }, [location, activeSlot, isTransitioning, slotLocations, transitionSlots]);
+    startTransitionForLocation(location);
+  }, [location, startTransitionForLocation]);
 
   useEffect(() => {
     if (!isTransitioning || !transitionSlots) {
@@ -140,8 +155,10 @@ export const usePageTransition = (location: Location) => {
     const incomingPage = transitionSlots.incoming === 'A' ? slotAPageRef.current : slotBPageRef.current;
     const corners = cornersRef.current;
     const wipe = mobileWipeRef.current;
+    const outgoingInner = outgoingPage?.querySelector<HTMLElement>('[data-transition-inner="true"]');
+    const incomingInner = incomingPage?.querySelector<HTMLElement>('[data-transition-inner="true"]');
 
-    if (!outgoingPage || !incomingPage || !corners || !wipe) {
+    if (!outgoingPage || !incomingPage || !corners || !wipe || !outgoingInner || !incomingInner) {
       return;
     }
 
@@ -171,8 +188,13 @@ export const usePageTransition = (location: Location) => {
     document.body.style.cursor = 'wait';
 
     const resetTransitionStyles = () => {
+      // Clear any fill-forwards animation effects so identity transforms
+      // do not linger on the promoted slot and break fixed footer behavior.
+      cancelAllAnimations();
       cleanupPageStyles(outgoingPage);
       cleanupPageStyles(incomingPage);
+      cleanupInnerStyles(outgoingInner);
+      cleanupInnerStyles(incomingInner);
       corners.style.removeProperty('width');
       corners.style.removeProperty('height');
       wipe.style.removeProperty('translate');
@@ -180,17 +202,27 @@ export const usePageTransition = (location: Location) => {
 
     const resetTransitionStylesDeferred = () => {
       requestAnimationFrame(() => {
-        if (cancelled || transitionId !== transitionIdRef.current) {
-          return;
-        }
+        requestAnimationFrame(() => {
+          // This runs after finalize state commits; do not gate on `cancelled`
+          // because effect cleanup sets it true immediately after finalize.
+          if (transitionId !== transitionIdRef.current) {
+            return;
+          }
 
-        resetTransitionStyles();
+          resetTransitionStyles();
+        });
       });
     };
 
     const restoreBodyStyles = () => {
       document.body.style.pointerEvents = previousBodyPointerEvents;
       document.body.style.cursor = previousBodyCursor;
+    };
+
+    const resetGlobalScrollToTop = () => {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      window.scrollTo(0, 0);
     };
 
     const finalizeTransition = (shouldProcessQueue: boolean, promoteIncoming: boolean) => {
@@ -233,6 +265,8 @@ export const usePageTransition = (location: Location) => {
 
       const nextOutgoing = promotedSlot;
       const nextIncoming = oppositeSlot(nextOutgoing);
+      resetGlobalScrollToTop();
+      currentScrollYRef.current = window.scrollY;
       setSlotLocations((prev) => ({ ...prev, [nextIncoming]: queuedLocation }));
       setTransitionSlots({ outgoing: nextOutgoing, incoming: nextIncoming });
       setIsTransitioning(true);
@@ -250,16 +284,18 @@ export const usePageTransition = (location: Location) => {
     outgoingPage.style.inset = '0';
     outgoingPage.style.overflow = 'hidden';
     outgoingPage.style.height = '100vh';
-    outgoingPage.style.willChange = 'translate, scale, opacity';
+    outgoingPage.style.willChange = 'translate, scale';
 
     incomingPage.style.position = 'fixed';
     incomingPage.style.inset = '0';
     incomingPage.style.overflow = 'hidden';
     incomingPage.style.height = '100vh';
-    incomingPage.style.willChange = 'translate, scale, opacity';
+    incomingPage.style.willChange = 'translate, scale';
 
     const runTransition = async () => {
       if (mode === 'mobile') {
+        resetGlobalScrollToTop();
+        currentScrollYRef.current = window.scrollY;
         wipe.style.setProperty('translate', '0 120%');
 
         await animateElement(
@@ -272,6 +308,10 @@ export const usePageTransition = (location: Location) => {
         if (cancelled || transitionId !== transitionIdRef.current) {
           return;
         }
+
+        // Swap the visible layer while fully covered by the wipe so the
+        // reveal phase shows the incoming route immediately.
+        outgoingPage.style.setProperty('visibility', 'hidden');
 
         await animateElement(
           wipe,
@@ -292,9 +332,14 @@ export const usePageTransition = (location: Location) => {
         ),
       );
 
-      // Keep the outgoing viewport frozen at the user's current scroll position.
-      outgoingPage.scrollTop = currentScrollYRef.current;
-      incomingPage.scrollTop = 0;
+      // Freeze outgoing slot at the pre-navigation viewport position.
+      const frozenOutgoingScroll = currentScrollYRef.current;
+      outgoingInner.style.translate = `0 ${-frozenOutgoingScroll}px`;
+      // Force layout so the locked outgoing frame is committed before
+      // global scroll jumps to the incoming start position.
+      void outgoingInner.getBoundingClientRect();
+      resetGlobalScrollToTop();
+      currentScrollYRef.current = window.scrollY;
 
       const expandedWidth = viewportWidth + toResponsivePixels(32, viewportWidth);
       const expandedHeight = viewportHeight + toResponsivePixels(32, viewportWidth);
@@ -303,11 +348,9 @@ export const usePageTransition = (location: Location) => {
 
       outgoingPage.style.setProperty('scale', '1');
       outgoingPage.style.setProperty('translate', '0 0');
-      outgoingPage.style.setProperty('opacity', '1');
 
       incomingPage.style.setProperty('scale', `${DESKTOP_ENTER_START_SCALE}`);
       incomingPage.style.setProperty('translate', `0 ${desktopTravelY}px`);
-      incomingPage.style.setProperty('opacity', '1');
 
       corners.style.width = `${expandedWidth}px`;
       corners.style.height = `${expandedHeight}px`;
@@ -329,16 +372,6 @@ export const usePageTransition = (location: Location) => {
             { translate: '0 0', offset: 0 },
             { translate: '0 0', offset: 0.28 },
             { translate: `0 ${-desktopTravelY}px`, offset: 1 },
-          ],
-          { duration: DESKTOP_SWAP_DURATION_MS, easing: EASE_SWAP },
-          activeAnimations,
-        ),
-        animateElement(
-          outgoingPage,
-          [
-            { opacity: 1, offset: 0 },
-            { opacity: 0.95, offset: 0.58 },
-            { opacity: 0, offset: 1 },
           ],
           { duration: DESKTOP_SWAP_DURATION_MS, easing: EASE_SWAP },
           activeAnimations,
@@ -378,8 +411,6 @@ export const usePageTransition = (location: Location) => {
       if (cancelled || transitionId !== transitionIdRef.current) {
         return;
       }
-
-      outgoingPage.style.setProperty('opacity', '0');
     };
 
     void (async () => {
@@ -410,6 +441,40 @@ export const usePageTransition = (location: Location) => {
     };
   }, [isTransitioning, slotLocations, transitionSlots]);
 
+  useEffect(() => {
+    if (isTransitioning) {
+      return;
+    }
+
+    if (slotAPageRef.current) {
+      cleanupPageStyles(slotAPageRef.current);
+      const slotAInner = slotAPageRef.current.querySelector<HTMLElement>('[data-transition-inner="true"]');
+      if (slotAInner) {
+        cleanupInnerStyles(slotAInner);
+      }
+    }
+
+    if (slotBPageRef.current) {
+      cleanupPageStyles(slotBPageRef.current);
+      const slotBInner = slotBPageRef.current.querySelector<HTMLElement>('[data-transition-inner="true"]');
+      if (slotBInner) {
+        cleanupInnerStyles(slotBInner);
+      }
+    }
+
+    if (cornersRef.current) {
+      cornersRef.current.style.removeProperty('width');
+      cornersRef.current.style.removeProperty('height');
+    }
+
+    if (mobileWipeRef.current) {
+      mobileWipeRef.current.style.removeProperty('translate');
+    }
+
+    document.body.style.removeProperty('pointer-events');
+    document.body.style.removeProperty('cursor');
+  }, [isTransitioning, activeSlot]);
+
   const stacked = Boolean(isTransitioning && transitionSlots);
   const activeLocation = slotLocations[activeSlot];
   const incomingLocation = transitionSlots ? slotLocations[transitionSlots.incoming] : null;
@@ -427,5 +492,6 @@ export const usePageTransition = (location: Location) => {
     slotBPageRef,
     cornersRef,
     mobileWipeRef,
+    startTransitionForLocation,
   };
 };

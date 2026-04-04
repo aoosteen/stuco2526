@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { createPortal } from "react-dom";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { NAV_ITEMS, FOOTER_LINKS } from "../constants/links";
 import { useDeviceDimensions } from "../hooks/useDeviceDimensions";
+import { PageTransitionLink } from "./PageTransitionLink";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const location = useLocation();
-  const { width, height } = useDeviceDimensions();
+  const { width } = useDeviceDimensions();
   const isHome = location.pathname === "/";
 
   // Scroll Lock
@@ -27,6 +28,18 @@ export const Navbar = () => {
       document.body.style.overflow = "unset";
       document.body.classList.remove("nav-menu-open");
     };
+  }, [isMenuOpen]);
+
+  // Keyboard Accessibility: Close menu on 'Esc'
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
   useEffect(() => {
@@ -60,20 +73,41 @@ export const Navbar = () => {
   return (
     <>
       <div className="pointer-events-auto fixed top-6 left-6 md:top-10 md:left-10 z-[1305]">
-        <Link to="/" className="cursor-pointer">
+        <PageTransitionLink to="/" className="cursor-pointer">
           <img
             src="/StucoLogo.png"
             alt="Stuco Logo"
             className="h-10 md:h-12 w-auto object-contain  "
           />
-        </Link>
+        </PageTransitionLink>
       </div>
       <nav className="fixed top-0 right-0 w-full p-6 md:p-10 z-[1305] flex justify-end items-center text-white pointer-events-none mix-blend-difference">
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="pointer-events-auto hover-trigger w-12 h-12 flex items-center justify-center rounded-full border border-white/20 hover:bg-white hover:text-black transition-colors cursor-pointer "
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="pointer-events-auto hover-trigger w-12 h-12 flex items-center justify-center rounded-full border border-white/20 hover:bg-white hover:text-black transition-colors cursor-pointer"
         >
-          {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          <span className="relative flex flex-col justify-center items-center w-5 h-5">
+            <span
+              className="absolute block h-[1.5px] w-5 bg-current rounded-full transition-all duration-300 ease-in-out"
+              style={{
+                transform: isMenuOpen ? "translateY(0) rotate(45deg)" : "translateY(-5px) rotate(0deg)",
+              }}
+            />
+            <span
+              className="absolute block h-[1.5px] w-5 bg-current rounded-full transition-all duration-300 ease-in-out"
+              style={{
+                opacity: isMenuOpen ? 0 : 1,
+                transform: isMenuOpen ? "scaleX(0)" : "scaleX(1)",
+              }}
+            />
+            <span
+              className="absolute block h-[1.5px] w-5 bg-current rounded-full transition-all duration-300 ease-in-out"
+              style={{
+                transform: isMenuOpen ? "translateY(0) rotate(-45deg)" : "translateY(5px) rotate(0deg)",
+              }}
+            />
+          </span>
         </button>
       </nav>
 
@@ -146,7 +180,10 @@ export const Navbar = () => {
                     item.name !== "Contact" &&
                     (item.isHash
                       ? isHome && location.hash === `#${item.path}`
-                      : location.pathname === item.path);
+                      : item.path === "/"
+                        ? location.pathname === "/"
+                        : location.pathname === item.path ||
+                          location.pathname.startsWith(`${item.path}/`));
 
                   const isHovered = hoveredItem === item.name;
                   const isFaded =
@@ -184,7 +221,7 @@ export const Navbar = () => {
                           </AnimatePresence>
 
                           {item.name === "Contact" ? (
-                            <Link
+                            <PageTransitionLink
                               to="#contact"
                               onClick={handleContactClick}
                               className="font-serif font-black tracking-tighter text-5xl md:text-8xl transition-all duration-500 hover-trigger inline-block relative cursor-pointer"
@@ -193,10 +230,10 @@ export const Navbar = () => {
                               }}
                             >
                               <span className="relative z-10">{item.name}</span>
-                            </Link>
+                            </PageTransitionLink>
                           ) : item.isHash ? (
                             isHome ? (
-                              <Link
+                              <PageTransitionLink
                                 to={`#${item.path}`}
                                 onClick={() => setIsMenuOpen(false)}
                                 className="font-serif font-black tracking-tighter text-5xl md:text-8xl transition-all duration-500 hover-trigger inline-block relative cursor-pointer"
@@ -210,9 +247,9 @@ export const Navbar = () => {
                                 <span className="relative z-10 ">
                                   {item.name}
                                 </span>
-                              </Link>
+                              </PageTransitionLink>
                             ) : (
-                              <Link
+                              <PageTransitionLink
                                 to={`/#${item.path}`}
                                 onClick={() => setIsMenuOpen(false)}
                                 className="font-serif font-black tracking-tighter text-5xl md:text-8xl transition-all duration-500 hover-trigger inline-block relative cursor-pointer"
@@ -226,10 +263,10 @@ export const Navbar = () => {
                                 <span className="relative z-10 ">
                                   {item.name}
                                 </span>
-                              </Link>
+                              </PageTransitionLink>
                             )
                           ) : (
-                            <Link
+                            <PageTransitionLink
                               to={item.path}
                               onClick={() => setIsMenuOpen(false)}
                               className="font-serif font-black tracking-tighter text-5xl md:text-8xl transition-all duration-500 hover-trigger inline-block relative cursor-pointer"
@@ -243,7 +280,7 @@ export const Navbar = () => {
                               <span className="relative z-10 ">
                                 {item.name}
                               </span>
-                            </Link>
+                            </PageTransitionLink>
                           )}
                         </div>
 

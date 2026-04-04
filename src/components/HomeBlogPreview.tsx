@@ -1,14 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Link } from 'react-router-dom';
-import { Tape } from './Tape';
 import { sanityClient } from '../lib/sanity';
 import { ArrowRight } from 'lucide-react';
+import { BlogPreviewCard } from './Card';
+import { PageTransitionLink } from './PageTransitionLink';
 
 const bgColors = ["bg-[#fff9ef]", "bg-[#b8e6fe]", "bg-[#ffbd9b]"];
 const rotations = [-2, 3, -1];
+const MotionLink = motion.create(PageTransitionLink);
 
-export const Blogs = () => {
+export const HomeBlogPreview = () => {
   const [blogs, setBlogs] = useState<any[]>([]);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export const Blogs = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
-    <section ref={containerRef} id="blogs" data-cursor="read" className="py-32 md:py-48 bg-[#b8e6fe] text-[#1a1a1a] relative overflow-hidden z-10">
+    <section ref={containerRef} id="blogs"  className="py-32 md:py-48 bg-[#b8e6fe] text-[#1a1a1a] relative overflow-hidden z-10">
       {/* Background Texture */}
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
       
@@ -95,54 +96,36 @@ export const Blogs = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
           {blogs.map((blog, i) => {
             const y = i === 0 ? y1 : i === 1 ? y2 : y3;
-            const MotionLink = motion.create(Link);
             return (
-              <MotionLink 
-                to={`/blog/${blog.id}`} 
+              <MotionLink
+                to={`/blog/${blog.id}`}
                 key={blog.id}
                 style={{ y }}
-                className="relative group cursor-pointer hover-trigger"
+                className="cursor-pointer hover-trigger"
+                data-cursor="read"
+                data-cursor-color={['#fff9ef', '#b8e6fe', '#ffbd9b'][i % 3]}
               >
-                <div 
-                  className={`relative p-8 shadow-[10px_10px_0px_rgba(0,0,0,0.2)] border-2 border-black transition-transform duration-300 group-hover:-translate-y-2 group-hover:shadow-[15px_15px_0px_rgba(0,0,0,0.2)] ${blog.color}`}
-                  style={{ transform: `rotate(${blog.rotation}deg)` }}
-                >
-                  <Tape rotation={blog.rotation * -2} className="absolute -top-4 left-1/2 -translate-x-1/2 w-24 opacity-80" />
-                  
-                  <div className="font-sans text-xs uppercase tracking-widest font-bold opacity-60 mb-4   ">
-                    <p>{blog.date}</p>
-                    <p >By {blog.author}</p>
-                  </div>
-                  
-                  <h3 className="font-serif text-2xl font-bold mb-4 leading-tight border-b-2 border-black/10 pb-4">
-                    {blog.title}
-                  </h3>
-                  
-                  <p className="font-hand text-xl text-gray-700 leading-relaxed mb-6 line-clamp-4">
-                    {blog.excerpt}
-                  </p>
-                  
-                  <div className="inline-flex items-center gap-2 font-sans text-sm uppercase tracking-widest font-bold text-[#a30037] group-hover:text-[#FF1493] transition-colors">
-                    Read More 
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </div>
-                </div>
+                <BlogPreviewCard
+                  color={blog.color}
+                  rotation={blog.rotation}
+                  date={blog.date}
+                  author={blog.author}
+                  title={blog.title}
+                  excerpt={blog.excerpt}
+                />
               </MotionLink>
             );
           })}
         </div>
           <div className="mt-20 flex justify-center relative z-20">
-          <Link to="/blog">
+          <PageTransitionLink to="/blog" data-cursor="read">
             <motion.button
               whileTap={{ scale: 0.95 }}
               className="bg-[#a30037] text-white px-8 py-4 md:px-12 md:py-6 font-sans uppercase tracking-[0.2em] font-black border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all hover-trigger flex items-center gap-4 text-sm md:text-base hover:scale-105"
             >
               Read more blogs <ArrowRight size={24} />
             </motion.button>
-          </Link>
+          </PageTransitionLink>
         </div>
       </div>
     </section>

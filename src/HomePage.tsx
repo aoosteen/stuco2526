@@ -6,16 +6,18 @@ import {
   useSpring,
   useMotionTemplate,
 } from "motion/react";
-import { About } from "./components/About";
-import { LatestEvents } from "./components/LatestEvents";
-import { Blogs } from "./components/Blogs";
-import { Board } from "./components/Board";
+import { HomeAboutSection } from "./components/HomeAboutSection";
+import { HomeLatestEvents } from "./components/HomeLatestEvents";
+import { HomeBlogPreview } from "./components/HomeBlogPreview";
+import { HomeBoardSection } from "./components/HomeBoardSection";
 import Lenis from "lenis";
+import { ChevronDown } from "lucide-react";
 import { useRouteTransitionMotion } from "./lib/routeTransitionMotion";
 
 // --- Main App ---
 export default function Home() {
   const { shouldRunEnter, incomingEnterDelaySec } = useRouteTransitionMotion();
+  const lenisRef = useRef<Lenis | null>(null);
 
   // Initialize Lenis
   useEffect(() => {
@@ -29,13 +31,14 @@ export default function Home() {
       touchMultiplier: 2,
     });
 
+    lenisRef.current = lenis;
+
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
 
     requestAnimationFrame(raf);
-    lenis.scrollTo(0, { immediate: true });
 
     return () => {
       lenis.destroy();
@@ -82,7 +85,6 @@ export default function Home() {
         <section
           ref={heroRef}
           id="home"
-          data-cursor="magic"
           className="relative h-[400vh] w-full bg-[#000000]"
         >
           <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -155,27 +157,64 @@ export default function Home() {
            
 
             <motion.div
-              style={{ opacity: uiOpacity }}
-              className="absolute bottom-10 right-10 z-40 hidden md:block"
+              className="absolute bottom-6 right-6 md:bottom-10 md:right-10 z-40 flex flex-col items-end gap-3 md:gap-6"
             >
-              <div className="flex items-center gap-4">
-                <span className="font-mono text-[8px] text-white/30 tracking-widest uppercase">
+              {/* Recording Indicator - simplified for mobile */}
+              <div className="flex items-center gap-2 md:gap-4 opacity-70 md:opacity-100">
+                <span className="font-mono text-[6px] md:text-[8px] text-white/30 tracking-widest uppercase">
                   REC [●] 00:00:00:00
                 </span>
-                <div className="w-8 h-[1px] bg-white/30" />
+                <div className="w-4 md:w-8 h-[1px] bg-white/30" />
               </div>
+
+              {/* Skip Intro Button - Redesigned to match scrapbook theme */}
+              <motion.button
+                onClick={() => lenisRef.current?.scrollTo('#about', { offset: -50 })}
+                whileHover={{ scale: 1.05, rotate: 1 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative flex items-center gap-2 md:gap-4 pointer-events-auto outline-none transition-all duration-300 mr-1 md:mr-2 mb-1 md:mb-2 scale-90 md:scale-100"
+              >
+                {/* Sticker Style Text Box */}
+                <div className="relative bg-accent-yellow text-black border-2 border-black px-4 md:px-5 py-2 md:py-2.5 shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[6px_6px_0px_rgba(0,0,0,1)] group-hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] md:group-hover:shadow-[3px_3px_0px_rgba(0,0,0,1)] group-hover:translate-x-[2px] md:group-hover:translate-x-[3px] group-hover:translate-y-[2px] md:group-hover:translate-y-[3px] transition-all duration-200 -rotate-2">
+                  {/* Decorative Tape from the theme */}
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 md:w-16 h-3 md:h-4 bg-white/40 backdrop-blur-sm border border-black/10 rotate-1 pointer-events-none" />
+                  
+                  <div className="flex flex-col items-start leading-tight">
+                    <span className="font-serif font-black text-[10px] md:text-xs uppercase tracking-tight">
+                      Skip Intro
+                    </span>
+                    <span className="hidden sm:inline font-hand text-[10px] text-black/50 italic">
+                      Straight to About
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bold Arrow Badge */}
+                <div className="w-11 md:w-14 h-11 md:h-14 bg-accent-pink rounded-full border-2 border-black flex items-center justify-center text-white shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[6px_6px_0px_rgba(0,0,0,1)] group-hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] md:group-hover:shadow-[3px_3px_0px_rgba(0,0,0,1)] group-hover:translate-x-[2px] md:group-hover:translate-x-[3px] group-hover:translate-y-[2px] md:group-hover:translate-y-[3px] transition-all duration-200">
+                  <ChevronDown size={28} strokeWidth={3} className="hidden md:block group-hover:translate-y-1 transition-transform duration-300" />
+                  <ChevronDown size={20} strokeWidth={3} className="block md:hidden group-hover:translate-y-1 transition-transform duration-300" />
+                </div>
+                
+                {/* Decorative Doodle Star */}
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+                  className="absolute -top-2 -right-2 text-[#00FFFF] drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] pointer-events-none"
+                >
+                  <span className="text-sm md:text-xl">★</span>
+                </motion.div>
+              </motion.button>
             </motion.div>
 
             {/* Scroll Indicator */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-40">
               <motion.div
-                style={{ opacity: scrollIndicatorOpacity }}
                 className="flex flex-col items-center gap-2"
               >
                 <span className="font-sans text-[10px] uppercase tracking-[0.4em] text-white/50">
-                  Explore
+                  SCROLL TO EXPLORE
                 </span>
-                <div className="w-[1px] h-12 bg-white/20 relative overflow-hidden">
+                <div className="w-px h-12 bg-white/20 relative overflow-hidden">
                   <motion.div
                     animate={{ y: [0, 48] }}
                     transition={{
@@ -204,17 +243,17 @@ export default function Home() {
               <span>OUR VOICE</span>
             </motion.div>
           </div>
-          <About />
+          <HomeAboutSection />
         </section>
 
         {/* Latest Events / Gallery */}
-        <LatestEvents />
+        <HomeLatestEvents />
 
         {/* Blogs Section */}
-        <Blogs />
+        <HomeBlogPreview />
 
         {/* Team Section */}
-        <Board />
+        <HomeBoardSection />
       </main>
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { Tape } from './Tape';
 
-export const About = () => {
+export const HomeAboutSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,

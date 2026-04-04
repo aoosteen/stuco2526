@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Tape } from './Tape';
-import { Link } from 'react-router-dom';
 import { FOOTER_LINKS } from "../constants/links";
 import Confetti from 'react-confetti';
 import { useDeviceDimensions } from '../hooks/useDeviceDimensions';
@@ -10,6 +9,7 @@ const SocialLinks = () => (
   <div className="flex flex-col gap-4 lg:gap-8 w-full">
     <a 
       href={FOOTER_LINKS.email.href} 
+      data-cursor="arrow"
       className="hover-trigger flex items-center gap-4 text-sm lg:text-lg font-sans uppercase tracking-widest transition-colors group"
       style={{ '--hover-color': FOOTER_LINKS.email.hoverColor } as React.CSSProperties}
     >
@@ -30,6 +30,7 @@ const SocialLinks = () => (
           href={link.href} 
           target="_blank" 
           rel="noreferrer" 
+          data-cursor="arrow"
           className="hover-trigger flex items-center gap-4 text-sm lg:text-lg font-sans uppercase tracking-widest transition-colors group"
           style={{ '--hover-color': link.hoverColor } as React.CSSProperties}
         >
@@ -101,7 +102,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer id="contact" data-cursor="hello" className="fixed bottom-0 left-0 w-full h-screen bg-[#ffbd9b] overflow-hidden flex flex-col justify-between p-4 sm:p-6 lg:p-20 pt-32 sm:pt-40 lg:pt-48 z-0">
+    <footer id="contact" data-cursor="hello" className="relative w-full h-screen bg-[#ffbd9b] overflow-hidden flex flex-col justify-between p-4 sm:p-6 lg:p-20 pt-32 sm:pt-40 lg:pt-48">
       {confettiActive && (
         <motion.div 
         initial={{ opacity: 0 }}
@@ -122,22 +123,22 @@ export const Footer = () => {
       <div className="hidden opacity-30" />
       
       {/* Background Doodles - Repositioned to avoid overlap and improve composition */}
-      <div className="absolute top-[25%] right-[5%] text-[#8b0836] opacity-20 pointer-events-none rotate-12">
+      <div className="absolute top-[10%] right-[3%] text-[#8b0836] opacity-20 pointer-events-none rotate-12">
         <svg width="120" height="120" viewBox="0 0 100 100">
           <path d="M10,50 Q30,10 50,50 T90,50" fill="none" stroke="currentColor" strokeWidth="3" />
         </svg>
       </div>
-      <div className="absolute top-[60%] left-[5%] text-[#024a70] opacity-20 pointer-events-none -rotate-12">
+      <div className="absolute top-[15%] left-[25%] text-[#024a70] opacity-20 pointer-events-none -rotate-12">
         <svg width="80" height="80" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5 5" />
         </svg>
       </div>
-      <div className="absolute top-[15%] right-[15%] text-[#FF1493] opacity-20 pointer-events-none rotate-[30deg]">
+      <div className="absolute top-[40%] right-[2%] text-[#FF1493] opacity-20 pointer-events-none rotate-[30deg]">
         <svg width="100" height="100" viewBox="0 0 100 100">
           <rect x="20" y="20" width="60" height="60" fill="none" stroke="currentColor" strokeWidth="3" />
         </svg>
       </div>
-      <div className="absolute bottom-[15%] left-[40%] text-black opacity-10 pointer-events-none">
+      <div className="absolute top-[12%] left-[45%] text-black opacity-10 pointer-events-none">
         <svg width="150" height="150" viewBox="0 0 100 100">
           <path d="M20,20 L80,80 M80,20 L20,80" stroke="currentColor" strokeWidth="2" />
         </svg>
@@ -171,7 +172,8 @@ export const Footer = () => {
                 <label className="font-sans text-[10px] uppercase tracking-widest font-bold opacity-50">Message</label>
                 <textarea
                   rows={6}
-                  className="bg-transparent border-b border-black/20 py-1 lg:py-4 focus:border-black outline-none font-hand text-lg lg:text-2xl resize-none"
+                  data-cursor="normal"
+                  className="bg-transparent border-b border-black/20 py-1 lg:py-4 focus:border-black outline-none font-hand text-lg lg:text-2xl resize-none cursor-auto"
                   placeholder="Write something..."
                   value={message}
                   onChange={(event) => {

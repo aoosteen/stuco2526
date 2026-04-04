@@ -1,32 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'motion/react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Tape } from './components/Tape';
 import Lenis from 'lenis';
 import { ArrowLeft, Calendar, Image as ImageIcon } from 'lucide-react';
 
 import { useRouteTransitionMotion } from './lib/routeTransitionMotion';
 import { useGalleryEvent } from './hooks/useGallery';
+import { Eyebrow } from './components/Eyebrow';
+import { Lightbox } from './components/Lightbox';
+import { PageTransitionLink } from './components/PageTransitionLink';
+import { ScribbleLine } from './components/ScribbleLine';
 
-const ScribbleLine = ({ className, enabled = true }: { className?: string; enabled?: boolean }) => (
-  <svg className={className} viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <motion.path
-      d="M0 10C20 5 40 15 60 10C80 5 100 15 120 10"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      initial={enabled ? { pathLength: 0 } : false}
-      whileInView={enabled ? { pathLength: 1 } : undefined}
-      transition={enabled ? { duration: 1.5, ease: "easeInOut" } : { duration: 0 }}
-    />
-  </svg>
-);
+
 
 export default function EventGallery() {
   const { shouldRunEnter, incomingEnterDelaySec } = useRouteTransitionMotion();
   const { id } = useParams<{ id: string }>();
   const { event, loading } = useGalleryEvent(id);
   const [activeCategory, setActiveCategory] = useState("Highlights");
+  const [selectedImage, setSelectedImage] = useState<{ url: string; alt: string } | null>(null);
+  const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>({});
+
+  const IMAGES_PER_PAGE = 9;
   
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -40,21 +36,23 @@ export default function EventGallery() {
 
   useEffect(() => {
     if (event?.categories && event.categories.length > 0 && activeCategory === "Highlights") {
-      setActiveCategory(event.categories[0].name);
+      const firstCat = event.categories[0].name;
+      setActiveCategory(firstCat);
+      setVisibleCounts(prev => ({ ...prev, [firstCat]: prev[firstCat] ?? IMAGES_PER_PAGE }));
     }
   }, [event, activeCategory]);
 
-  useEffect(() => {
-    if (!loading && event) {
-      // Small delay to ensure the DOM has fully updated after loading state changes
-      const timer = setTimeout(() => {
-        window.scrollTo(0, 0);
-        // If there's a global lenis or local one, we could use it here, 
-        // but for now we'll rely on the useEffect below to initialize it
-      }, 50);
-      return () => clearTimeout(timer);
-    }
-  }, [loading, event]);
+  const handleCategoryChange = (name: string) => {
+    setActiveCategory(name);
+    setVisibleCounts(prev => ({ ...prev, [name]: prev[name] ?? IMAGES_PER_PAGE }));
+  };
+
+  const handleLoadMore = () => {
+    setVisibleCounts(prev => ({
+      ...prev,
+      [activeCategory]: (prev[activeCategory] ?? IMAGES_PER_PAGE) + IMAGES_PER_PAGE,
+    }));
+  };
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -74,16 +72,16 @@ export default function EventGallery() {
 
     requestAnimationFrame(raf);
 
-    // Initial scroll reset for the mounted component
-    lenis.scrollTo(0, { immediate: true });
-    window.scrollTo(0, 0);
-
     return () => {
       lenis.destroy();
     };
   }, [id]);
 
   const activeCategoryData = event?.categories?.find((c: any) => c.name === activeCategory) || event?.categories?.[0];
+  const visibleCount = visibleCounts[activeCategory] ?? IMAGES_PER_PAGE;
+  const totalImages = activeCategoryData?.images?.length ?? 0;
+  const visibleImages = activeCategoryData?.images?.slice(0, visibleCount) ?? [];
+  const hasMoreImages = visibleCount < totalImages;
 
   return (
     <div ref={containerRef} className="min-h-screen bg-paper text-ink font-sans selection:bg-accent-yellow selection:text-ink overflow-x-hidden relative">
@@ -98,7 +96,7 @@ export default function EventGallery() {
       {!loading && !event && (
         <div className="min-h-screen flex items-center justify-center flex-col gap-4">
           <div className="font-serif text-3xl text-ink">Event not found</div>
-          <Link to="/gallery" className="font-sans text-sm uppercase tracking-widest font-bold underline text-ink">Return to Gallery</Link>
+          <PageTransitionLink to="/gallery" className="font-sans text-sm uppercase tracking-widest font-bold underline text-ink">Return to Gallery</PageTransitionLink>
         </div>
       )}
 
@@ -121,10 +119,10 @@ export default function EventGallery() {
                 <h1 className="font-serif text-5xl md:text-7xl font-black tracking-tighter leading-tight mb-6">
                   {event.title}
                 </h1>
-                <p className="font-hand text-2xl leading-relaxed text-accent-yellow mb-8">
+                <p className="font-hand text-2xl leading-relaxed text-accent-yellow-dark mb-8">
                   {event.description}
                 </p>
-                <ScribbleLine className="w-32 text-[#FFC21A]" enabled={shouldRunEnter} />
+                <ScribbleLine className="w-32 text-accent-yellow-dark" enabled={shouldRunEnter} />
               </motion.div>
 
               {/* Cover Image */}
@@ -137,14 +135,18 @@ export default function EventGallery() {
                     : { duration: 0 }
                 }
                 className="w-full lg:w-1/2 relative"
+                data-cursor="view"
               >
                 <div className="p-4 bg-white border-2 border-black shadow-[15px_15px_0px_rgba(0,0,0,0.15)] relative">
                   <Tape rotation={3} className="absolute -top-6 left-1/2 -translate-x-1/2 w-40 opacity-90 z-20" />
-                  <div className="aspect-[4/3] overflow-hidden border-2 border-black">
+                  <div 
+                    className="aspect-[4/3] overflow-hidden border-2 border-black "
+                    onClick={() => setSelectedImage({ url: event.coverImage, alt: event.title })}
+                  >
                     <img 
                       src={event.coverImage} 
                       alt={event.title} 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
                       referrerPolicy="no-referrer"
                     />
                   </div>
@@ -168,7 +170,7 @@ export default function EventGallery() {
                 return (
                   <button
                     key={cat.name}
-                    onClick={() => setActiveCategory(cat.name)}
+                    onClick={() => handleCategoryChange(cat.name)}
                     className={`px-6 py-3 font-sans font-bold uppercase tracking-widest text-sm border-2 border-black transition-all duration-300 ${
                       isActive 
                         ? `${hexColor} text-white shadow-[0px_0px_0px_rgba(0,0,0,1)] translate-y-1` 
@@ -176,6 +178,7 @@ export default function EventGallery() {
                     }`}
                   >
                     {cat.name}
+                    <span className="ml-2 opacity-50 font-mono text-xs">({cat.images.length})</span>
                   </button>
                 );
               })}
@@ -211,11 +214,16 @@ export default function EventGallery() {
                       className={`absolute inset-0 ${activeCategoryData.color.replace('text-', 'bg-')} origin-left`}
                     />
                   </div>
+                  {totalImages > 0 && (
+                    <span className="font-sans text-[10px] uppercase tracking-widest font-bold opacity-40 whitespace-nowrap">
+                      {Math.min(visibleCount, totalImages)} / {totalImages}
+                    </span>
+                  )}
                 </div>
 
                 {/* Masonry-ish Scrapbook Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-                  {activeCategoryData.images.map((img, imgIndex) => (
+                  {visibleImages.map((img, imgIndex) => (
                     <motion.div
                       key={`${activeCategoryData.name}-${imgIndex}`}
                       initial={shouldRunEnter ? { opacity: 0, y: 50, rotate: img.rot * 2 } : false}
@@ -226,6 +234,7 @@ export default function EventGallery() {
                           : { duration: 0 }
                       }
                       className="relative group"
+                      data-cursor="view"
                     >
                       {/* Polaroid Style Frame */}
                       <div className="p-3 md:p-4 bg-white border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,0.1)] transition-transform duration-500 group-hover:scale-[1.03] group-hover:shadow-[12px_12px_0px_rgba(0,0,0,0.15)] group-hover:z-10 relative">
@@ -235,8 +244,9 @@ export default function EventGallery() {
                           <img 
                             src={img.url} 
                             alt={`${activeCategoryData.name} ${imgIndex + 1}`} 
-                            className="w-full h-full object-cover transition-all duration-700"
+                            className="w-full h-full object-cover transition-all duration-700 "
                             referrerPolicy="no-referrer"
+                            onClick={() => setSelectedImage({ url: img.url, alt: `${activeCategoryData.name} ${imgIndex + 1}` })}
                           />
                           {/* Hover Overlay */}
                           <div className="absolute inset-0 bg-[#FF1493]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none mix-blend-multiply" />
@@ -245,11 +255,44 @@ export default function EventGallery() {
                     </motion.div>
                   ))}
                 </div>
+
+                {/* Load More / End Indicator */}
+                {hasMoreImages ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex flex-col items-center gap-4 mt-16"
+                  >
+                    <p className="font-sans text-[10px] uppercase tracking-widest font-bold opacity-40">
+                      Showing {Math.min(visibleCount, totalImages)} of {totalImages} photos
+                    </p>
+                    <button
+                      id={`load-more-${activeCategory}`}
+                      onClick={handleLoadMore}
+                      className={`group relative flex items-center gap-3 px-10 py-4 bg-black text-white font-sans text-xs uppercase tracking-widest font-black border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,0.15)] hover:shadow-[2px_2px_0px_rgba(0,0,0,0.15)] hover:translate-x-[4px] hover:translate-y-[4px] transition-all`}
+                    >
+                      Load More Photos
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                  </motion.div>
+                ) : totalImages > IMAGES_PER_PAGE ? (
+                  <div className="flex flex-col items-center gap-2 mt-16 opacity-40">
+                    <div className="w-12 h-[2px] bg-black" />
+                    <p className="font-sans text-[10px] uppercase tracking-widest font-bold">All {totalImages} photos loaded</p>
+                    <div className="w-12 h-[2px] bg-black" />
+                  </div>
+                ) : null}
                 
               </motion.div>
             </AnimatePresence>
           </div>
          
+          <Lightbox 
+            isOpen={!!selectedImage} 
+            onClose={() => setSelectedImage(null)} 
+            src={selectedImage?.url || ''} 
+            alt={selectedImage?.alt || ''} 
+          />
         </>
       )}
     </div>

@@ -1,17 +1,19 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { Polaroid } from './Polaroid';
 import { Tape } from './Tape';
 import { urlFor } from '../lib/sanity';
 import { cn } from '../lib/utils';
 import { useLatestGalleryEvents } from '../hooks/useGallery';
 import { ArrowRight } from 'lucide-react';
+import { Lightbox } from './Lightbox';
+import { PageTransitionLink } from './PageTransitionLink';
 
-const MotionLink = motion.create(Link);
+const MotionLink = motion.create(PageTransitionLink);
 
-export const LatestEvents = () => {
+export const HomeLatestEvents = () => {
   const { events } = useLatestGalleryEvents(3);
+  const [selectedImage, setSelectedImage] = useState<{ url: string; alt: string } | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -24,6 +26,7 @@ export const LatestEvents = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
   return (
+    <>
     <section ref={containerRef} id="latest-events" className="pt-48 pb-32 bg-[#1c1917] text-[#ffffff] relative overflow-hidden z-10">
       {/* Background Texture */}
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
@@ -89,6 +92,7 @@ export const LatestEvents = () => {
                   caption={item.shortWords || "Memory"} 
                   className="w-[85%] md:w-[75%]" 
                   captionClassname={isEven ? 'text-accent-pink' : 'text-accent-yellow'}
+                  onImageClick={(data) => setSelectedImage({ url: data.src, alt: data.alt })}
                 />
                 
                 {/* Decorative elements per item */}
@@ -146,15 +150,22 @@ export const LatestEvents = () => {
         })}
       </div>
       <div className="mt-10 flex justify-center relative z-20">
-        <Link to="/gallery">
+        <PageTransitionLink to="/gallery">
           <motion.button
             whileTap={{ scale: 0.95 }}
             className="bg-accent-yellow text-black px-8 py-4 md:px-12 md:py-6 font-sans uppercase tracking-[0.2em] font-black border-2 border-black shadow-[8px_8px_0px_rgba(255,255,255,1)] hover:shadow-[12px_12px_0px_rgba(255,255,255,1)] transition-all hover-trigger flex items-center gap-4 text-sm md:text-base hover:scale-105"
           >
             View Event Gallery <ArrowRight size={24} />
           </motion.button>
-        </Link>
+        </PageTransitionLink>
       </div>
     </section>
+      <Lightbox 
+        isOpen={!!selectedImage} 
+        onClose={() => setSelectedImage(null)} 
+        src={selectedImage?.url || ''} 
+        alt={selectedImage?.alt || ''} 
+      />
+    </>
   );
 };

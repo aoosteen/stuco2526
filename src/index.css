@@ -11,6 +11,7 @@
   --color-accent-red: #8b0836;
   --color-accent-darkblue: #024a70;
   --color-accent-yellow: #FFC21A;
+  --color-accent-yellow-dark: #8B6E00;
   --color-accent-lightblue: #e5e0d7;
   --color-accent-pink: #FF1493;
 }
@@ -25,10 +26,7 @@ body {
   --scrapbook-transition-ease: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Hide default cursor on elements with custom cursor */
-[data-cursor], [data-cursor] * {
-  cursor: none !important;
-}
+
 
 /* Ensure default cursor is visible on nav, menu, and form elements */
 nav, .menu-container, form, button, input, textarea, .hover-trigger {
@@ -38,6 +36,25 @@ nav, .menu-container, form, button, input, textarea, .hover-trigger {
 /* Force pointer cursor on interactive elements */
 button, button *, .hover-trigger, .hover-trigger *, a, a * {
   cursor: pointer !important;
+}
+
+/* Hide default cursor on elements with custom cursor */
+/* This MUST come after interactive element rules to take precedence */
+[data-cursor]:not([data-cursor="normal"]), 
+[data-cursor]:not([data-cursor="normal"]) * {
+  cursor: none !important;
+}
+
+/* Explicitly restore cursor for data-cursor="normal" - Use high specificity to win over parent data-cursor */
+[data-cursor] [data-cursor="normal"], 
+[data-cursor][data-cursor="normal"],
+[data-cursor="normal"] {
+  cursor: auto !important;
+}
+
+[data-cursor] [data-cursor="normal"] *,
+[data-cursor="normal"] * {
+  cursor: auto !important;
 }
 
 /* Scrapbook specific styles removed for clean theme */
@@ -148,6 +165,11 @@ html.lenis, html.lenis body {
 .aod-transition-page {
   position: relative;
   z-index: 2;
+}
+
+.aod-transition-page-inner {
+  position: relative;
+  min-height: 100%;
 }
 
 .aod-transition-page--stacked {

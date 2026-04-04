@@ -9,6 +9,7 @@ export default {
       name: 'name',
       type: 'string',
       title: 'Name',
+      validation: (Rule: Rule) => Rule.required().min(2).max(50),
     },
     {
       name: 'position',
@@ -30,22 +31,28 @@ export default {
           {title: 'Sec 1 Level Representative', value: 'Sec 1 Level Representative'},
         ],
       },
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'twoWords',
       type: 'string',
       title: '2 words to describe you',
-      validation: (Rule:Rule) => Rule.max(20)
+      validation: (Rule: Rule) => Rule.required().max(25),
     },
     {
       name: 'image',
       type: 'image',
       title: 'Image',
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'description',
       type: 'text',
       title: 'Description',
+      validation: (Rule: Rule) => Rule.required().min(5).max(200),
     },
     {
       name: 'events',

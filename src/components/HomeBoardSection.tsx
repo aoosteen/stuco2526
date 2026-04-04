@@ -1,16 +1,16 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'motion/react';
+import React, { useRef, useState } from 'react';
+import { motion, useScroll, useSpring } from 'motion/react';
 import { useMember } from '../hooks/useMember';
-import { BoardMember } from './BoardMember';
+import { BoardMemberRow } from './BoardMemberRow';
 import { Tape } from './Tape';
-import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { ParallaxText } from './ParallaxText';
+import { PageTransitionLink } from './PageTransitionLink';
 
-export const Board = () => {
+export const HomeBoardSection = () => {
   const { allSortedMembers: boardMembers, loading } = useMember();
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -19,10 +19,8 @@ export const Board = () => {
 
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 50, damping: 20, mass: 0.5 });
   
-
-
   return (
-    <section ref={containerRef} id="team" data-cursor="view" className="py-32 md:py-48 bg-[#FEF8EE] relative z-20 overflow-hidden">
+    <section ref={containerRef} id="team"  className="py-32 md:py-48 bg-[#FEF8EE] relative z-20 overflow-hidden">
       {/* Parallax Background Text Layers */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0 hidden sm:block">
         <div className="absolute w-full" style={{ top: "17.4%", opacity: 0.05, color: "#000000" }}>
@@ -66,24 +64,32 @@ export const Board = () => {
           <p className="font-hand text-3xl text-gray-600 max-w-sm mt-6 md:mt-0">The minds behind the madness. Meet your officers.</p>
         </div>
 
-        <div className="border-t-2 border-black min-h-[400px]">
+        <div className="border-t-2 border-black min-h-[400px]" data-cursor="view">
           {!loading ? (
             boardMembers.map((member, i) => (
-              <BoardMember key={member._id || i} member={member} index={i} />
+              <BoardMemberRow 
+                key={member._id || i} 
+                member={member} 
+                index={i} 
+                isHovered={hoveredIndex === i}
+                isAnyHovered={hoveredIndex !== null}
+                onHover={() => setHoveredIndex(i)}
+                onUnhover={() => setHoveredIndex(null)}
+              />
             ))
           ) : (
             <div className="py-20 text-center font-hand text-2xl opacity-20">Loading our leaders...</div>
           )}
         </div>
          <div className="mt-20 flex justify-center">
-            <Link to="/members">
+            <PageTransitionLink to="/members">
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 className="bg-accent-pink text-white px-8 py-4 md:px-12 md:py-6 font-sans uppercase tracking-[0.2em] font-black border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all hover-trigger flex items-center gap-4 text-sm md:text-base hover:scale-105"
               >
                 Learn More <ArrowRight size={24} />
               </motion.button>
-            </Link>
+            </PageTransitionLink>
           </div>
       </div>
     </section>

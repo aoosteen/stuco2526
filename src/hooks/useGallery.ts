@@ -79,6 +79,55 @@ const STICKER_COLORS = [
   'bg-[#FFBD9B] text-black'
 ];
 
+function decorateEvent(event: any, overallIndex: number, lastCardColorIdx: number): { event: GalleryEvent; nextLastIdx: number } {
+  const stickerColor = STICKER_COLORS[overallIndex % STICKER_COLORS.length];
+  const stickerBgOnly = stickerColor.split(' ')[0].toLowerCase();
+
+  let cardColorIdx = Math.floor(Math.random() * CARD_COLORS.length);
+  while (
+    (cardColorIdx === lastCardColorIdx ||
+      CARD_COLORS[cardColorIdx].toLowerCase() === stickerBgOnly) &&
+    CARD_COLORS.length > 2
+  ) {
+    cardColorIdx = Math.floor(Math.random() * CARD_COLORS.length);
+  }
+
+  return {
+    event: {
+      ...event,
+      id: event._id,
+      bgColor: CARD_COLORS[cardColorIdx],
+      stickerColor,
+      rotation: (Math.random() * 6) - 3,
+    },
+    nextLastIdx: cardColorIdx,
+  };
+}
+
+function buildTermData(rawEvents: any[]): TermData[] {
+  const terms: Record<string, GalleryEvent[]> = { term1: [], term2: [], term3: [], term4: [] };
+
+  let overallIndex = 0;
+  let lastCardColorIdx = -1;
+
+  rawEvents.forEach((event: any) => {
+    const term = event.term as keyof typeof terms;
+    if (terms[term]) {
+      const { event: decoratedEvent, nextLastIdx } = decorateEvent(event, overallIndex, lastCardColorIdx);
+      lastCardColorIdx = nextLastIdx;
+      terms[term].push(decoratedEvent);
+      overallIndex++;
+    }
+  });
+
+  return (
+    ['term1', 'term2', 'term3', 'term4'] as const
+  ).map(key => ({
+    ...termThemes[key],
+    events: terms[key],
+  })).filter(t => t.events.length > 0) as TermData[];
+}
+
 export function useGalleryData() {
   const [galleryData, setGalleryData] = useState<TermData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -88,53 +137,7 @@ export function useGalleryData() {
     try {
       setLoading(true);
       const data = await sanityClient.fetch(`*[_type == "gallery"] | order(date asc)`);
-      
-      const terms: Record<string, GalleryEvent[]> = {
-        term1: [],
-        term2: [],
-        term3: [],
-        term4: []
-      };
-
-      let overallIndex = 0;
-      let lastCardColorIdx = -1;
-
-      data.forEach((event: any) => {
-        const term = event.term as keyof typeof terms; 
-        if (terms[term]) {
-          const stickerColor = STICKER_COLORS[overallIndex % STICKER_COLORS.length];
-          const stickerBgOnly = stickerColor.split(' ')[0].toLowerCase();
-
-          let cardColorIdx = Math.floor(Math.random() * CARD_COLORS.length);
-          while(
-            (cardColorIdx === lastCardColorIdx || 
-             CARD_COLORS[cardColorIdx].toLowerCase() === stickerBgOnly) && 
-             CARD_COLORS.length > 2
-          ) {
-            cardColorIdx = Math.floor(Math.random() * CARD_COLORS.length);
-          }
-          lastCardColorIdx = cardColorIdx;
-
-          terms[term].push({
-            ...event,
-            id: event._id,
-            bgColor: CARD_COLORS[cardColorIdx],
-            stickerColor: stickerColor,
-            rotation: (Math.random() * 6) - 3 // random rotation between -3 and 3
-          });
-
-          overallIndex++;
-        }
-      });
-
-      const processedData: TermData[] = [
-        { ...termThemes.term1, events: terms.term1 },
-        { ...termThemes.term2, events: terms.term2 },
-        { ...termThemes.term3, events: terms.term3 },
-        { ...termThemes.term4, events: terms.term4 },
-      ].filter(t => t.events.length > 0) as TermData[];
-
-      setGalleryData(processedData);
+      setGalleryData(buildTermData(data));
       setError(null);
     } catch (err: any) {
       console.error("Error fetching gallery data:", err);

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import { Tape } from "./components/Tape";
 import Lenis from "lenis";
@@ -7,44 +8,14 @@ import { createPortal } from "react-dom";
 import { useMember } from "./hooks/useMember";
 import { useRouteTransitionMotion } from "./lib/routeTransitionMotion";
 import { ParallaxText } from "./components/ParallaxText";
+import { BoardMemberCard, LevelRepCard } from "./components/Card";
+import { Eyebrow } from "./components/Eyebrow";
+import { Lightbox } from "./components/Lightbox";
+import { memberAnchorIdFromPosition, normalizeMemberAnchorId } from "./lib/memberAnchor";
+import { ScribbleLine } from "./components/ScribbleLine";
+import { MembersTimeline } from "./components/MembersTimeline";
 
-const Sticker = ({
-  text,
-  color,
-  className,
-}: {
-  text: string;
-  color: string;
-  className?: string;
-}) => (
-  <motion.div
-    initial={{ scale: 0, rotate: -20 }}
-    whileInView={{ scale: 1, rotate: Math.random() * 20 - 10 }}
-    viewport={{ once: true }}
-    className={`px-4 py-2 ${color} border-2 border-black font-hand text-sm font-bold shadow-[4px_4px_0px_rgba(0,0,0,1)] whitespace-nowrap ${className}`}
-  >
-    {text}
-  </motion.div>
-);
 
-const ScribbleLine = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    viewBox="0 0 100 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <motion.path
-      d="M0 10C20 5 40 15 60 10C80 5 100 15 120 10"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      initial={{ pathLength: 0 }}
-      whileInView={{ pathLength: 1 }}
-      transition={{ duration: 1.5, ease: "easeInOut" }}
-    />
-  </svg>
-);
 
 const HandDrawnArrow = ({ className }: { className?: string }) => (
   <svg
@@ -68,9 +39,13 @@ const HandDrawnArrow = ({ className }: { className?: string }) => (
 
 export default function Members() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<Lenis | null>(null);
+  const location = useLocation();
   const { boardMembers, levelReps, loading } = useMember();
   const [isMounted, setIsMounted] = useState(false);
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{ url: string; alt: string } | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const { shouldRunEnter, incomingEnterDelaySec, layer, isTransitioning } =
     useRouteTransitionMotion();
 
@@ -80,8 +55,7 @@ export default function Members() {
     offset: ["start start", "end end"],
   });
 
-  const { scrollYProgress: globalScroll } = useScroll();
-  const progressOpacity = useTransform(scrollYProgress, [0,0.95, 1], [1,1, 0]);
+  const progressOpacity = useTransform(scrollYProgress, [0,1, 1], [1,1, 0]);
 
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 50,
@@ -113,6 +87,40 @@ export default function Members() {
     };
   }, []);
 
+  const allMembers = [...boardMembers, ...levelReps];
+
+  useEffect(() => {
+    if (loading || allMembers.length === 0) return;
+
+    const handleScroll = () => {
+      const ids = allMembers.map((m) => memberAnchorIdFromPosition(m.position));
+      let currentActiveId = null;
+      let minDistance = Infinity;
+
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // Find the member closest to 1/3 down the viewport
+          const distance = Math.abs(rect.top - window.innerHeight / 3);
+          
+          if (distance < minDistance) {
+            minDistance = distance;
+            currentActiveId = id;
+          }
+        }
+      }
+      
+      if (currentActiveId) setActiveId(currentActiveId);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Run once initially to set the active item
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, allMembers]);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.5,
@@ -123,6 +131,7 @@ export default function Members() {
       wheelMultiplier: 0.8,
       touchMultiplier: 2,
     });
+    lenisRef.current = lenis;
 
     function raf(time: number) {
       lenis.raf(time);
@@ -130,43 +139,89 @@ export default function Members() {
     }
 
     requestAnimationFrame(raf);
-    lenis.scrollTo(0, { immediate: true });
 
     return () => {
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (loading || !location.hash || layer !== "current" || isTransitioning) {
+      return;
+    }
+
+    const rawHashId = decodeURIComponent(location.hash.substring(1));
+    const normalizedHashId = normalizeMemberAnchorId(rawHashId);
+    let timeoutId: number | null = null;
+    let rafId: number | null = null;
+    let attempts = 0;
+    const maxAttempts = 120;
+
+    const tryScrollToMember = () => {
+      const lenis = lenisRef.current;
+      const element =
+        document.getElementById(normalizedHashId) ??
+        document.getElementById(rawHashId);
+
+      if (!element) {
+        if (attempts < maxAttempts) {
+          attempts += 1;
+          rafId = window.requestAnimationFrame(tryScrollToMember);
+        }
+        return;
+      }
+
+      const targetTop = Math.max(0, element.getBoundingClientRect().top + window.scrollY - 120);
+      window.scrollTo({ top: targetTop, behavior: "smooth" });
+      if (lenis) {
+        lenis.scrollTo(targetTop, { immediate: true });
+      }
+    };
+
+    // Slight delay avoids racing with final layout/paint right after slot promotion.
+    timeoutId = window.setTimeout(() => {
+      tryScrollToMember();
+    }, 120);
+
+    return () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+  }, [loading, location.hash, layer, isTransitioning]);
+
+  const activeIndex = activeId ? allMembers.findIndex(m => memberAnchorIdFromPosition(m.position) === activeId) : 0;
+  const isDarkSection = activeIndex >= boardMembers.length;
 
   const progressCanShow =
     isMounted && layer === "current" && !isTransitioning && !isNavMenuOpen;
 
   return (
     <>
-      {isMounted && typeof document !== "undefined"
-        ? createPortal(
-            <motion.div
-              animate={{ opacity: progressCanShow ? 1 : 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="fixed left-6 top-1/2 -translate-y-1/2 z-[1150] hidden xl:flex flex-col items-center gap-4 pointer-events-none"
-            >
-              <motion.div
-                style={{ opacity: progressOpacity }}
-                className="flex flex-col items-center gap-4"
-              >
-                <div className="font-hand text-sm rotate-90 mb-8 opacity-40">
-                  The Story So Far
-                </div>
-                <div className="w-[2px] h-64 bg-black/10 relative">
-                  <motion.div
-                    style={{ scaleY: smoothProgress }}
-                    className="absolute inset-0 bg-accent-darkblue origin-top"
-                  />
-                </div>
-              </motion.div>
-            </motion.div>,
-            document.body,
-          )
-        : null}
+      <MembersTimeline
+        isMounted={isMounted}
+        progressCanShow={progressCanShow}
+        progressOpacity={progressOpacity}
+        allMembers={allMembers}
+        activeId={activeId}
+        activeIndex={activeIndex}
+        isDarkSection={isDarkSection}
+        onMemberClick={(id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            const targetTop = Math.max(0, el.getBoundingClientRect().top + window.scrollY - 120);
+            window.scrollTo({ top: targetTop, behavior: "smooth" });
+            if (lenisRef.current) {
+              lenisRef.current.scrollTo(targetTop, { immediate: false, duration: 1.5 });
+            }
+          }
+        }}
+      />
+
 
       <div
         ref={containerRef}
@@ -189,6 +244,11 @@ export default function Members() {
           }
           className="relative"
         >
+          <Eyebrow 
+            text="Meet the team" 
+            color="text-accent-darkblue" 
+            delay={incomingEnterDelaySec} 
+          />
           <h1 className="font-serif text-[15vw] md:text-[12vw] leading-[0.8] font-black tracking-tighter text-[#1a1a1a] mb-4">
             OUR
             <br />
@@ -271,7 +331,8 @@ export default function Members() {
           {boardMembers.map((member, i) => (
             <div
               key={member.name}
-              className={`flex flex-col ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-12 md:gap-24 relative`}
+              id={memberAnchorIdFromPosition(member.position)}
+              className={`flex flex-col ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-12 md:gap-24 relative scroll-mt-32`}
             >
               {/* Connector Lines */}
               {i < boardMembers.length - 1 && (
@@ -303,76 +364,39 @@ export default function Members() {
                 viewport={{ once: true, margin: "-100px" }}
                 className="flex-1 relative group"
               >
-                <div
-                  className={`relative p-8 md:p-12 shadow-[20px_20px_0px_rgba(0,0,0,0.1)] border-2 border-black ${member.color} transition-transform duration-500 group-hover:scale-[1.02]`}
-                  style={{ transform: `rotate(${member.rotation}deg)` }}
-                >
-                  <Tape
-                    rotation={member.rotation * -3}
-                    className="absolute -top-6 left-1/2 -translate-x-1/2 w-40 opacity-90"
-                  />
-
-                  <div className="flex flex-col gap-8">
-                    <div className="w-full aspect-square overflow-hidden border-2 border-black shadow-[10px_10px_0px_rgba(0,0,0,0.1)]">
-                      <img
-                        src={member.imageUrl}
-                        alt={member.name}
-                        className="w-full h-full object-cover  transition-all duration-700"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="h-[1px] flex-1 bg-black/10" />
-                      </div>
-                      <h3 className="font-serif text-4xl md:text-6xl font-bold mb-2">
-                        {member.name}
-                      </h3>
-                      <p className="font-sans text-sm uppercase tracking-[0.3em] font-black text-[#8b0836] mb-6">
-                        {member.role}
-                      </p>
-                      <p className="font-hand text-2xl md:text-3xl leading-relaxed mb-8">
-                        "{member.bio}"
-                      </p>
-
-                      {/* Dynamic Sticker for Board Members */}
-                      {member.twoWords && (
-                        <Sticker
-                          text={member.twoWords}
-                          color={
-                            i === 0
-                              ? "bg-[#FFC21A]"
-                              : i === 1
-                                ? "bg-[#ffbd9b]"
-                                : i === 2
-                                  ? "bg-[#b8e6fe]"
-                                  : i === 3
-                                    ? "bg-[#ffffff]"
-                                    : "bg-[#FF1493] text-white"
-                          }
-                          className={`absolute ${i === 0 ? "-top-10 -right-4 rotate-12" : i === 1 ? "top-1/2 -left-12 -translate-y-1/2 -rotate-90" : i === 2 ? "-bottom-8 right-10 rotate-3" : i === 3 ? "top-20 -right-10 rotate-12" : "-bottom-4 -left-4 -rotate-6"}`}
-                        />
-                      )}
-
-                      <div className="pt-6 border-t border-black/10">
-                        <h4 className="font-sans text-[10px] uppercase tracking-widest font-bold opacity-40 mb-4">
-                          Academic Year Events
-                        </h4>
-                        <div className="flex flex-wrap gap-3">
-                          {member.events.map((event) => (
-                            <span
-                              key={event}
-                              className="px-4 py-2 bg-white/40 border border-black/10 rounded-full text-xs font-bold"
-                            >
-                              {event}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <BoardMemberCard
+                  color={member.color}
+                  rotation={member.rotation}
+                  imageUrl={member.imageUrl}
+                  name={member.name}
+                  role={member.role}
+                  bio={member.bio}
+                  events={member.events}
+                  twoWords={member.twoWords}
+                  stickerColor={
+                    i === 0
+                      ? "bg-[#FFC21A]"
+                      : i === 1
+                        ? "bg-[#ffbd9b]"
+                        : i === 2
+                          ? "bg-[#b8e6fe]"
+                          : i === 3
+                            ? "bg-[#ffffff]"
+                            : "bg-[#FF1493] text-white"
+                  }
+                  stickerClassName={`absolute ${
+                    i === 0
+                      ? "-top-10 -right-4 rotate-12"
+                      : i === 1
+                        ? "top-1/2 -left-12 -translate-y-1/2 -rotate-90"
+                        : i === 2
+                          ? "-bottom-8 right-10 rotate-3"
+                          : i === 3
+                            ? "top-20 -right-10 rotate-12"
+                            : "-bottom-4 -left-4 -rotate-6"
+                  }`}
+                  onImageClick={(data) => setSelectedImage({ url: data.src, alt: data.alt })}
+                />
               </motion.div>
 
               <div className="flex-1 hidden md:block">
@@ -428,68 +452,38 @@ export default function Members() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.8 }}
-                className="relative group"
+                id={memberAnchorIdFromPosition(rep.position)}
+                className="relative group scroll-mt-32"
               >
-                <div
-                  className={`p-6 md:p-8 border-2 border-black ${rep.color} text-[#1a1a1a] shadow-[15px_15px_0px_rgba(255,255,255,0.1)] transition-transform duration-500 group-hover:scale-[1.02] relative`}
-                  style={{ transform: `rotate(${rep.rotation * 2}deg)` }}
-                >
-                  <Tape
-                    rotation={rep.rotation * -5}
-                    className="absolute -top-4 left-1/2 -translate-x-1/2 w-32 opacity-80"
-                  />
-
-                  <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
-                    <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 overflow-hidden border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,0.1)]transition-all duration-500">
-                      <img
-                        src={rep.imageUrl}
-                        alt={rep.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-
-                    <div className="text-center sm:text-left">
-                      <div className="font-sans text-[10px] uppercase tracking-widest font-black text-[#8b0836] mb-2">
-                        {rep.grade}
-                      </div>
-                      <h3 className="font-serif text-3xl font-bold mb-3">
-                        {rep.name}
-                      </h3>
-                      <p className="font-hand text-xl md:text-2xl line-clamp-3 leading-tight mb-4">
-                        "{rep.bio}"
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                        {rep.events.map((event) => (
-                          <span
-                            key={event}
-                            className="px-3 py-1 bg-black/5 border border-black/10 rounded-full text-[10px] font-bold uppercase tracking-tighter"
-                          >
-                            {event}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Dynamic Sticker for Level Reps */}
-                  {rep.twoWords && (
-                    <Sticker
-                      text={rep.twoWords}
-                      color={
-                        i === 0
-                          ? "bg-[#FFC21A]"
-                          : i === 1
-                            ? "bg-[#b8e6fe]"
-                            : i === 2
-                              ? "bg-[#ffbd9b]"
-                              : "bg-[#ffffff]"
-                      }
-                      className={`absolute ${i === 0 ? "-bottom-4 -right-4 rotate-6" : i === 1 ? "-top-4 -left-4 -rotate-12" : i === 2 ? "-bottom-6 left-10 rotate-3" : "top-1/2 -right-8 -translate-y-1/2 rotate-90"}`}
-                    />
-                  )}
-                </div>
+                <LevelRepCard
+                  color={rep.color}
+                  rotation={rep.rotation}
+                  imageUrl={rep.imageUrl}
+                  grade={rep.grade}
+                  name={rep.name}
+                  bio={rep.bio}
+                  events={rep.events}
+                  twoWords={rep.twoWords}
+                  stickerColor={
+                    i === 0
+                      ? "bg-[#FFC21A]"
+                      : i === 1
+                        ? "bg-[#b8e6fe]"
+                        : i === 2
+                          ? "bg-[#ffbd9b]"
+                          : "bg-[#ffffff]"
+                  }
+                  stickerClassName={`absolute ${
+                    i === 0
+                      ? "-bottom-4 -right-4 rotate-6"
+                      : i === 1
+                        ? "-top-4 -left-4 -rotate-12"
+                        : i === 2
+                          ? "-bottom-6 left-10 rotate-3"
+                          : "top-1/2 -right-8 -translate-y-1/2 rotate-90"
+                  }`}
+                  onImageClick={(data) => setSelectedImage({ url: data.src, alt: data.alt })}
+                />
               </motion.div>
             ))}
           </div>
@@ -551,6 +545,12 @@ export default function Members() {
         </motion.div>
       </div>
       </div>
+      <Lightbox 
+        isOpen={!!selectedImage} 
+        onClose={() => setSelectedImage(null)} 
+        src={selectedImage?.url || ''} 
+        alt={selectedImage?.alt || ''} 
+      />
     </>
   );
 }
