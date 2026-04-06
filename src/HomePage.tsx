@@ -13,10 +13,12 @@ import { HomeBoardSection } from "./components/HomeBoardSection";
 import Lenis from "lenis";
 import { ChevronDown } from "lucide-react";
 import { useRouteTransitionMotion } from "./lib/routeTransitionMotion";
+import { useHeroVideo } from "./hooks/useHeroVideo";
 
 // --- Main App ---
 export default function Home() {
   const { shouldRunEnter, incomingEnterDelaySec } = useRouteTransitionMotion();
+  const { videoUrl: heroVideoUrl, status: heroVideoStatus } = useHeroVideo();
   const lenisRef = useRef<Lenis | null>(null);
 
   // Initialize Lenis
@@ -76,6 +78,15 @@ export default function Home() {
   const uiOpacity = useTransform(heroProgress, [0, 0.2], [1, 0]);
   const scrollIndicatorOpacity = useTransform(heroProgress, [0, 0.05], [1, 0]);
 
+  const heroStatusLabel =
+    heroVideoStatus === "loading"
+      ? "Loading hero video..."
+      : heroVideoStatus === "missing"
+        ? "No published hero video found in Sanity."
+        : "Hero video unavailable. Please try again.";
+
+
+        console.log(heroVideoUrl)
   return (
     <div className="min-h-screen bg-[#ffffff] text-[#000000] font-sans selection:bg-[#FFC21A] selection:text-[#000000]">
       <div className="hidden" />
@@ -96,18 +107,30 @@ export default function Home() {
               }}
               className="absolute inset-0 w-full h-full z-0"
             >
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-              >
-                <source
-                  src="https://sc.jny.sch.id/main/StucoMainVideoCompressed.mp4"
-                  type="video/mp4"
-                />
-              </video>
+              {heroVideoStatus === "ready" && heroVideoUrl ? (
+                <video
+                  key={heroVideoUrl}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  className="w-full h-full object-cover"
+                >
+                  <source src={heroVideoUrl} />
+                </video>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-black text-white/80 px-6 text-center">
+                  <div className="max-w-xl">
+                    <p className="font-sans text-[10px] uppercase tracking-[0.35em] text-white/60">
+                      Homepage Media
+                    </p>
+                    <p className="mt-3 font-serif text-lg md:text-2xl">
+                      {heroStatusLabel}
+                    </p>
+                  </div>
+                </div>
+              )}
             </motion.div>
 
             {/* Elegant Frosted Glass Vignette Overlay */}
