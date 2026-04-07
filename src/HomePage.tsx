@@ -1,4 +1,4 @@
-import React, { useEffect, useRef} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   motion,
   useScroll,
@@ -20,6 +20,7 @@ export default function Home() {
   const { shouldRunEnter, incomingEnterDelaySec } = useRouteTransitionMotion();
   const { videoUrl: heroVideoUrl, status: heroVideoStatus } = useHeroVideo();
   const lenisRef = useRef<Lenis | null>(null);
+  const [isHeroVideoVisible, setIsHeroVideoVisible] = useState(false);
 
   // Initialize Lenis
   useEffect(() => {
@@ -83,7 +84,13 @@ export default function Home() {
       ? "Loading hero video..."
       : heroVideoStatus === "missing"
         ? "No published hero video found in Sanity."
-        : "Hero video unavailable. Please try again.";
+        : heroVideoStatus === "error"
+          ? "Hero video unavailable. Please try again."
+          : "Preparing hero video...";
+
+  useEffect(() => {
+    setIsHeroVideoVisible(false);
+  }, [heroVideoUrl]);
 
 
         console.log(heroVideoUrl)
@@ -108,29 +115,46 @@ export default function Home() {
               className="absolute inset-0 w-full h-full z-0"
             >
               {heroVideoStatus === "ready" && heroVideoUrl ? (
-                <video
+                <motion.video
                   key={heroVideoUrl}
                   autoPlay
                   loop
                   muted
                   playsInline
                   preload="auto"
+                  onCanPlay={() => setIsHeroVideoVisible(true)}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: isHeroVideoVisible ? 1 : 0 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
                   className="w-full h-full object-cover"
                 >
                   <source src={heroVideoUrl} />
-                </video>
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-black text-white/80 px-6 text-center">
-                  <div className="max-w-xl">
-                    <p className="font-sans text-[10px] uppercase tracking-[0.35em] text-white/60">
-                      Homepage Media
-                    </p>
-                    <p className="mt-3 font-serif text-lg md:text-2xl">
-                      {heroStatusLabel}
-                    </p>
-                  </div>
+                </motion.video>
+              ) : null}
+
+              <motion.div
+                animate={{
+                  opacity:
+                    heroVideoStatus === "ready" && isHeroVideoVisible ? 0 : 1,
+                }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="absolute inset-0 flex items-center justify-center bg-black text-white/80 px-6 text-center"
+                style={{
+                  pointerEvents:
+                    heroVideoStatus === "ready" && isHeroVideoVisible
+                      ? "none"
+                      : "auto",
+                }}
+              >
+                <div className="max-w-xl">
+                  <p className="font-sans text-[10px] uppercase tracking-[0.35em] text-white/60">
+                    Homepage Media
+                  </p>
+                  <p className="mt-3 font-serif text-lg md:text-2xl">
+                    {heroStatusLabel}
+                  </p>
                 </div>
-              )}
+              </motion.div>
             </motion.div>
 
             {/* Elegant Frosted Glass Vignette Overlay */}
